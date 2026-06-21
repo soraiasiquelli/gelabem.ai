@@ -1,0 +1,110 @@
+<div class="formAdd">
+
+  <!-- Upload imagem -->
+  <div class="upload-area">
+    <input
+      type="file"
+      accept="image/*"
+      capture="environment"
+      (change)="onFile($event)" />
+    <span class="upload-icon">📷</span>
+    <span class="upload-label">Fotografar ou escolher imagem</span>
+    <span class="upload-sub">A IA vai identificar o item automaticamente</span>
+  </div>
+
+  @if (analisando) {
+    <p class="ia-status">Analisando imagem...</p>
+  }
+  @if (mensagemIA && !analisando) {
+    <p class="ia-status">{{ mensagemIA }}</p>
+  }
+
+  <!-- Itens detectados pela IA -->
+  @if (itensDetectados.length) {
+    <div class="itens-detectados">
+      @for (item of itensDetectados; track $index) {
+        <div class="item-detectado-card">
+          <div class="field">
+            <label>Nome</label>
+            <input type="text" [(ngModel)]="item.nome" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Quantidade</label>
+              <input type="number" [(ngModel)]="item.quantidade" min="0" />
+            </div>
+            <div class="field">
+              <label>Categoria</label>
+              <div class="select-wrap">
+                <select [(ngModel)]="item.categoria">
+                  <option value="">Selecionar</option>
+                  @for (cat of categorias; track cat.id) {
+                    <option [value]="cat.id">{{ cat.nome }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-save" (click)="adicionarDetectado(item, $index)">
+            + Adicionar
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Card do form -->
+  <div class="form-card">
+
+    <!-- Nome -->
+    <div class="field">
+      <label for="nome">Nome do item</label>
+      <input
+        type="text"
+        id="nome"
+        [(ngModel)]="nome"
+        placeholder="Ex: Arroz integral" />
+    </div>
+
+    <!-- Quantidade + Categoria -->
+    <div class="field-row">
+
+      <div class="field">
+        <label for="quant">Quantidade</label>
+        <input
+          type="number"
+          id="quant"
+          [(ngModel)]="quantidade"
+          placeholder="0"
+          min="0" />
+      </div>
+
+      <div class="field">
+        <label for="categoria">Categoria</label>
+        <div class="select-wrap">
+          <select id="categoria" [(ngModel)]="categoria">
+            <option value="">Selecionar</option>
+            @for (cat of categorias; track cat.id) {
+              <option [value]="cat.id">{{ cat.nome }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Ações -->
+  <div class="form-footer">
+    <button type="button" class="btn-save" (click)="adicionar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="17" height="17">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Adicionar item
+    </button>
+    <button type="button" class="btn-cancel">Cancelar</button>
+  </div>
+
+</div>

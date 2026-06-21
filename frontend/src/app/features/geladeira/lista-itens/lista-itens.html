@@ -1,0 +1,8 @@
+<div class="listaItens">
+    @for(item of itens$ | async; track item.id){
+    <app-item-card
+    [item]="item"
+    (remover)="removerItem($event)">
+    </app-item-card>
+    }
+</div>

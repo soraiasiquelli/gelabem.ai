@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.cardItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(125, 216, 255, 0.15);
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.18s, border-color 0.18s;
+}
+.cardItem:hover {
+  background: rgba(125, 216, 255, 0.09);
+  border-color: rgba(125, 216, 255, 0.28);
+}
+
+/* ── Info ── */
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nomeItem {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.1px;
+}
+
+.detalhesItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantItem {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4cc38a;
+  background: rgba(76, 195, 138, 0.15);
+  border: 1px solid rgba(76, 195, 138, 0.25);
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+/* ── Botão remover ── */
+.btnRemover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.btnRemover:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+.btnRemover:active { transform: scale(0.92); }
+.btnRemover svg { width: 15px; height: 15px; }

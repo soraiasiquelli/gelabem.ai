@@ -1,0 +1,111 @@
+<header>
+  <div class="header-top">
+    <div class="logo-row">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="4" x2="20" y2="36" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="4" y1="20" x2="36" y2="20" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="7.5" y1="7.5" x2="32.5" y2="32.5" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="32.5" y1="7.5" x2="7.5" y2="32.5" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="3.5" fill="#b2ebf2"/>
+        </svg>
+      </div>
+      <h1>Gela<span>bem</span></h1>
+    </div>
+    <div class="avatar">GB</div>
+  </div>
+  <p>O que você quer verificar hoje?</p>
+</header>
+
+<p class="section-label">Meus armazenamentos</p>
+
+@if (locais$ | async; as locais) {
+<div class="secaoBlocos">
+
+  @if (locais.includes('geladeira')) {
+  <div class="bloco bloco--geladeira" routerLink="/armazenamento/geladeira">
+    <div class="bloco-decoracoes">
+      <span class="circulo"></span>
+      <span class="diamante"></span>
+    </div>
+    <div class="bloco-icone">🧊</div>
+    <div class="bloco-conteudo">
+      <h2>Geladeira</h2>
+      <p>{{ totalItens$ | async }} itens armazenados</p>
+    </div>
+    <span class="bloco-seta">›</span>
+  </div>
+  }
+
+  @if (locais.includes('freezer')) {
+  <div class="bloco bloco--freezer" routerLink="/armazenamento/freezer">
+    <div class="bloco-decoracoes">
+      <span class="circulo"></span>
+      <span class="diamante"></span>
+    </div>
+    <div class="bloco-icone">❄️</div>
+    <div class="bloco-conteudo">
+      <h2>Freezer</h2>
+      <p>Alimentos congelados</p>
+    </div>
+    <span class="bloco-seta">›</span>
+  </div>
+  }
+
+  @if (locais.includes('despensa')) {
+  <div class="bloco bloco--despensa" routerLink="/armazenamento/despensa">
+    <div class="bloco-decoracoes">
+      <span class="circulo"></span>
+      <span class="diamante"></span>
+    </div>
+    <div class="bloco-icone">🏺</div>
+    <div class="bloco-conteudo">
+      <h2>Despensa</h2>
+      <p>Secos e enlatados</p>
+    </div>
+    <span class="bloco-seta">›</span>
+  </div>
+  }
+
+  @if (locais.includes('frigobar')) {
+  <div class="bloco bloco--frigobar" routerLink="/armazenamento/frigobar">
+    <div class="bloco-decoracoes">
+      <span class="circulo"></span>
+      <span class="diamante"></span>
+    </div>
+    <div class="bloco-icone">🧃</div>
+    <div class="bloco-conteudo">
+      <h2>Frigobar</h2>
+      <p>Bebidas e petiscos</p>
+    </div>
+    <span class="bloco-seta">›</span>
+  </div>
+  }
+
+</div>
+
+@if (locais.length < tiposDisponiveis.length) {
+  <div class="adicionar-armazenamento">
+    @if (!mostrarOpcoes) {
+      <button class="btn-add-armazenamento" type="button" (click)="toggleOpcoes()">
+        + Adicionar tipo de armazenamento
+      </button>
+    } @else {
+      <div class="opcoes-armazenamento">
+        @for (tipo of tiposDisponiveis; track tipo.nome) {
+          @if (!locais.includes(tipo.nome)) {
+            <button
+              class="chip-tipo"
+              type="button"
+              [disabled]="salvando"
+              (click)="adicionarTipo(locais, tipo.nome)">
+              {{ tipo.icone }} {{ tipo.label }}
+            </button>
+          }
+        }
+        <button class="btn-cancelar-add" type="button" (click)="toggleOpcoes()">Cancelar</button>
+      </div>
+    }
+  </div>
+}
+}

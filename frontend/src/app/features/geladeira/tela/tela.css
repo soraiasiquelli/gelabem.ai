@@ -1,0 +1,184 @@
+.mainGeladeira {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 100px;
+  background: linear-gradient(160deg, #0d2550 0%, #0a3a6e 50%, #0d5494 100%);
+  font-family: 'Nunito', sans-serif;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ── Blobs ── */
+.mainGeladeira::before {
+  content: '';
+  position: fixed;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: #4fc3f7;
+  filter: blur(90px);
+  opacity: 0.12;
+  top: -80px; right: -60px;
+  pointer-events: none;
+}
+.mainGeladeira::after {
+  content: '';
+  position: fixed;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: #80deea;
+  filter: blur(90px);
+  opacity: 0.1;
+  bottom: -60px; left: -40px;
+  pointer-events: none;
+}
+
+/* ── Bloco header ── */
+.bloco {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 96px;
+  border-radius: 22px;
+  padding: 0 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid rgba(76, 195, 138, 0.35);
+}
+
+.bloco--geladeira {
+  background: linear-gradient(135deg, #1a5c3a 0%, #1e7a4a 100%);
+  box-shadow: 0 4px 24px rgba(30, 122, 74, 0.4);
+}
+
+.bloco--freezer {
+  background: linear-gradient(135deg, #0d3a7a 0%, #1250a8 100%);
+  border-color: rgba(91, 155, 240, 0.35);
+  box-shadow: 0 4px 24px rgba(18, 80, 168, 0.4);
+}
+
+.bloco--despensa {
+  background: linear-gradient(135deg, #7a3d10 0%, #a85218 100%);
+  border-color: rgba(226, 148, 75, 0.35);
+  box-shadow: 0 4px 24px rgba(168, 82, 24, 0.4);
+}
+
+.bloco--frigobar {
+  background: linear-gradient(135deg, #4a1a6e 0%, #6b25a0 100%);
+  border-color: rgba(180, 100, 240, 0.35);
+  box-shadow: 0 4px 24px rgba(107, 37, 160, 0.4);
+}
+
+.bloco-icone {
+  position: relative;
+  z-index: 1;
+  width: 52px; height: 52px;
+  min-width: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+}
+
+.bloco-conteudo {
+  position: relative;
+  z-index: 1;
+}
+.bloco-conteudo h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+.bloco-conteudo p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Decorações */
+.bloco-decoracoes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bloco-decoracoes .circulo {
+  position: absolute;
+  top: -28px; right: -18px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(76, 195, 138, 0.2);
+}
+.bloco-decoracoes .diamante {
+  position: absolute;
+  bottom: -16px; right: 50px;
+  width: 38px; height: 38px;
+  transform: rotate(45deg);
+  background: rgba(76, 195, 138, 0.2);
+}
+
+/* ── Botão voltar ── */
+.btnVoltar {
+  position: relative;
+  z-index: 2;
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btnVoltar:hover { background: rgba(255,255,255,0.2); }
+.btnVoltar:active { transform: scale(0.92); }
+
+/* ── Categorias ── */
+.categorias {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+.categorias::-webkit-scrollbar { display: none; }
+
+.btnCategoria {
+  background: rgba(255,255,255,0.06);
+  padding: 8px 18px;
+  color: rgba(160, 210, 255, 0.7);
+  border: 1px solid rgba(125, 216, 255, 0.2);
+  border-radius: 999px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+.btnCategoria:hover {
+  background: rgba(125, 216, 255, 0.1);
+  border-color: rgba(125, 216, 255, 0.4);
+  color: #fff;
+}
+.btnCategoria.ativo {
+  background: #1e7a4a !important;
+  border-color: #4cc38a !important;
+  color: #fff !important;
+  box-shadow: 0 2px 12px rgba(30, 122, 74, 0.4);
+}
+
+/* ── Lista ── */
+.listaItesElement {
+  flex: 1;
+}

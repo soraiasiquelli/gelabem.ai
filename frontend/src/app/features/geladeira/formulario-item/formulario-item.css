@@ -1,0 +1,218 @@
+.formAdd {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Upload de imagem ── */
+.upload-area {
+  width: 100%;
+  height: 120px;
+  border-radius: 16px;
+  border: 1.5px dashed rgba(125, 216, 255, 0.3);
+  background: rgba(125, 216, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+.upload-area:hover {
+  border-color: rgba(125, 216, 255, 0.55);
+  background: rgba(125, 216, 255, 0.09);
+}
+.upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.upload-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.upload-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(160, 210, 255, 0.6);
+  letter-spacing: 0.04em;
+}
+.upload-sub {
+  font-size: 11px;
+  color: rgba(160, 210, 255, 0.35);
+}
+
+.ia-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(160, 210, 255, 0.75);
+  text-align: center;
+  margin: -4px 0 0;
+}
+
+/* ── Itens detectados pela IA ── */
+.itens-detectados {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-detectado-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(125, 216, 255, 0.15);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-detectado-card .btn-save {
+  height: 42px;
+  font-size: 13px;
+}
+
+/* ── Card do formulário ── */
+.form-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(125, 216, 255, 0.15);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ── Fields ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.field label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(160, 210, 255, 0.65);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 46px;
+  border: 1px solid rgba(125, 216, 255, 0.18);
+  border-radius: 13px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  color: #e8f4ff;
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s;
+}
+.field input::placeholder {
+  color: rgba(160, 210, 255, 0.28);
+  font-weight: 400;
+}
+.field input:focus,
+.field select:focus {
+  border-color: rgba(125, 216, 255, 0.55);
+  background: rgba(125, 216, 255, 0.07);
+}
+
+/* select arrow */
+.select-wrap {
+  position: relative;
+}
+.select-wrap::after {
+  content: '›';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 18px;
+  color: rgba(125, 216, 255, 0.5);
+  pointer-events: none;
+  line-height: 1;
+}
+.select-wrap select {
+  padding-right: 36px;
+}
+
+/* select options (browser default, dark bg) */
+.field select option {
+  background: #0d3a6e;
+  color: #e8f4ff;
+}
+
+/* ── Row com 2 ou 3 campos ── */
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+.field-row .field { flex: 1; min-width: 0; }
+
+/* ── Footer ── */
+.form-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-save {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1e88e5, #0d5494);
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 20px rgba(13, 84, 148, 0.45);
+  transition: opacity 0.2s, transform 0.15s;
+  box-sizing: border-box;
+}
+.btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-save:active { transform: scale(0.98); }
+
+.btn-cancel {
+  width: 100%;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(125, 216, 255, 0.18);
+  background: transparent;
+  color: rgba(160, 210, 255, 0.5);
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  box-sizing: border-box;
+}
+.btn-cancel:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(125, 216, 255, 0.35);
+  color: rgba(160, 210, 255, 0.8);
+}

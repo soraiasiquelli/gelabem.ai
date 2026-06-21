@@ -1,0 +1,85 @@
+.page-container {
+  min-height: 100dvh;
+  background: linear-gradient(160deg, #0d2550 0%, #0a3a6e 50%, #0d5494 100%);
+  font-family: 'Nunito', sans-serif;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.page-container::before {
+  content: '';
+  position: fixed;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: #4fc3f7;
+  filter: blur(90px);
+  opacity: 0.12;
+  top: -80px; right: -60px;
+  pointer-events: none;
+  z-index: 0;
+}
+.page-container::after {
+  content: '';
+  position: fixed;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: #80deea;
+  filter: blur(90px);
+  opacity: 0.1;
+  bottom: -60px; left: -40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Topbar ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px 14px;
+  background: rgba(13, 37, 80, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(125, 216, 255, 0.1);
+}
+
+.topbar h1 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+/* ── Botão voltar ── */
+.back-btn {
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(125, 216, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  color: #fff;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.back-btn:hover { background: rgba(255,255,255,0.15); }
+.back-btn:active { transform: scale(0.92); }
+
+/* ── Conteúdo ── */
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 24px 20px 40px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: rgba(160, 210, 255, 0.6);
+  margin: 0 0 24px;
+  line-height: 1.5;
+}

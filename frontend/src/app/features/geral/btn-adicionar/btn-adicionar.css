@@ -1,0 +1,18 @@
+.btnAdicionar{
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 24px;
+    z-index: 20;
+    display: block;
+    width: auto;
+    height: 56px;
+    background-color: #2ec4a3;
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(46, 196, 163, 0.45);
+    cursor: pointer;
+}
