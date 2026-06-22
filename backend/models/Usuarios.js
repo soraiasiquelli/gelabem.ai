@@ -33,6 +33,8 @@ const Usuario = sequelize.define('Usuario', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   }
+}, {
+  tableName: 'usuarios'
 });
 
 
