@@ -71,8 +71,8 @@
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </span>
-        <input type="password" placeholder="Mínimo 8 caracteres" [(ngModel)]="senha"/>
-        <span class="eye">
+        <input [type]="mostrarSenha ? 'text' : 'password'" placeholder="Mínimo 8 caracteres" [(ngModel)]="senha"/>
+        <span class="eye" (click)="toggleSenha()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
             <circle cx="12" cy="12" r="3"/>
@@ -97,8 +97,8 @@
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
         </span>
-        <input type="password" placeholder="Repita a senha" [(ngModel)]="repetirsenha"/>
-        <span class="eye">
+        <input [type]="mostrarConfirmarSenha ? 'text' : 'password'" placeholder="Repita a senha" [(ngModel)]="repetirsenha"/>
+        <span class="eye" (click)="toggleConfirmarSenha()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
             <circle cx="12" cy="12" r="3"/>
@@ -106,19 +106,6 @@
         </span>
       </div>
     </div>
-
-    <!-- Termos -->
-    <label class="terms-row">
-      <input type="checkbox" class="checkbox" />
-      <span class="checkmark">
-        <svg viewBox="0 0 12 12" fill="none">
-          <polyline points="2,6 5,9 10,3" stroke="#7dd8ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-      <span class="terms-text">
-        Concordo com os <a href="#">Termos de uso</a> e a <a href="#">Política de privacidade</a>
-      </span>
-    </label>
 
     <!-- Botão criar conta -->
     <button class="btn-primary" (click)="validarSenha()">

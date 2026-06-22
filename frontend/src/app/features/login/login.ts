@@ -17,10 +17,15 @@ export class Login {
 
   email = ''
   senha = ''
+  mostrarSenha = false
 
 
   constructor(private loginService: LoginService, private http: HttpClient, private router: Router){
 
+  }
+
+  toggleSenha() {
+    this.mostrarSenha = !this.mostrarSenha
   }
 
  login() {

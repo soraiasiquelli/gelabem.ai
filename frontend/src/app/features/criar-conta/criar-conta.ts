@@ -16,10 +16,20 @@ export class CriarConta {
     email = ''
     senha = ''
     repetirsenha = ''
+    mostrarSenha = false
+    mostrarConfirmarSenha = false
 
 
   constructor(private loginService: LoginService, private http: HttpClient, private router: Router){
 
+  }
+
+  toggleSenha() {
+    this.mostrarSenha = !this.mostrarSenha
+  }
+
+  toggleConfirmarSenha() {
+    this.mostrarConfirmarSenha = !this.mostrarConfirmarSenha
   }
 
 validarSenha(){
