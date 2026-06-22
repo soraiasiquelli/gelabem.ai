@@ -30,6 +30,8 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+const LIMITE_IA_GRATIS = Number(process.env.LIMITE_IA_GRATIS) || 20
+
 
 const fs = require('fs');
 
@@ -70,6 +72,23 @@ app.post("/vision", upload.single("image"), async (req, res) => {
   console.log("🚀 Entrou na rota /vision");
 
   try {
+    const usuarioId = Number(req.body.usuario_id)
+    const usuario = await Usuario.findByPk(usuarioId)
+
+    if (!usuario) {
+      fs.unlinkSync(req.file.path);
+      return res.status(401).json({ error: "Usuário não encontrado." })
+    }
+
+    if (usuario.nivel === 'comum' && usuario.usos_ia >= LIMITE_IA_GRATIS) {
+      fs.unlinkSync(req.file.path);
+      return res.status(403).json({
+        error: "Você atingiu o limite gratuito de análises por IA. Faça upgrade pra premium pra continuar usando.",
+        limite: LIMITE_IA_GRATIS,
+        usados: usuario.usos_ia
+      })
+    }
+
     // 1. Buscar categorias no banco
     const categoriasDB = await Categoria.findAll();
 
@@ -134,7 +153,16 @@ Formato obrigatório:
       quantidade: Number(item.quantidade) || 1,
     }));
 
-    res.json({ resultado: resultadoFinal });
+    if (usuario.nivel === 'comum') {
+      usuario.usos_ia += 1
+      await usuario.save()
+    }
+
+    res.json({
+      resultado: resultadoFinal,
+      usosIA: usuario.usos_ia,
+      limiteIA: LIMITE_IA_GRATIS
+    });
 
   } catch (error) {
     console.log("🔥 ERRO:", error.message);

@@ -27,7 +27,12 @@ const Usuario = sequelize.define('Usuario', {
   nivel: {
   type: DataTypes.ENUM('comum', 'premium', 'admin'),
   defaultValue: 'comum'
-}
+},
+
+  usos_ia: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  }
 });
 
 

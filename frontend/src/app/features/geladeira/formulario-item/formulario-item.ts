@@ -110,14 +110,21 @@ onFile(event: any) {
   const file = event.target.files[0];
   if (!file) return
 
+  const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
+  if (!usuario) {
+    this.mensagemIA = 'Você precisa estar logado para usar a IA.'
+    return
+  }
+
   const formData = new FormData();
   formData.append("image", file);
+  formData.append("usuario_id", String(usuario.id));
 
   this.analisando = true
   this.mensagemIA = ''
   this.itensDetectados = []
 
-  this.http.post<{ resultado: { nome: string, categoria: string, quantidade: number }[] }>(`${environment.apiUrl}/vision`, formData)
+  this.http.post<{ resultado: { nome: string, categoria: string, quantidade: number }[], usosIA: number, limiteIA: number }>(`${environment.apiUrl}/vision`, formData)
     .subscribe({
       next: (res) => {
         console.log("IA respondeu:", res);
@@ -141,13 +148,17 @@ onFile(event: any) {
           }
         })
 
+        const restantes = res.limiteIA != null ? res.limiteIA - res.usosIA : null
         this.mensagemIA = `${itens.length} item(ns) identificado(s). Confira e clique em Adicionar em cada um.`
+          + (restantes != null ? ` (${restantes} análise(s) grátis restante(s))` : '')
         this.cdr.markForCheck()
       },
       error: (err) => {
         console.log("Erro:", err);
         this.analisando = false
-        this.mensagemIA = 'Não foi possível analisar a imagem.'
+        this.mensagemIA = err.status === 403
+          ? (err.error?.error || 'Limite gratuito de análises por IA atingido.')
+          : 'Não foi possível analisar a imagem.'
         this.cdr.markForCheck()
       }
     });
