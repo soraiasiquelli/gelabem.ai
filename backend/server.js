@@ -73,6 +73,12 @@ app.post("/vision", upload.single("image"), async (req, res) => {
 
   try {
     const usuarioId = Number(req.body.usuario_id)
+
+    if (!usuarioId || Number.isNaN(usuarioId)) {
+      fs.unlinkSync(req.file.path);
+      return res.status(401).json({ error: "Usuário não encontrado." })
+    }
+
     const usuario = await Usuario.findByPk(usuarioId)
 
     if (!usuario) {
