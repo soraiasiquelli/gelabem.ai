@@ -28,6 +28,20 @@ export class FormularioItem {
   mensagemIA = ''
   itensDetectados: {nome: string, quantidade: number, categoria: number}[] = []
 
+  mensagemStatus = ''
+  statusTipo: 'sucesso' | 'erro' | '' = ''
+
+  mostrarStatus(mensagem: string, tipo: 'sucesso' | 'erro') {
+    this.mensagemStatus = mensagem
+    this.statusTipo = tipo
+    this.cdr.markForCheck()
+    setTimeout(() => {
+      this.mensagemStatus = ''
+      this.statusTipo = ''
+      this.cdr.markForCheck()
+    }, 3000)
+  }
+
     constructor (private geladeiraService: GeladeiraService, private loginService: LoginService, private http:HttpClient, private cdr: ChangeDetectorRef, private route: ActivatedRoute){
       this.geladeiraService.getCategoriasBD().subscribe(categorias => {
         this.categorias = categorias
@@ -66,11 +80,11 @@ export class FormularioItem {
       next: (res) => {
         console.log("Salvo no banco:", res);
         this.mensagemIA = ''
-        this.cdr.markForCheck()
+        this.mostrarStatus('Item salvo com sucesso!', 'sucesso')
       },
       error: (err) => {
         console.log("Erro:", err);
-        this.cdr.markForCheck()
+        this.mostrarStatus(err.error?.error || 'Erro ao salvar item. Tente novamente.', 'erro')
       }
     });
 
@@ -97,11 +111,11 @@ export class FormularioItem {
           next: (res) => {
             console.log("Salvo no banco:", res);
             this.itensDetectados.splice(index, 1)
-            this.cdr.markForCheck()
+            this.mostrarStatus('Item salvo com sucesso!', 'sucesso')
           },
           error: (err) => {
             console.log("Erro:", err);
-            this.cdr.markForCheck()
+            this.mostrarStatus(err.error?.error || 'Erro ao salvar item. Tente novamente.', 'erro')
           }
         });
     }

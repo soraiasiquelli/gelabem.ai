@@ -18,6 +18,9 @@
   @if (mensagemIA && !analisando) {
     <p class="ia-status">{{ mensagemIA }}</p>
   }
+  @if (mensagemStatus) {
+    <p class="ia-status" [class.status-erro]="statusTipo === 'erro'" [class.status-sucesso]="statusTipo === 'sucesso'">{{ mensagemStatus }}</p>
+  }
 
   <!-- Itens detectados pela IA -->
   @if (itensDetectados.length) {
