@@ -330,7 +330,8 @@ app.listen(PORT, async () => {
     await sequelize.authenticate();
     console.log("Banco conectado!");
 
-await sequelize.sync({ alter: true });
+// alter:true acumula FKs/índices duplicados a cada restart até estourar o limite de chaves do MySQL — ver histórico de constraints duplicadas em locais/itens
+await sequelize.sync();
     console.log("Tabelas sincronizadas!");
 
     console.log(`Backend rodando na porta ${PORT}`);
