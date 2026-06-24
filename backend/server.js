@@ -25,6 +25,10 @@ const app = express();
 
 app.use(cors())
 app.use(express.json())
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store')
+  next()
+})
 
 const Anthropic = require('@anthropic-ai/sdk');
 const sharp = require('sharp');
