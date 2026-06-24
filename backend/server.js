@@ -26,9 +26,10 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const Anthropic = require('@anthropic-ai/sdk');
+const sharp = require('sharp');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const LIMITE_IA_GRATIS = Number(process.env.LIMITE_IA_GRATIS) || 20
 
@@ -122,37 +123,39 @@ Formato obrigatório:
 ]
 `;
 
-    // 4. Ler imagem em base64
-    const imageBase64 = fs.readFileSync(req.file.path, {
-      encoding: "base64",
-    });
+    // 4. Redimensionar a imagem (reduz custo/tempo de análise) e converter pra base64
+    const imageBuffer = await sharp(req.file.path)
+      .resize({ width: 1024, height: 1024, fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer();
+    const imageBase64 = imageBuffer.toString('base64');
 
-    // 5. Chamar API Gemini (com retry em caso de sobrecarga temporária - erro 503)
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
+    // 5. Chamar API Claude (com retry em caso de sobrecarga temporária - erro 529)
     const TENTATIVAS = 3
     let response
     for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
       try {
-        response = await model.generateContent([
-          {
-            inlineData: {
-              mimeType: req.file.mimetype, // "image/jpeg", "image/png", etc.
-              data: imageBase64,
-            },
-          },
-          prompt,
-        ]);
+        response = await anthropic.messages.create({
+          model: 'claude-haiku-4-5',
+          max_tokens: 1024,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
+              { type: 'text', text: prompt }
+            ]
+          }]
+        });
         break
-      } catch (erroGemini) {
-        const sobrecarregado = erroGemini.message?.includes('503') || erroGemini.message?.includes('overloaded')
-        if (!sobrecarregado || tentativa === TENTATIVAS) throw erroGemini
-        console.log(`⏳ Gemini sobrecarregado, tentativa ${tentativa}/${TENTATIVAS}, tentando de novo...`)
+      } catch (erroClaude) {
+        const sobrecarregado = erroClaude.status === 529 || erroClaude.error?.error?.type === 'overloaded_error'
+        if (!sobrecarregado || tentativa === TENTATIVAS) throw erroClaude
+        console.log(`⏳ Claude sobrecarregado, tentativa ${tentativa}/${TENTATIVAS}, tentando de novo...`)
         await new Promise(resolve => setTimeout(resolve, tentativa * 1500))
       }
     }
 
-    const text = response.response.text();
+    const text = response.content.find(b => b.type === 'text')?.text || ''
     console.log("IA respondeu:", text);
 
     fs.unlinkSync(req.file.path);
@@ -184,10 +187,10 @@ Formato obrigatório:
 
   } catch (error) {
     console.log("🔥 ERRO:", error.message);
-    const sobrecarregado = error.message?.includes('503') || error.message?.includes('overloaded')
+    const sobrecarregado = error.status === 529 || error.error?.error?.type === 'overloaded_error'
     res.status(sobrecarregado ? 503 : 500).json({
       error: sobrecarregado
-        ? "A IA do Google está sobrecarregada no momento. Tente novamente em alguns instantes."
+        ? "A IA está sobrecarregada no momento. Tente novamente em alguns instantes."
         : "Erro na IA"
     });
   }
