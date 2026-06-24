@@ -27,6 +27,7 @@ export class Tela {
 
   categorias!: { id: number, nome: string }[]
   categoriaSelecionada: string = "Todos"
+  categoriaIdSelecionada?: number
 
   constructor(
     private geladeiraService: GeladeiraService,
@@ -34,7 +35,10 @@ export class Tela {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.categorias = this.geladeiraService.getCategorias();
+    this.categorias = []
+    this.geladeiraService.getCategoriasBD().subscribe(categorias => {
+      this.categorias = categorias
+    })
 
     this.tipo = this.route.snapshot.paramMap.get('tipo') || 'geladeira'
     this.meta = METADATA[this.tipo] || METADATA['geladeira']
@@ -54,11 +58,11 @@ export class Tela {
 
   selecionarTodos(){
     this.categoriaSelecionada = "Todos"
-    this.geladeiraService.resetFiltro()
+    this.categoriaIdSelecionada = undefined
   }
 
   filtrarItens(categoriaId: number){
-    this.geladeiraService.filtrarItens(categoriaId)
+    this.categoriaIdSelecionada = categoriaId
   }
 
   goBack(){

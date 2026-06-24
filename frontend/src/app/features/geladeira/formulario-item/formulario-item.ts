@@ -55,13 +55,18 @@ export class FormularioItem {
         this.loginService.getArmazenamentos(usuario.id).subscribe(locais => {
           this.locais = locais
           const localDoTipo = locais.find(loc => loc.nome === tipo)
-          this.local = localDoTipo ? localDoTipo.id : (locais[0]?.id ?? 0)
+          this.local = localDoTipo?.id ?? 0
           this.cdr.markForCheck()
         })
       }
     }
 
     adicionar(){
+      if (!this.local) {
+        this.mostrarStatus('Esse armazenamento não está configurado pra esse usuário.', 'erro')
+        return
+      }
+
       const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
 
       const novoItem: Item = {
@@ -95,6 +100,11 @@ export class FormularioItem {
     }
 
     adicionarDetectado(item: {nome: string, quantidade: number, categoria: number}, index: number){
+      if (!this.local) {
+        this.mostrarStatus('Esse armazenamento não está configurado pra esse usuário.', 'erro')
+        return
+      }
+
       const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
 
       const novoItem: Item = {

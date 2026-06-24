@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { GeladeiraService } from '../../../services/geladeira.service'
 import { ItemCard } from '../item-card/item-card';
 import { AsyncPipe } from '@angular/common';
-import { Observable, forkJoin, map } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, forkJoin, map, of } from 'rxjs';
 import { Item } from '../../../models/item.model';
 
 function agruparPorNome(itens: Item[]): Item[] {
@@ -33,6 +33,7 @@ export class ListaItens {
   itens$!: Observable<Item[]>;
 
   private _localId?: number
+  private categoriaIdSubject = new BehaviorSubject<number | undefined>(undefined)
 
   @Input()
   set localId(value: number | undefined) {
@@ -43,13 +44,31 @@ export class ListaItens {
     return this._localId
   }
 
+  @Input()
+  set categoriaId(value: number | undefined) {
+    this.categoriaIdSubject.next(value)
+  }
+
   constructor(private geladeiraService: GeladeiraService){
     this.carregarItens()
   }
 
   carregarItens() {
-    this.itens$ = this.geladeiraService.getItensBD(this._localId).pipe(
-      map(itens => agruparPorNome(itens))
+    if (this._localId === undefined) {
+      this.itens$ = of([])
+      return
+    }
+
+    this.itens$ = combineLatest([
+      this.geladeiraService.getItensBD(this._localId),
+      this.categoriaIdSubject
+    ]).pipe(
+      map(([itens, categoriaId]) => {
+        const filtrados = categoriaId
+          ? itens.filter(item => item.categoria_id === categoriaId)
+          : itens
+        return agruparPorNome(filtrados)
+      })
     )
   }
 

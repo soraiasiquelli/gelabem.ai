@@ -5,5 +5,8 @@ export interface Item {
     categoria: number,
     local: number,
     usuario_id?: number,
-    ids?: number[]
+    ids?: number[],
+    /** campos retornados pela API ao listar itens (GET /itens) */
+    categoria_id?: number,
+    local_id?: number
 }
