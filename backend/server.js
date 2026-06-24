@@ -127,18 +127,30 @@ Formato obrigatório:
       encoding: "base64",
     });
 
-    // 5. Chamar API Gemini
+    // 5. Chamar API Gemini (com retry em caso de sobrecarga temporária - erro 503)
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    const response = await model.generateContent([
-      {
-        inlineData: {
-          mimeType: req.file.mimetype, // "image/jpeg", "image/png", etc.
-          data: imageBase64,
-        },
-      },
-      prompt,
-    ]);
+    const TENTATIVAS = 3
+    let response
+    for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
+      try {
+        response = await model.generateContent([
+          {
+            inlineData: {
+              mimeType: req.file.mimetype, // "image/jpeg", "image/png", etc.
+              data: imageBase64,
+            },
+          },
+          prompt,
+        ]);
+        break
+      } catch (erroGemini) {
+        const sobrecarregado = erroGemini.message?.includes('503') || erroGemini.message?.includes('overloaded')
+        if (!sobrecarregado || tentativa === TENTATIVAS) throw erroGemini
+        console.log(`⏳ Gemini sobrecarregado, tentativa ${tentativa}/${TENTATIVAS}, tentando de novo...`)
+        await new Promise(resolve => setTimeout(resolve, tentativa * 1500))
+      }
+    }
 
     const text = response.response.text();
     console.log("IA respondeu:", text);
@@ -172,7 +184,12 @@ Formato obrigatório:
 
   } catch (error) {
     console.log("🔥 ERRO:", error.message);
-    res.status(500).json({ error: "Erro na IA" });
+    const sobrecarregado = error.message?.includes('503') || error.message?.includes('overloaded')
+    res.status(sobrecarregado ? 503 : 500).json({
+      error: sobrecarregado
+        ? "A IA do Google está sobrecarregada no momento. Tente novamente em alguns instantes."
+        : "Erro na IA"
+    });
   }
 });
 

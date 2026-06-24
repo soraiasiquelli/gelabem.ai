@@ -170,8 +170,8 @@ onFile(event: any) {
       error: (err) => {
         console.log("Erro:", err);
         this.analisando = false
-        this.mensagemIA = err.status === 403
-          ? (err.error?.error || 'Limite gratuito de análises por IA atingido.')
+        this.mensagemIA = (err.status === 403 || err.status === 503)
+          ? (err.error?.error || 'Não foi possível analisar a imagem.')
           : 'Não foi possível analisar a imagem.'
         this.cdr.markForCheck()
       }
