@@ -295,6 +295,11 @@ app.post('/usuarios/:usuarioId/armazenamentos', async (req, res) => {
     const usuarioId = Number(req.params.usuarioId)
     const armazenamentos = req.body.armazenamentos
 
+    const usuario = await Usuario.findByPk(usuarioId)
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario não encontrado' })
+    }
+
     const existentes = await Local.findAll({ where: { usuario_id: usuarioId } })
     const nomesExistentes = existentes.map(local => local.nome)
 

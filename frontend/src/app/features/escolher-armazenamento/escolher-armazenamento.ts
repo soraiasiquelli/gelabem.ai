@@ -43,6 +43,11 @@ export class EscolherArmazenamento {
       },
       error: (err) => {
         console.log('Erro ao salvar armazenamentos:', err)
+        if (err.status === 404) {
+          localStorage.removeItem('usuario')
+          this.router.navigate(['/login'])
+          return
+        }
         this.router.navigate(['/home'])
       }
     })
