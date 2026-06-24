@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://sorai7099.c44.integrator.host'
+  apiUrl: 'https://sorai7099.c44.integrator.host/62635'
 };
