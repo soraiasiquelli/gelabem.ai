@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { GeladeiraService } from '../../../services/geladeira.service'
 import { ItemCard } from '../item-card/item-card';
 import { AsyncPipe } from '@angular/common';
@@ -49,7 +49,7 @@ export class ListaItens {
     this.categoriaIdSubject.next(value)
   }
 
-  constructor(private geladeiraService: GeladeiraService){
+  constructor(private geladeiraService: GeladeiraService, private cdr: ChangeDetectorRef){
     this.carregarItens()
   }
 
@@ -79,6 +79,7 @@ export class ListaItens {
 
     forkJoin(remocoes).subscribe(() => {
       this.carregarItens()
+      this.cdr.markForCheck()
     });
   }
 

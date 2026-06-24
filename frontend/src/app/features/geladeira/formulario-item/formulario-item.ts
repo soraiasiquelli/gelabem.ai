@@ -17,7 +17,7 @@ import { environment } from '../../../../environments/environment';
 export class FormularioItem {
 
    nome = ''
-   quantidade = 0
+   quantidade = 1
    categoria = 0
    local = 0
 
@@ -45,6 +45,9 @@ export class FormularioItem {
     constructor (private geladeiraService: GeladeiraService, private loginService: LoginService, private http:HttpClient, private cdr: ChangeDetectorRef, private route: ActivatedRoute){
       this.geladeiraService.getCategoriasBD().subscribe(categorias => {
         this.categorias = categorias
+        if (!this.categoria) {
+          this.categoria = categorias[0]?.id ?? 0
+        }
         this.cdr.markForCheck()
       })
 
@@ -94,8 +97,8 @@ export class FormularioItem {
     });
 
       this.nome = ''
-      this.quantidade = 0
-      this.categoria = 0
+      this.quantidade = 1
+      this.categoria = this.categorias[0]?.id ?? 0
 
     }
 

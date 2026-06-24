@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { ListaItens } from '../lista-itens/lista-itens';
 import { BtnAdicionar } from '../../geral/btn-adicionar/btn-adicionar';
@@ -33,11 +33,13 @@ export class Tela {
     private geladeiraService: GeladeiraService,
     private loginService: LoginService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.categorias = []
     this.geladeiraService.getCategoriasBD().subscribe(categorias => {
       this.categorias = categorias
+      this.cdr.markForCheck()
     })
 
     this.tipo = this.route.snapshot.paramMap.get('tipo') || 'geladeira'
@@ -48,21 +50,25 @@ export class Tela {
       this.loginService.getArmazenamentos(usuario.id).subscribe(locais => {
         const local = locais.find(l => l.nome === this.tipo)
         this.localId = local?.id
+        this.cdr.markForCheck()
       })
     }
   }
 
   selecionarCategoria(categoria: string){
     this.categoriaSelecionada = categoria
+    this.cdr.markForCheck()
   }
 
   selecionarTodos(){
     this.categoriaSelecionada = "Todos"
     this.categoriaIdSelecionada = undefined
+    this.cdr.markForCheck()
   }
 
   filtrarItens(categoriaId: number){
     this.categoriaIdSelecionada = categoriaId
+    this.cdr.markForCheck()
   }
 
   goBack(){
