@@ -1,0 +1,81 @@
+<div class="form-wrap">
+
+  <!-- Upload -->
+  <div class="upload-area" [class.carregando]="carregando">
+    <input
+      type="file"
+      accept="image/*"
+      (change)="onFile($event)" />
+
+    @if (!carregando) {
+      <div class="upload-content">
+        <div class="upload-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <span class="upload-label">Enviar foto da nota fiscal</span>
+        <span class="upload-sub">Tire uma foto clara da nota ou escolha da galeria</span>
+        <span class="upload-btn">Escolher imagem</span>
+      </div>
+    } @else {
+      <div class="upload-loading">
+        <div class="spinner"></div>
+        <span class="loading-text">Lendo nota fiscal...</span>
+        <span class="loading-sub">A IA está identificando os itens</span>
+      </div>
+    }
+  </div>
+
+  <!-- Dicas -->
+  <div class="dicas-card">
+    <p class="dicas-titulo">📋 Dicas para melhor resultado</p>
+    <ul class="dicas-lista">
+      <li>Fotografe a nota em local bem iluminado</li>
+      <li>Mantenha a câmera paralela à nota</li>
+      <li>Certifique-se que o texto está legível</li>
+    </ul>
+  </div>
+
+  <!-- Resultado -->
+  @if (itensDetectados.length > 0) {
+    <div class="resultado-wrap">
+      <div class="resultado-header">
+        <span class="resultado-titulo">✅ {{ itensDetectados.length }} item(s) encontrado(s)</span>
+        <span class="resultado-sub">Confirme e adicione cada item</span>
+      </div>
+
+      <div class="resultado-lista">
+        @for (item of itensDetectados; track $index; let i = $index) {
+          <div class="item-card">
+            <div class="item-info">
+              <span class="item-nome">{{ item.nome }}</span>
+              <span class="item-quant">{{ item.quantidade }} {{ item.unidade }}</span>
+            </div>
+            <button class="btn-add-item" (click)="adicionarItem(item, i)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Adicionar
+            </button>
+          </div>
+        }
+      </div>
+
+      <button class="btn-add-todos" (click)="adicionarTodos()">
+        Adicionar todos os itens
+      </button>
+    </div>
+  }
+
+  <!-- Mensagem de status -->
+  @if (mensagem) {
+    <div class="status-msg" [class.sucesso]="statusTipo === 'sucesso'" [class.erro]="statusTipo === 'erro'">
+      {{ mensagem }}
+    </div>
+  }
+
+</div>

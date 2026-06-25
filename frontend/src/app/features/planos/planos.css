@@ -1,0 +1,357 @@
+:host { display: block; min-height: 100vh; }
+
+.planos-host {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0d2550 0%, #0a3a6e 50%, #0d5494 100%);
+  font-family: 'Nunito', sans-serif;
+  padding: 24px 16px 48px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.13;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob-1 { width: 300px; height: 300px; background: #4fc3f7; top: -80px; right: -60px; }
+.blob-2 { width: 220px; height: 220px; background: #80deea; bottom: -60px; left: -40px; }
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.back-btn {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(125,216,255,0.22);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #fff; flex-shrink: 0;
+  transition: background 0.15s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.15); }
+.header-text h1 {
+  margin: 0 0 4px;
+  font-size: 20px; font-weight: 800; color: #fff;
+  letter-spacing: -0.3px;
+}
+.header-text p {
+  margin: 0;
+  font-size: 13px; color: rgba(160,210,255,0.6);
+}
+
+/* ── Toggle ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.toggle-row span {
+  font-size: 13px; font-weight: 700;
+  color: rgba(160,210,255,0.4);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s;
+}
+.toggle-row span.active { color: #fff; }
+.toggle {
+  width: 44px; height: 24px;
+  border-radius: 999px;
+  background: rgba(125,216,255,0.15);
+  border: 1px solid rgba(125,216,255,0.25);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #7dd8ff;
+  transition: left 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toggle-thumb.right { left: 23px; }
+.badge-desconto {
+  font-size: 10px; font-weight: 800;
+  background: rgba(76,195,138,0.2);
+  border: 1px solid rgba(76,195,138,0.4);
+  color: #4cc38a;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Grid ── */
+.planos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Card de plano ── */
+.plano-card {
+  position: relative;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(125,216,255,0.15);
+  border-radius: 22px;
+  padding: 22px 20px 20px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.plano-card.destaque {
+  background: rgba(30,136,229,0.12);
+  border-color: rgba(30,136,229,0.45);
+  box-shadow: 0 4px 28px rgba(13,84,148,0.35);
+}
+.plano-card.premium {
+  background: rgba(107,37,160,0.1);
+  border-color: rgba(180,100,240,0.3);
+}
+.plano-card.atual {
+  border-color: rgba(76,195,138,0.5);
+}
+
+.badge-popular {
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1e88e5, #0d5494);
+  color: #fff;
+  font-size: 11px; font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+.badge-atual {
+  margin-left: auto;
+  font-size: 10px; font-weight: 800;
+  background: rgba(76,195,138,0.15);
+  border: 1px solid rgba(76,195,138,0.35);
+  color: #4cc38a;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.plano-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.plano-icon {
+  font-size: 26px;
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.plano-nome {
+  margin: 0 0 2px;
+  font-size: 17px; font-weight: 800; color: #fff;
+}
+.plano-desc {
+  margin: 0;
+  font-size: 12px; color: rgba(160,210,255,0.55);
+}
+
+.plano-preco {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.preco-valor {
+  font-size: 28px; font-weight: 800; color: #fff;
+  letter-spacing: -0.5px;
+}
+.preco-periodo {
+  font-size: 13px; color: rgba(160,210,255,0.5);
+}
+.preco-anual {
+  font-size: 11px; color: rgba(160,210,255,0.4);
+  margin: 0 0 4px;
+}
+
+.plano-divider {
+  height: 1px;
+  background: rgba(125,216,255,0.1);
+  margin: 14px 0;
+}
+
+/* ── Features ── */
+.plano-features {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.plano-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px; font-weight: 600;
+}
+.plano-features li.ok { color: rgba(220,240,255,0.85); }
+.plano-features li.no { color: rgba(160,210,255,0.3); }
+.feat-icon {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 900;
+  flex-shrink: 0;
+}
+.feat-icon.ok { background: rgba(76,195,138,0.15); color: #4cc38a; }
+.feat-icon.no { background: rgba(255,255,255,0.05); color: rgba(160,210,255,0.2); }
+
+/* ── Botões de plano ── */
+.btn-plano {
+  width: 100%; height: 46px;
+  border-radius: 14px; border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  box-sizing: border-box;
+}
+.btn-plano:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-plano:active { transform: scale(0.98); }
+
+.btn-free {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(125,216,255,0.15) !important;
+  color: rgba(160,210,255,0.4);
+  cursor: default;
+}
+.btn-pro {
+  background: linear-gradient(135deg, #1e88e5, #0d5494);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(13,84,148,0.4);
+}
+.btn-premium {
+  background: linear-gradient(135deg, #6b25a0, #4a1a6e);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(107,37,160,0.4);
+}
+
+/* ── Rodapé ── */
+.rodape {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(160,210,255,0.35);
+  margin-top: 24px;
+}
+
+/* ── Modal overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,15,40,0.8);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  padding: 0 0 0;
+}
+
+.modal {
+  background: #0d2e5e;
+  border: 1px solid rgba(125,216,255,0.2);
+  border-radius: 28px 28px 0 0;
+  padding: 32px 24px 40px;
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+}
+.modal-icon { font-size: 36px; text-align: center; margin-bottom: 12px; }
+.modal-titulo {
+  font-size: 20px; font-weight: 800; color: #fff;
+  text-align: center; margin: 0 0 8px;
+}
+.modal-desc {
+  font-size: 13px; color: rgba(160,210,255,0.6);
+  text-align: center; line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+.modal-planos {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.modal-plano {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(125,216,255,0.15);
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+.modal-plano:hover { background: rgba(125,216,255,0.08); }
+.modal-plano.destaque {
+  background: rgba(30,136,229,0.15);
+  border-color: rgba(30,136,229,0.5);
+}
+.modal-plano-badge {
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  background: #1e88e5;
+  color: #fff;
+  font-size: 9px; font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.modal-plano-nome {
+  font-size: 14px; font-weight: 800; color: #fff;
+  margin-bottom: 4px;
+}
+.modal-plano-preco {
+  font-size: 18px; font-weight: 800; color: #7dd8ff;
+  margin-bottom: 6px;
+}
+.modal-plano-preco span { font-size: 12px; color: rgba(160,210,255,0.5); }
+.modal-plano-feat {
+  font-size: 11px; color: rgba(160,210,255,0.55);
+}
+
+.modal-btn-fechar {
+  width: 100%; height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(125,216,255,0.15);
+  background: transparent;
+  color: rgba(160,210,255,0.45);
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+.modal-btn-fechar:hover { background: rgba(255,255,255,0.05); }

@@ -11,7 +11,13 @@ const Item = sequelize.define('Item', {
   usuario_id: {
     type: DataTypes.INTEGER,
     allowNull: false
-  }
+  },
+  unidade: {
+    type: DataTypes.ENUM('un', 'kg', 'g', 'L', 'mL', 'cx', 'pct'),
+    defaultValue: 'un'
+  },
+    quantidade_minima: DataTypes.INTEGER,
+
 }, {
   tableName: 'itens',
   timestamps: false

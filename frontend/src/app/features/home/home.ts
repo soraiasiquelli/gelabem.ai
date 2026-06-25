@@ -4,6 +4,7 @@ import { LoginService } from '../../services/auth/login.service';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { Observable, map, of, switchMap } from 'rxjs';
+import { HttpClient } from '@angular/common/http'; // ← adiciona
 
 const TIPOS_DISPONIVEIS = [
   { nome: 'geladeira', label: 'Geladeira', icone: '🧊' },
@@ -27,14 +28,38 @@ export class Home {
   mostrarOpcoes = false
   salvando = false
 
+  itensAcabando: any[] = []
+  mostrarAlerta = true
+
+  fecharAlerta() {
+    this.itensAcabando = []
+  }
+
+  private api = 'http://localhost:3000' // ← ou sua URL de produção
   private usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
 
   constructor(
     private geladeiraService: GeladeiraService,
     private loginService: LoginService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient // ← adiciona
   ) {
     this.carregarLocais()
+    this.carregarItensAcabando() // ← adiciona
+  }
+
+  carregarItensAcabando() {
+    if (!this.usuario) return
+
+    this.http.get<any[]>(`${this.api}/itens-acabando/${this.usuario.id}`)
+      .subscribe({
+        next: (itens) => {
+          this.itensAcabando = itens
+        },
+        error: (err) => {
+          console.error('Erro ao buscar itens acabando:', err)
+        }
+      })
   }
 
   carregarLocais() {

@@ -7,11 +7,11 @@
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
     </button>
-    <h1>Adicionar item 🧺</h1>
+    <h1>{{ itemId ? 'Editar item ✏️' : 'Adicionar item 🧺' }}</h1>
   </header>
 
   <div class="content">
-    <p class="subtitle">Adicionando em: {{ titulo }}</p>
-    <app-formulario-item></app-formulario-item>
+    <p class="subtitle">{{ itemId ? 'Editando em' : 'Adicionando em' }}: {{ titulo }}</p>
+    <app-formulario-item [itemId]="itemId"></app-formulario-item>
   </div>
 </div>

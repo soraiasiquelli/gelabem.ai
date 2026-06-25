@@ -5,6 +5,7 @@ import { BtnAdicionar } from '../../geral/btn-adicionar/btn-adicionar';
 import { GeladeiraService } from '../../../services/geladeira.service';
 import { LoginService } from '../../../services/auth/login.service';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { Item } from '../../../models/item.model';
 
 const METADATA: Record<string, { titulo: string, desc: string, icone: string, classe: string }> = {
   geladeira: { titulo: 'Geladeira', desc: 'Seus itens frescos', icone: '🧊', classe: 'bloco--geladeira' },
@@ -24,10 +25,15 @@ export class Tela {
   tipo = 'geladeira'
   meta = METADATA['geladeira']
   localId?: number
+  usuarioId?: number
 
   categorias!: { id: number, nome: string }[]
   categoriaSelecionada: string = "Todos"
   categoriaIdSelecionada?: number
+
+  modoSelecao = false
+  itensSelecionados: Set<number> = new Set()
+  mensagemSelecao = ''
 
   constructor(
     private geladeiraService: GeladeiraService,
@@ -74,5 +80,48 @@ export class Tela {
   goBack(){
     this.router.navigate(['/home'])
   }
+
+ gerarReceita(armazenamento: string) {
+  if (!this.modoSelecao) {
+    this.modoSelecao = true
+    this.itensSelecionados.clear()
+    this.mensagemSelecao = ''
+    this.cdr.markForCheck()
+    return
+  }
+
+  if (this.itensSelecionados.size === 0) {
+    this.mensagemSelecao = 'Selecione pelo menos um item para gerar a receita.'
+    this.cdr.markForCheck()
+    return
+  }
+
+  const itens = Array.from(this.itensSelecionados).join(',')
+  this.modoSelecao = false
+  this.router.navigate(['/receita', armazenamento], { queryParams: { itens } })
+}
+
+cancelarSelecao() {
+  this.modoSelecao = false
+  this.itensSelecionados.clear()
+  this.mensagemSelecao = ''
+  this.cdr.markForCheck()
+}
+
+toggleSelecaoItem(item: Item) {
+  const ids = item.ids?.length ? item.ids : [item.id]
+  const todosSelecionados = ids.every(id => this.itensSelecionados.has(id))
+
+  ids.forEach(id => {
+    if (todosSelecionados) {
+      this.itensSelecionados.delete(id)
+    } else {
+      this.itensSelecionados.add(id)
+    }
+  })
+
+  this.mensagemSelecao = ''
+  this.cdr.markForCheck()
+}
 
 }

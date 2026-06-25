@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { GeladeiraService } from '../../../services/geladeira.service'
 import { ItemCard } from '../item-card/item-card';
 import { AsyncPipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest, forkJoin, map, of } from 'rxjs';
 import { Item } from '../../../models/item.model';
 
@@ -36,6 +37,15 @@ export class ListaItens {
   private categoriaIdSubject = new BehaviorSubject<number | undefined>(undefined)
 
   @Input()
+  modoSelecao = false
+
+  @Input()
+  selecionados: Set<number> = new Set()
+
+  @Output()
+  selecionarItem = new EventEmitter<Item>()
+
+  @Input()
   set localId(value: number | undefined) {
     this._localId = value
     this.carregarItens()
@@ -49,7 +59,12 @@ export class ListaItens {
     this.categoriaIdSubject.next(value)
   }
 
-  constructor(private geladeiraService: GeladeiraService, private cdr: ChangeDetectorRef){
+  constructor(
+    private geladeiraService: GeladeiraService,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private route: ActivatedRoute
+  ){
     this.carregarItens()
   }
 
@@ -72,6 +87,12 @@ export class ListaItens {
     )
   }
 
+  editarItem(item: Item) {
+    const id = item.ids?.[0] ?? item.id
+    const tipo = this.route.snapshot.paramMap.get('tipo') || 'geladeira'
+    this.router.navigate(['/armazenamento', tipo, 'editar', id])
+  }
+
   removerItem(item: Item) {
     if (!item.ids?.length) return
 
@@ -83,5 +104,9 @@ export class ListaItens {
     });
   }
 
+  isSelecionado(item: Item): boolean {
+    const ids = item.ids?.length ? item.ids : [item.id]
+    return ids.every(id => this.selecionados.has(id))
+  }
 
 }

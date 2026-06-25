@@ -2,7 +2,11 @@
     @for(item of itens$ | async; track item.id){
     <app-item-card
     [item]="item"
-    (remover)="removerItem($event)">
+    [selecionavel]="modoSelecao"
+    [selecionado]="isSelecionado(item)"
+    (remover)="removerItem($event)"
+    (editar)="editarItem($event)"
+    (selecionar)="selecionarItem.emit($event)">
     </app-item-card>
     }
 </div>

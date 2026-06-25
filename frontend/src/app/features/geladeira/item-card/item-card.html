@@ -1,20 +1,43 @@
-<div class="cardItem">
+<div
+  class="cardItem"
+  [class.selecionavel]="selecionavel"
+  [class.selecionado]="selecionado"
+  (click)="clicouCard()">
 
   <div class="infoItem">
     <p class="nomeItem">{{ item.nome }}</p>
     <div class="detalhesItem">
-      <span class="quantItem">{{ item.quantidade }} un</span>
+      <span class="quantItem">{{ item.quantidade }} {{item.unidade}}</span>
     </div>
   </div>
 
-  <button class="btnRemover" (click)="clicouRemover()" aria-label="Remover item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 6h18"></path>
-      <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
-      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-      <line x1="10" y1="11" x2="10" y2="17"></line>
-      <line x1="14" y1="11" x2="14" y2="17"></line>
-    </svg>
-  </button>
+  @if (selecionavel) {
+    <div class="checkboxItem" [class.marcado]="selecionado" aria-hidden="true">
+      @if (selecionado) {
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      }
+    </div>
+  } @else {
+    <div class="acoesItem">
+      <button class="btnEditar" (click)="$event.stopPropagation(); clicouEditar()" aria-label="Editar item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+          <path d="M15 5l4 4"></path>
+        </svg>
+      </button>
+
+      <button class="btnRemover" (click)="$event.stopPropagation(); clicouRemover()" aria-label="Remover item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"></path>
+          <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </button>
+    </div>
+  }
 
 </div>

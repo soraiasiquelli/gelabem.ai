@@ -18,6 +18,14 @@ export class GeladeiraService {
         return this.http.post(`${this.api}/itens`, item)
     }
 
+    getItemBD(id: number): Observable<Item>{
+        return this.http.get<Item>(`${this.api}/itens/${id}`)
+    }
+
+    updateItemBD(id: number, item: Item){
+        return this.http.put(`${this.api}/itens/${id}`, item)
+    }
+
     getItensBD(localId?: number): Observable<Item[]>{
         console.log("Chamando API /itens")
         const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
@@ -36,9 +44,9 @@ export class GeladeiraService {
     /*lista comeca vazia*/
     private itensSubject = new BehaviorSubject<Item[]> (
         [
-        {id:1, nome: "Leite", quantidade: 1, categoria: 1, local: 1},
-        {id:2, nome: "Arroz", quantidade: 2, categoria: 2, local: 2},
-        {id:3, nome: "Frango", quantidade: 1, categoria: 3, local: 3},
+        {id:1, nome: "Leite", quantidade: 1, categoria: 1, local: 1, unidade: 'un', quantidade_minima: 1},
+        {id:2, nome: "Arroz", quantidade: 2, categoria: 2, local: 2, unidade: 'un', quantidade_minima: 1},
+        {id:3, nome: "Frango", quantidade: 1, categoria: 3, local: 3, unidade: 'un', quantidade_minima: 1}
 
     ]
     )   
@@ -128,4 +136,23 @@ export class GeladeiraService {
 
     return this.http.post(`${this.api}/vision`, formData);
     }
+
+    gerarReceita(usuarioId: number, localId?: number, itemIds?: number[]): Observable<{ receita: Receita }>{
+        const body: { usuario_id: number, local_id?: number, item_ids?: number[] } = { usuario_id: usuarioId }
+        if (itemIds?.length) {
+            body.item_ids = itemIds
+        } else if (localId) {
+            body.local_id = localId
+        }
+        return this.http.post<{ receita: Receita }>(`${this.api}/gerar-receita`, body)
+    }
+}
+
+export interface Receita {
+    titulo: string
+    tempoPreparo?: string
+    porcoes?: number
+    ingredientesUsados?: string[]
+    ingredientesFaltantes?: string[]
+    modoPreparo?: string[]
 }

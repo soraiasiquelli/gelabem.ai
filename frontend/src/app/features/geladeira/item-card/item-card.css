@@ -57,6 +57,35 @@
   letter-spacing: 0.03em;
 }
 
+/* ── Ações ── */
+.acoesItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Botão editar ── */
+.btnEditar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(125, 216, 255, 0.25);
+  border-radius: 10px;
+  background: rgba(125, 216, 255, 0.1);
+  color: #7dd8ff;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.btnEditar:hover {
+  background: rgba(125, 216, 255, 0.2);
+  border-color: rgba(125, 216, 255, 0.45);
+}
+.btnEditar:active { transform: scale(0.92); }
+.btnEditar svg { width: 15px; height: 15px; }
+
 /* ── Botão remover ── */
 .btnRemover {
   display: flex;
@@ -77,3 +106,31 @@
 }
 .btnRemover:active { transform: scale(0.92); }
 .btnRemover svg { width: 15px; height: 15px; }
+
+/* ── Seleção (gerar receita) ── */
+.cardItem.selecionavel {
+  cursor: pointer;
+}
+.cardItem.selecionado {
+  background: rgba(76, 195, 138, 0.14);
+  border-color: rgba(76, 195, 138, 0.5);
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  min-width: 26px;
+  border-radius: 8px;
+  border: 2px solid rgba(125, 216, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.checkboxItem svg { width: 14px; height: 14px; }
+.checkboxItem.marcado {
+  background: #1e7a4a;
+  border-color: #4cc38a;
+}

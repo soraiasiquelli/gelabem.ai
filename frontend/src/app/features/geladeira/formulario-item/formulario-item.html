@@ -1,29 +1,31 @@
 <div class="formAdd">
 
-  <!-- Upload imagem -->
-  <div class="upload-area">
-    <input
-      type="file"
-      accept="image/*"
-      capture="environment"
-      (change)="onFile($event)" />
-    <span class="upload-icon">📷</span>
-    <span class="upload-label">Fotografar ou escolher imagem</span>
-    <span class="upload-sub">A IA vai identificar o item automaticamente</span>
-  </div>
+  @if (!itemId) {
+    <!-- Upload imagem -->
+    <div class="upload-area">
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        (change)="onFile($event)" />
+      <span class="upload-icon">📷</span>
+      <span class="upload-label">Fotografar ou escolher imagem</span>
+      <span class="upload-sub">A IA vai identificar o item automaticamente</span>
+    </div>
 
-  @if (analisando) {
-    <p class="ia-status">Analisando imagem...</p>
-  }
-  @if (mensagemIA && !analisando) {
-    <p class="ia-status">{{ mensagemIA }}</p>
+    @if (analisando) {
+      <p class="ia-status">Analisando imagem...</p>
+    }
+    @if (mensagemIA && !analisando) {
+      <p class="ia-status">{{ mensagemIA }}</p>
+    }
   }
   @if (mensagemStatus) {
     <p class="ia-status" [class.status-erro]="statusTipo === 'erro'" [class.status-sucesso]="statusTipo === 'sucesso'">{{ mensagemStatus }}</p>
   }
 
   <!-- Itens detectados pela IA -->
-  @if (itensDetectados.length) {
+  @if (!itemId && itensDetectados.length) {
     <div class="itens-detectados">
       @for (item of itensDetectados; track $index) {
         <div class="item-detectado-card">
@@ -73,7 +75,7 @@
     <div class="field-row">
 
       <div class="field">
-        <label for="quant">Quantidade</label>
+        <label for="quant">Qtd</label>
         <input
           type="number"
           id="quant"
@@ -81,6 +83,32 @@
           placeholder="0"
           min="0" />
       </div>
+
+      
+      <div class="field">
+        <label for="quant">Qtd Min.</label>
+        <input
+          type="number"
+          id="quant"
+          [(ngModel)]="quantidade_minima"
+          placeholder="0"
+          min="0" />
+      </div>
+
+    <div class="field">
+      <label for="unidade">Unidade</label>
+      <div class="select-wrap">
+        <select id="unidade" [(ngModel)]="unidade">
+          <option value="un">un (unidade)</option>
+          <option value="kg">kg</option>
+          <option value="g">g</option>
+          <option value="L">L (litro)</option>
+          <option value="mL">mL</option>
+          <option value="cx">cx (caixa)</option>
+          <option value="pct">pct (pacote)</option>
+        </select>
+      </div>
+    </div>
 
       <div class="field">
         <label for="categoria">Categoria</label>
@@ -105,7 +133,7 @@
         <line x1="12" y1="5" x2="12" y2="19"/>
         <line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
-      Adicionar item
+      {{ itemId ? 'Salvar alterações' : 'Adicionar item' }}
     </button>
     <button type="button" class="btn-cancel">Cancelar</button>
   </div>

@@ -17,6 +17,27 @@
   <p>O que você quer verificar hoje?</p>
 </header>
 
+@if (itensAcabando.length > 0) {
+<div class="alerta-acabando">
+  <div class="alerta-header">
+    <div class="alerta-icone">⚠️</div>
+    <div class="alerta-texto">
+      <span class="alerta-titulo">Itens acabando</span>
+      <span class="alerta-sub">{{ itensAcabando.length }} item(s) precisam de atenção</span>
+    </div>
+    <button class="alerta-fechar" (click)="fecharAlerta()">✕</button>
+  </div>
+  <div class="alerta-lista">
+    @for (item of itensAcabando; track item.id) {
+      <div class="alerta-item">
+        <span class="alerta-item-nome">{{ item.nome }}</span>
+        <span class="alerta-item-quant">{{ item.quantidade }} {{ item.unidade }}</span>
+      </div>
+    }
+  </div>
+</div>
+}
+
 <p class="section-label">Meus armazenamentos</p>
 
 @if (locais$ | async; as locais) {
@@ -108,4 +129,17 @@
     }
   </div>
 }
+
+
+ <!-- <button class="btn-nota-fiscal" type="button" routerLink="/ler-nota-fiscal">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+    <polyline points="10 9 9 9 8 9"/>
+  </svg>
+  Ler Nota Fiscal
+</button>-->
+
 }

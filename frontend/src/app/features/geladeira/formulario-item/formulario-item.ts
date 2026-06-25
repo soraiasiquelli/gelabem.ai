@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GeladeiraService } from '../../../services/geladeira.service';
 import { LoginService } from '../../../services/auth/login.service';
@@ -14,12 +14,16 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './formulario-item.html',
   styleUrl: './formulario-item.css',
 })
-export class FormularioItem {
+export class FormularioItem implements OnInit {
+
+  @Input() itemId?: number
 
    nome = ''
    quantidade = 1
    categoria = 0
    local = 0
+   unidade = 'un'
+   quantidade_minima = 1
 
   categorias: {id: number, nome: string}[] = [];
   locais: {id: number, nome: string}[] = []
@@ -64,6 +68,20 @@ export class FormularioItem {
       }
     }
 
+    ngOnInit() {
+      if (!this.itemId) return
+
+      this.geladeiraService.getItemBD(this.itemId).subscribe(item => {
+        this.nome = item.nome
+        this.quantidade = item.quantidade
+        this.categoria = item.categoria_id ?? this.categoria
+        this.local = item.local_id ?? this.local
+        this.unidade = item.unidade
+        this.quantidade_minima = item.quantidade_minima
+        this.cdr.markForCheck()
+      })
+    }
+
     adicionar(){
       if (!this.local) {
         this.mostrarStatus('Esse armazenamento não está configurado pra esse usuário.', 'erro')
@@ -78,28 +96,34 @@ export class FormularioItem {
         quantidade: this.quantidade,
         categoria: Number(this.categoria),
         local:Number(this.local),
-        usuario_id: usuario?.id
+        usuario_id: usuario?.id,
+        unidade: this.unidade,
+        quantidade_minima: this.quantidade_minima
 
       }
 
       console.log("Novo Item:", novoItem)
-     this.geladeiraService.addItemBD(novoItem)
-    .subscribe({
-      next: (res) => {
-        console.log("Salvo no banco:", res);
-        this.mensagemIA = ''
-        this.mostrarStatus('Item salvo com sucesso!', 'sucesso')
-      },
-      error: (err) => {
-        console.log("Erro:", err);
-        this.mostrarStatus(err.error?.error || 'Erro ao salvar item. Tente novamente.', 'erro')
+      const request = this.itemId
+        ? this.geladeiraService.updateItemBD(this.itemId, novoItem)
+        : this.geladeiraService.addItemBD(novoItem)
+
+      request.subscribe({
+        next: (res) => {
+          console.log("Salvo no banco:", res);
+          this.mensagemIA = ''
+          this.mostrarStatus(this.itemId ? 'Item atualizado com sucesso!' : 'Item salvo com sucesso!', 'sucesso')
+        },
+        error: (err) => {
+          console.log("Erro:", err);
+          this.mostrarStatus(err.error?.error || 'Erro ao salvar item. Tente novamente.', 'erro')
+        }
+      });
+
+      if (!this.itemId) {
+        this.nome = ''
+        this.quantidade = 1
+        this.categoria = this.categorias[0]?.id ?? 0
       }
-    });
-
-      this.nome = ''
-      this.quantidade = 1
-      this.categoria = this.categorias[0]?.id ?? 0
-
     }
 
     adicionarDetectado(item: {nome: string, quantidade: number, categoria: number}, index: number){
@@ -116,7 +140,9 @@ export class FormularioItem {
         quantidade: item.quantidade,
         categoria: Number(item.categoria),
         local: Number(this.local),
-        usuario_id: usuario?.id
+        usuario_id: usuario?.id,
+        unidade: this.unidade,
+        quantidade_minima: this.quantidade_minima
       }
 
       this.geladeiraService.addItemBD(novoItem)

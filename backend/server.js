@@ -5,8 +5,9 @@ const cors = require("cors")
 const models = require('./models');
 const multer = require("multer")
 const upload = multer({dest: './uploads'})
-const sequelize = require('./db'); 
+const sequelize = require('./db');
 const bcrypt = require('bcryptjs')
+const { Op } = require('sequelize')
 
 
 
@@ -72,6 +73,66 @@ app.get('/itens', async (req, res) => {
   }
 });
 
+app.post('/leitura-nota', upload.single("image"), async (req, res) => {
+  console.log("Entrou na rota de /leitura-nota")
+
+  try {
+    // 1. Processa imagem e busca categorias ao mesmo tempo
+    const [imageBuffer, categoriasDB] = await Promise.all([
+      sharp(req.file.path)
+        .resize({ width: 640, height: 1280, fit: 'inside' })
+        .jpeg({ quality: 70 })
+        .toBuffer(),
+      Categoria.findAll()
+    ])
+
+    const imageBase64 = imageBuffer.toString('base64')
+
+    const categoriasMap = {}
+    categoriasDB.forEach(cat => {
+      categoriasMap[cat.nome.toLowerCase()] = cat.id
+    })
+
+    // 2. Prompt simplificado
+    const prompt = `Leia esta nota fiscal. Retorne APENAS JSON com itens alimentícios. Ignore higiene/limpeza.
+Categorias: ${categoriasDB.map(c => c.nome).join(', ')}
+Formato: [{"nome":"Arroz","quantidade":2,"categoria":"Grãos e Cereais","unidade":"un"}]`
+
+    // 3. Chamar o Claude
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 1024,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+
+    const text = response.content.find(b => b.type === 'text')?.text || ''
+    fs.unlinkSync(req.file.path)
+
+    const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim()
+    const resultado = JSON.parse(cleanText)
+
+    const resultadoFinal = resultado.map(item => ({
+      nome: item.nome,
+      quantidade: Number(item.quantidade) || 1,
+      categoria: item.categoria,
+      categoria_id: categoriasMap[item.categoria?.toLowerCase()] || null,
+      unidade: item.unidade || 'un'
+    }))
+
+    res.json({ resultado: resultadoFinal })
+
+  } catch (error) {
+    console.error("🔥 ERRO NO /leitura-nota:", error)
+    if (req.file) fs.unlinkSync(req.file.path)
+    res.status(500).json({ error: "Erro ao processar a nota fiscal." })
+  }
+})
 
 app.post("/vision", upload.single("image"), async (req, res) => {
   console.log("🚀 Entrou na rota /vision");
@@ -200,6 +261,70 @@ Formato obrigatório:
   }
 });
 
+app.post('/gerar-receita', async(req, res) => {
+  try {
+    console.log("Entrou na rota /gerar-receita ")
+
+    const usuarioID = Number(req.body.usuario_id)
+    const localID = req.body.local_id ? Number(req.body.local_id) : null
+    const itemIds = Array.isArray(req.body.item_ids)
+      ? req.body.item_ids.map(Number).filter(id => !Number.isNaN(id))
+      : []
+
+    if (!usuarioID || Number.isNaN(usuarioID)) {
+      return res.status(401).json({ error: "Usuário não encontrado." })
+    }
+
+    const where = { usuario_id: usuarioID }
+    if (itemIds.length) {
+      where.id = { [Op.in]: itemIds }
+    } else if (localID) {
+      where.local_id = localID
+    }
+
+    const itens = await Item.findAll({ where, include: Categoria })
+
+    if (!itens.length) {
+      return res.status(404).json({ error: "Nenhum item encontrado para gerar uma receita." })
+    }
+
+    const listaItens = itens
+      .map(item => `${item.nome} (${item.quantidade} ${item.unidade}${item.Categoria ? `, ${item.Categoria.nome}` : ''})`)
+      .join('\n')
+
+    const prompt = `Você é um chef de cozinha. Com base nos itens disponíveis abaixo, sugira UMA receita prática e gostosa, usando o máximo possível desses itens. Pode sugerir itens extras simples (sal, óleo, água, temperos básicos) se necessário, mas marque-os como "ingredientesFaltantes".
+
+Itens disponíveis:
+${listaItens}
+
+Retorne APENAS JSON válido, sem markdown, sem explicações, no formato:
+{
+  "titulo": "Nome da receita",
+  "tempoPreparo": "30 minutos",
+  "porcoes": 4,
+  "ingredientesUsados": ["item 1", "item 2"],
+  "ingredientesFaltantes": ["item que precisa comprar"],
+  "modoPreparo": ["passo 1", "passo 2"]
+}`
+
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }]
+    })
+
+    const text = response.content.find(b => b.type === 'text')?.text || ''
+    const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim()
+    const receita = JSON.parse(cleanText)
+
+    res.json({ receita })
+
+  } catch (error) {
+      console.log("ERRO", error)
+      res.status(500).json({ error: "Erro ao gerar a receita." })
+  }
+})
+
 app.post('/itens', async (req, res) => {
   try {
     console.log("BODY RECEBIDO:", req.body);
@@ -209,7 +334,9 @@ app.post('/itens', async (req, res) => {
       quantidade: req.body.quantidade,
       categoria_id: Number(req.body.categoria),
       local_id: Number(req.body.local),
-      usuario_id: Number(req.body.usuario_id)
+      usuario_id: Number(req.body.usuario_id),
+      unidade: req.body.unidade,
+      quantidade_minima: req.body.quantidade_minima
     });
 
     res.json(item);
@@ -220,6 +347,63 @@ app.post('/itens', async (req, res) => {
   }
 });
 
+app.get('/itens/:id', async (req, res) => {
+  try {
+    const item = await Item.findByPk(req.params.id)
+    if (!item) {
+      return res.status(404).json({ error: "Item não encontrado" })
+    }
+    res.json(item)
+  } catch (error) {
+    console.log("ERRO NO GET /ITENS/:id:", error);
+    res.status(500).json({ error: "Erro ao buscar item" });
+  }
+});
+
+app.put('/itens/:id', async (req, res) => {
+  try {
+    const item = await Item.findByPk(req.params.id)
+    if (!item) {
+      return res.status(404).json({ error: "Item não encontrado" })
+    }
+
+    await item.update({
+      nome: req.body.nome,
+      quantidade: req.body.quantidade,
+      categoria_id: Number(req.body.categoria),
+      local_id: Number(req.body.local),
+      unidade: req.body.unidade,
+      quantidade_minima: req.body.quantidade_minima
+    });
+
+    res.json(item);
+
+  } catch (err) {
+    console.error("🔥 ERRO NO UPDATE:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/itens-acabando/:usuarioId", async (req, res) => {
+  try {
+    const usuarioId = Number(req.params.usuarioId)
+
+    const itens = await Item.findAll({
+      where: { usuario_id: usuarioId }
+    })
+
+    const itensAcabando = itens.filter(item => 
+      item.quantidade_minima !== null && 
+      item.quantidade <= item.quantidade_minima
+    )
+
+    res.json(itensAcabando)
+
+  } catch (err) {
+    console.error("Erro ao buscar itens acabando:", err)
+    res.status(500).json({ error: err.message })
+  }
+})
 
 app.post('/usuarios', async (req, res) => {
 try {
@@ -355,7 +539,7 @@ app.listen(PORT, async () => {
     console.log("Banco conectado!");
 
 // alter:true acumula FKs/índices duplicados a cada restart até estourar o limite de chaves do MySQL — ver histórico de constraints duplicadas em locais/itens
-await sequelize.sync();
+await sequelize.sync({alter: true});
     console.log("Tabelas sincronizadas!");
 
     console.log(`Backend rodando na porta ${PORT}`);

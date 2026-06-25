@@ -1,0 +1,235 @@
+<div class="planos-host">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <button class="back-btn" type="button" (click)="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+      </button>
+      <div class="header-text">
+        <h1>Escolha seu plano</h1>
+        <p>Desbloqueie o potencial da IA na sua cozinha</p>
+      </div>
+    </div>
+
+    <!-- Toggle mensal/anual -->
+    <div class="toggle-row">
+      <span [class.active]="!anual" (click)="anual = false">Mensal</span>
+      <div class="toggle" (click)="anual = !anual">
+        <div class="toggle-thumb" [class.right]="anual"></div>
+      </div>
+      <span [class.active]="anual" (click)="anual = true">
+        Anual
+        <span class="badge-desconto">-20%</span>
+      </span>
+    </div>
+
+    <!-- Cards de plano -->
+    <div class="planos-grid">
+
+      <!-- FREE -->
+      <div class="plano-card" [class.atual]="planoAtual === 'free'">
+        <div class="plano-header">
+          <div class="plano-icon">🧊</div>
+          <div>
+            <h2 class="plano-nome">Free</h2>
+            <p class="plano-desc">Para começar a organizar</p>
+          </div>
+          @if (planoAtual === 'free') {
+            <span class="badge-atual">Atual</span>
+          }
+        </div>
+
+        <div class="plano-preco">
+          <span class="preco-valor">R$ 0</span>
+          <span class="preco-periodo">/mês</span>
+        </div>
+
+        <div class="plano-divider"></div>
+
+        <ul class="plano-features">
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Até 3 armazenamentos
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Cadastros manuais ilimitados
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            10 cadastros com IA por mês
+          </li>
+          <li class="no">
+            <span class="feat-icon no">✕</span>
+            Alertas de validade
+          </li>
+          <li class="no">
+            <span class="feat-icon no">✕</span>
+            Lista de compras com IA
+          </li>
+          <li class="no">
+            <span class="feat-icon no">✕</span>
+            Sugestões de receitas
+          </li>
+        </ul>
+
+        <button class="btn-plano btn-free" disabled>
+          Plano atual
+        </button>
+      </div>
+
+      <!-- PRO -->
+      <div class="plano-card destaque" [class.atual]="planoAtual === 'pro'">
+        <div class="badge-popular">⚡ Mais popular</div>
+
+        <div class="plano-header">
+          <div class="plano-icon">❄️</div>
+          <div>
+            <h2 class="plano-nome">Pro</h2>
+            <p class="plano-desc">Para usar sem limites</p>
+          </div>
+          @if (planoAtual === 'pro') {
+            <span class="badge-atual">Atual</span>
+          }
+        </div>
+
+        <div class="plano-preco">
+          <span class="preco-valor">{{ anual ? 'R$ 7,92' : 'R$ 9,90' }}</span>
+          <span class="preco-periodo">/mês</span>
+        </div>
+        @if (anual) {
+          <p class="preco-anual">R$ 95,04 cobrado anualmente</p>
+        }
+
+        <div class="plano-divider"></div>
+
+        <ul class="plano-features">
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Até 5 armazenamentos
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Cadastros manuais ilimitados
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Cadastros com IA ilimitados
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Alertas de validade
+          </li>
+          <li class="no">
+            <span class="feat-icon no">✕</span>
+            Lista de compras com IA
+          </li>
+          <li class="no">
+            <span class="feat-icon no">✕</span>
+            Sugestões de receitas
+          </li>
+        </ul>
+
+        <button class="btn-plano btn-pro" (click)="assinar('pro')">
+          {{ planoAtual === 'pro' ? 'Plano atual' : 'Assinar Pro' }}
+        </button>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="plano-card premium" [class.atual]="planoAtual === 'premium'">
+        <div class="plano-header">
+          <div class="plano-icon">🌟</div>
+          <div>
+            <h2 class="plano-nome">Premium</h2>
+            <p class="plano-desc">Experiência completa com IA</p>
+          </div>
+          @if (planoAtual === 'premium') {
+            <span class="badge-atual">Atual</span>
+          }
+        </div>
+
+        <div class="plano-preco">
+          <span class="preco-valor">{{ anual ? 'R$ 15,92' : 'R$ 19,90' }}</span>
+          <span class="preco-periodo">/mês</span>
+        </div>
+        @if (anual) {
+          <p class="preco-anual">R$ 191,04 cobrado anualmente</p>
+        }
+
+        <div class="plano-divider"></div>
+
+        <ul class="plano-features">
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Armazenamentos ilimitados
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Cadastros manuais ilimitados
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Cadastros com IA ilimitados
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Alertas de validade
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Lista de compras com IA
+          </li>
+          <li class="ok">
+            <span class="feat-icon ok">✓</span>
+            Sugestões de receitas
+          </li>
+        </ul>
+
+        <button class="btn-plano btn-premium" (click)="assinar('premium')">
+          {{ planoAtual === 'premium' ? 'Plano atual' : 'Assinar Premium' }}
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Rodapé -->
+    <p class="rodape">
+      Pagamento seguro via Kiwify · Cancele quando quiser · 7 dias de garantia
+    </p>
+
+  </div>
+</div>
+
+<!-- Modal upgrade (aparece quando atinge limite) -->
+@if (mostrarModal) {
+<div class="modal-overlay" (click)="fecharModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-icon">🚀</div>
+    <h2 class="modal-titulo">Limite atingido</h2>
+    <p class="modal-desc">Você usou todos os seus cadastros com IA do plano Free este mês. Faça upgrade para continuar usando.</p>
+
+    <div class="modal-planos">
+      <div class="modal-plano" (click)="assinar('pro')">
+        <div class="modal-plano-nome">Pro</div>
+        <div class="modal-plano-preco">R$ 9,90<span>/mês</span></div>
+        <div class="modal-plano-feat">IA ilimitada</div>
+      </div>
+      <div class="modal-plano destaque" (click)="assinar('premium')">
+        <div class="modal-plano-badge">Recomendado</div>
+        <div class="modal-plano-nome">Premium</div>
+        <div class="modal-plano-preco">R$ 19,90<span>/mês</span></div>
+        <div class="modal-plano-feat">IA + Lista de compras</div>
+      </div>
+    </div>
+
+    <button class="modal-btn-fechar" (click)="fecharModal()">Agora não</button>
+  </div>
+</div>
+}

@@ -19,10 +19,14 @@ const TITULOS: Record<string, string> = {
 export class TelaCriar {
 
   titulo = 'item'
+  itemId?: number
 
   constructor(private location: Location, private route: ActivatedRoute) {
     const tipo = this.route.snapshot.paramMap.get('tipo') || ''
     this.titulo = TITULOS[tipo] || 'item'
+
+    const itemIdParam = this.route.snapshot.paramMap.get('itemId')
+    this.itemId = itemIdParam ? Number(itemIdParam) : undefined
   }
 
   goBack(){

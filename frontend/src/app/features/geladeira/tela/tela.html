@@ -41,8 +41,37 @@
 
   </div>
 
-  <app-lista-itens class="listaItesElement" [localId]="localId" [categoriaId]="categoriaIdSelecionada"></app-lista-itens>
+  <app-lista-itens
+    class="listaItesElement"
+    [localId]="localId"
+    [categoriaId]="categoriaIdSelecionada"
+    [modoSelecao]="modoSelecao"
+    [selecionados]="itensSelecionados"
+    (selecionarItem)="toggleSelecaoItem($event)">
+  </app-lista-itens>
 
-  <app-btn-adicionar [routerLink]="['/armazenamento', tipo, 'adicionar']"></app-btn-adicionar>
+  @if (!modoSelecao) {
+    <app-btn-adicionar [routerLink]="['/armazenamento', tipo, 'adicionar']"></app-btn-adicionar>
+  }
+
+  @if (mensagemSelecao) {
+    <p class="mensagemSelecao">{{ mensagemSelecao }}</p>
+  }
+
+  <div class="acoesReceita">
+    @if (modoSelecao) {
+      <button class="btn-cancelar" (click)="cancelarSelecao()">
+        Cancelar
+      </button>
+    }
+
+    <button class="btn-receita" (click)="gerarReceita(tipo)">
+      @if (modoSelecao) {
+        ✅ Confirmar Seleção ({{ itensSelecionados.size }})
+      } @else {
+        🍽️ Gerar Receita
+      }
+    </button>
+  </div>
 
 </main>

@@ -8,5 +8,7 @@ export interface Item {
     ids?: number[],
     /** campos retornados pela API ao listar itens (GET /itens) */
     categoria_id?: number,
-    local_id?: number
+    local_id?: number,
+    unidade: string,
+    quantidade_minima: number
 }
