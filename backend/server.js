@@ -261,6 +261,42 @@ Formato obrigatório:
   }
 });
 
+app.post("/vision-preview", upload.single("image"), async (req, res) => {
+  try {
+    const imageBuffer = await sharp(req.file.path)
+      .resize({ width: 1024, height: 1024, fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer();
+    const imageBase64 = imageBuffer.toString('base64');
+    fs.unlinkSync(req.file.path);
+
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 1024,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
+          { type: 'text', text: `Analise a geladeira e retorne APENAS JSON valido sem markdown:
+{
+  "ingredientes": "lista dos itens visiveis separados por virgula",
+  "receitas": "2 receitas simples com esses ingredientes, uma por linha comecando com •",
+  "compras": "5 itens que estao faltando para complementar as receitas, um por linha comecando com •"
+}` }
+        ]
+      }]
+    });
+
+    const text = response.content.find(b => b.type === 'text')?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    res.json(JSON.parse(clean));
+
+  } catch (error) {
+    console.error('Erro vision-preview:', error.message);
+    res.status(500).json({ error: 'Erro ao analisar imagem.' });
+  }
+});
+
 app.post('/gerar-receita', async(req, res) => {
   try {
     console.log("Entrou na rota /gerar-receita ")
