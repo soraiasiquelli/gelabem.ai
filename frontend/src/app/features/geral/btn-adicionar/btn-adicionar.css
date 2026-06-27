@@ -1,11 +1,11 @@
+:host {
+    display: flex;
+    flex: 1;
+}
+
 .btnAdicionar{
-    position: fixed;
-    left: 20px;
-    right: 20px;
-    bottom: 94px;
-    z-index: 20;
     display: block;
-    width: auto;
+    width: 100%;
     height: 56px;
     background-color: #2ec4a3;
     color: white;

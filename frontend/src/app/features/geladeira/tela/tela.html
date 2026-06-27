@@ -50,19 +50,17 @@
     (selecionarItem)="toggleSelecaoItem($event)">
   </app-lista-itens>
 
-  @if (!modoSelecao) {
-    <app-btn-adicionar [routerLink]="['/armazenamento', tipo, 'adicionar']"></app-btn-adicionar>
-  }
-
   @if (mensagemSelecao) {
     <p class="mensagemSelecao">{{ mensagemSelecao }}</p>
   }
 
-  <div class="acoesReceita">
+  <div class="acoesFixas">
     @if (modoSelecao) {
       <button class="btn-cancelar" (click)="cancelarSelecao()">
         Cancelar
       </button>
+    } @else {
+      <app-btn-adicionar [routerLink]="['/armazenamento', tipo, 'adicionar']"></app-btn-adicionar>
     }
 
     <button class="btn-receita" (click)="gerarReceita(tipo)">
