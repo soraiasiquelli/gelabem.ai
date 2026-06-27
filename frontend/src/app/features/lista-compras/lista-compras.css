@@ -1,0 +1,239 @@
+:host {
+  display: block;
+}
+
+.mainLista {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 48px 20px 140px;
+  background: linear-gradient(160deg, #0d2550 0%, #0a3a6e 50%, #0d5494 100%);
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btnVoltar {
+  width: 38px; height: 38px;
+  min-width: 38px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btnVoltar:hover { background: rgba(255,255,255,0.2); }
+.btnVoltar:active { transform: scale(0.92); }
+
+.topo h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+.topo p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: rgba(160, 210, 255, 0.6);
+}
+
+.formNovoItem {
+  display: flex;
+  gap: 8px;
+}
+
+.inputNome {
+  flex: 1;
+  min-width: 0;
+}
+
+.inputNome,
+.inputQuantidade,
+.selectUnidade {
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid rgba(125, 216, 255, 0.25);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+.inputNome::placeholder { color: rgba(255,255,255,0.45); }
+
+.inputQuantidade {
+  width: 60px;
+  padding: 0 6px;
+  text-align: center;
+}
+
+.selectUnidade {
+  width: 64px;
+  padding: 0 4px;
+}
+
+.formNovoItem .btnAdicionar {
+  width: 46px; height: 46px;
+  min-width: 46px;
+  border-radius: 12px;
+  border: none;
+  background: #2ec4a3;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.formNovoItem .btnAdicionar:hover { opacity: 0.9; }
+.formNovoItem .btnAdicionar:active { transform: scale(0.94); }
+.formNovoItem .btnAdicionar:disabled { opacity: 0.5; cursor: default; }
+
+.sugestoes {
+  background: rgba(255, 180, 50, 0.08);
+  border: 1px solid rgba(255, 180, 50, 0.3);
+  border-radius: 18px;
+  padding: 14px 16px;
+}
+
+.sugestoesTitulo {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #ffb432;
+}
+
+.listaSugestoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.itemSugestao {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 180, 50, 0.07);
+}
+.itemSugestao .itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.itemSugestao .itemNome {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 220, 150, 0.9);
+}
+.itemSugestao .itemQuantidade {
+  font-size: 11px;
+  color: rgba(255, 180, 50, 0.7);
+}
+
+.addSugestaoBtn {
+  width: 28px; height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #2ec4a3;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.addSugestaoBtn:disabled { opacity: 0.5; cursor: default; }
+
+.status {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 24px;
+}
+.status.erro { color: #ffb4b4; }
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.itemLista {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(125, 216, 255, 0.15);
+  transition: opacity 0.2s, background 0.2s;
+}
+.itemLista.comprado {
+  opacity: 0.5;
+}
+
+.checkBtn {
+  width: 26px; height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(125, 216, 255, 0.4);
+  background: rgba(125, 216, 255, 0.08);
+  color: #2ec4a3;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.itemNome {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+.itemLista.comprado .itemNome {
+  text-decoration: line-through;
+}
+
+.itemQuantidade {
+  font-size: 12px;
+  color: rgba(160, 210, 255, 0.6);
+}
+
+.removerBtn {
+  width: 28px; height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 100, 100, 0.12);
+  color: rgba(255, 150, 150, 0.8);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.removerBtn:hover { background: rgba(255, 100, 100, 0.22); }

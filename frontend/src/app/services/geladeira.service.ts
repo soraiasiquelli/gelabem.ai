@@ -40,6 +40,10 @@ export class GeladeiraService {
         return this.http.get<{id: number, nome: string}[]>(`${this.api}/categorias`)
     }
 
+    getItensAcabandoBD(usuarioId: number): Observable<Item[]>{
+        return this.http.get<Item[]>(`${this.api}/itens-acabando/${usuarioId}`)
+    }
+
 
     /*lista comeca vazia*/
     private itensSubject = new BehaviorSubject<Item[]> (

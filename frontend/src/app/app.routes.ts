@@ -10,6 +10,7 @@ import { EscolherArmazenamento } from './features/escolher-armazenamento/escolhe
 import { Planos } from './features/planos/planos';
 import { LerNotafiscal } from './features/ler-notafiscal/ler-notafiscal';
 import { Receita } from './features/geladeira/receita/receita';
+import { ListaCompras } from './features/lista-compras/lista-compras';
 
 export const routes: Routes = [
     {
@@ -58,6 +59,11 @@ export const routes: Routes = [
     {
         path: 'ler-nota-fiscal',
         component: LerNotafiscal,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'lista-compras',
+        component: ListaCompras,
         canActivate: [authGuard]
     }
 ];

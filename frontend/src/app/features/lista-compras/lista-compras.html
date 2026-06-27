@@ -1,0 +1,82 @@
+<main class="mainLista">
+
+  <div class="topo">
+    <button class="btnVoltar" type="button" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <div>
+      <h1>Lista de Compras</h1>
+      <p>{{ itens.length }} item(s) na lista</p>
+    </div>
+  </div>
+
+  <form class="formNovoItem" (ngSubmit)="adicionarItem()">
+    <input
+      class="inputNome"
+      type="text"
+      placeholder="Adicionar item..."
+      [(ngModel)]="novoNome"
+      name="nome"
+      required />
+    <input
+      class="inputQuantidade"
+      type="number"
+      min="1"
+      [(ngModel)]="novaQuantidade"
+      name="quantidade" />
+    <select class="selectUnidade" [(ngModel)]="novaUnidade" name="unidade">
+      <option value="un">un</option>
+      <option value="kg">kg</option>
+      <option value="g">g</option>
+      <option value="L">L</option>
+      <option value="mL">mL</option>
+      <option value="cx">cx</option>
+      <option value="pct">pct</option>
+    </select>
+    <button class="btnAdicionar" type="submit" [disabled]="salvando">+</button>
+  </form>
+
+  @if (sugestoes.length > 0) {
+    <div class="sugestoes">
+      <p class="sugestoesTitulo">⚠️ Estoque baixo</p>
+      <ul class="listaSugestoes">
+        @for (item of sugestoes; track item.id) {
+          <li class="itemSugestao">
+            <div class="itemInfo">
+              <span class="itemNome">{{ item.nome }}</span>
+              <span class="itemQuantidade">restam {{ item.quantidade }} {{ item.unidade }}</span>
+            </div>
+            <button class="addSugestaoBtn" type="button" [disabled]="salvando" (click)="adicionarSugestao(item)">+</button>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+
+  @if (carregando) {
+    <p class="status">Carregando...</p>
+  } @else if (erro) {
+    <p class="status erro">{{ erro }}</p>
+  } @else if (!itens.length) {
+    <p class="status">Sua lista de compras está vazia.</p>
+  } @else {
+    <ul class="lista">
+      @for (item of itens; track item.id) {
+        <li class="itemLista" [class.comprado]="item.comprado">
+          <button class="checkBtn" type="button" (click)="toggleComprado(item)">
+            @if (item.comprado) { ✓ }
+          </button>
+          <div class="itemInfo">
+            <span class="itemNome">{{ item.nome }}</span>
+            <span class="itemQuantidade">{{ item.quantidade }} {{ item.unidade }}</span>
+          </div>
+          <button class="removerBtn" type="button" (click)="removerItem(item)">✕</button>
+        </li>
+      }
+    </ul>
+  }
+
+</main>

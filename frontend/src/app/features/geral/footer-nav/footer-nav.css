@@ -1,0 +1,45 @@
+.footerNav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 70px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(8, 22, 48, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(125, 216, 255, 0.15);
+  font-family: 'Nunito', sans-serif;
+}
+
+.footerBtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 100%;
+  text-decoration: none;
+  color: rgba(160, 210, 255, 0.55);
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+.footerBtn:active { transform: scale(0.94); }
+
+.footerIcone {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.footerLabel {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.footerBtn.ativo {
+  color: #7dd8ff;
+}

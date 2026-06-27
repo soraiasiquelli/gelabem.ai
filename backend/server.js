@@ -22,6 +22,7 @@ const Item = models.Item;
 const Categoria = models.Categoria
 const Usuario = models.Usuario
 const Local = models.Local
+const ListaCompras = models.ListaCompras
 const app = express();
 
 app.use(cors())
@@ -564,6 +565,61 @@ app.post('/usuarios/:usuarioId/armazenamentos', async (req, res) => {
 
 app.delete('/itens/:id', async (req, res) => {
   await Item.destroy({ where: { id: req.params.id } });
+  res.json({ message: 'Item removido' });
+});
+
+app.get('/lista-compras', async (req, res) => {
+  try {
+    const usuarioId = Number(req.query.usuario_id)
+    const itens = await ListaCompras.findAll({
+      where: { usuario_id: usuarioId },
+      order: [['comprado', 'ASC'], ['id', 'DESC']]
+    })
+    res.json(itens)
+  } catch (error) {
+    console.log("ERRO NO GET /LISTA-COMPRAS:", error);
+    res.status(500).json({ error: "Erro ao buscar lista de compras" });
+  }
+});
+
+app.post('/lista-compras', async (req, res) => {
+  try {
+    const item = await ListaCompras.create({
+      nome: req.body.nome,
+      quantidade: req.body.quantidade || 1,
+      unidade: req.body.unidade || 'un',
+      usuario_id: Number(req.body.usuario_id)
+    });
+    res.json(item);
+  } catch (err) {
+    console.error("🔥 ERRO NO CREATE LISTA-COMPRAS:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/lista-compras/:id', async (req, res) => {
+  try {
+    const item = await ListaCompras.findByPk(req.params.id)
+    if (!item) {
+      return res.status(404).json({ error: "Item não encontrado" })
+    }
+
+    const dados = {}
+    if (req.body.nome !== undefined) dados.nome = req.body.nome
+    if (req.body.quantidade !== undefined) dados.quantidade = req.body.quantidade
+    if (req.body.unidade !== undefined) dados.unidade = req.body.unidade
+    if (req.body.comprado !== undefined) dados.comprado = req.body.comprado
+
+    await item.update(dados);
+    res.json(item);
+  } catch (err) {
+    console.error("🔥 ERRO NO UPDATE LISTA-COMPRAS:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/lista-compras/:id', async (req, res) => {
+  await ListaCompras.destroy({ where: { id: req.params.id } });
   res.json({ message: 'Item removido' });
 });
 
