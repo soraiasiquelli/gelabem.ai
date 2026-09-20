@@ -842,66 +842,122 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, no formato:
 })
 
 // Assistente de cozinha — chat que conhece os alimentos do usuário
-app.post('/chat', auth, async (req, res) => {
-  try {
-    const mensagem = (req.body.mensagem || '').trim()
-    if (!mensagem) {
-      return res.status(400).json({ error: "Escreva uma mensagem." })
-    }
+const MODELO_CHAT = 'claude-haiku-4-5'
+const MAX_TOKENS_CHAT = 500
 
-    const usuario = await Usuario.findByPk(req.usuarioId)
-    if (!usuario) {
-      return res.status(401).json({ error: "Usuário não encontrado." })
-    }
-    verificarCota(usuario)
+// Valida a mensagem, confere a cota e monta o que vai pra IA. Lança ErroCotaIA / erros com .status.
+async function prepararChat(req) {
+  const mensagem = (req.body.mensagem || '').trim()
+  if (!mensagem) {
+    const e = new Error("Escreva uma mensagem.")
+    e.status = 400
+    throw e
+  }
 
-    const historico = Array.isArray(req.body.historico) ? req.body.historico.slice(-10) : []
+  const usuario = await Usuario.findByPk(req.usuarioId)
+  if (!usuario) {
+    const e = new Error("Usuário não encontrado.")
+    e.status = 401
+    throw e
+  }
+  verificarCota(usuario)
 
-    const itens = await Item.findAll({ where: { usuario_id: { [Op.in]: req.idsCasa } } })
-    const listaItens = itens.length
-      ? descreverItens(itens).replace(/\n/g, ', ')
-      : 'nenhum alimento cadastrado ainda'
+  const historico = Array.isArray(req.body.historico) ? req.body.historico.slice(-10) : []
 
-    const system = `Você é o assistente de cozinha do Gelabem. Ajude o usuário a decidir o que cozinhar usando o que ele já tem em casa.
+  const itens = await Item.findAll({ where: { usuario_id: { [Op.in]: req.idsCasa } } })
+  const listaItens = itens.length
+    ? descreverItens(itens).replace(/\n/g, ', ')
+    : 'nenhum alimento cadastrado ainda'
+
+  const system = `Você é o assistente de cozinha do Gelabem. Ajude o usuário a decidir o que cozinhar usando o que ele já tem em casa.
 Alimentos que o usuário tem cadastrados agora: ${listaItens}.
 ${REGRA_VALIDADE}
 Regras:
-- respostas curtas, diretas e em português do Brasil, tom amigável e sem infantilizar
-- quando sugerir uma receita, estruture com um título, o tempo estimado e o modo de preparo em passos curtos
+- respostas curtas e diretas, com no máximo umas 120 palavras, em português do Brasil, tom amigável e sem infantilizar
+- quando sugerir uma receita, estruture com um título, o tempo estimado e o modo de preparo em poucos passos curtos
 - se faltar informação (tempo disponível, quantas pessoas, tipo de refeição), pergunte antes de sugerir
 - nunca invente que o usuário tem um ingrediente que não está na lista acima
 - se a lista de alimentos estiver vazia, sugira que ele fotografe a cozinha ou adicione itens manualmente`
 
-    const messages = historico
-      .filter(m => m && m.texto)
-      .map(m => ({ role: m.autor === 'assistente' ? 'assistant' : 'user', content: String(m.texto) }))
+  const messages = historico
+    .filter(m => m && m.texto)
+    .map(m => ({ role: m.autor === 'assistente' ? 'assistant' : 'user', content: String(m.texto) }))
 
-    messages.push({ role: 'user', content: mensagem })
+  messages.push({ role: 'user', content: mensagem })
 
-    const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 800,
-      system,
-      messages
-    })
+  return { usuario, params: { model: MODELO_CHAT, max_tokens: MAX_TOKENS_CHAT, system, messages } }
+}
 
-    const resposta = response.content.find(b => b.type === 'text')?.text || 'Não consegui responder agora, tenta de novo.'
+function erroDoChat(error) {
+  if (error instanceof ErroCotaIA) return { status: 403, mensagem: error.message }
+  if (error.status === 400 || error.status === 401) {
+    if (error.message && !error.error) return { status: error.status, mensagem: error.message }
+  }
+  console.error("ERRO EM /chat", error)
+  const sobrecarregado = error.status === 529 || error.error?.error?.type === 'overloaded_error'
+  return {
+    status: sobrecarregado ? 503 : 500,
+    mensagem: sobrecarregado
+      ? "O assistente está sobrecarregado no momento. Tente novamente em instantes."
+      : "Não foi possível responder agora."
+  }
+}
+
+app.post('/chat', auth, async (req, res) => {
+  try {
+    const { usuario, params } = await prepararChat(req)
+
+    const response = await anthropic.messages.create(params)
+
+    const resposta = response.content.find(b => b.type === 'text')?.text || 'Não consegui responder agora, tente de novo.'
 
     await registrarUso(usuario)
 
     res.json({ resposta, ...resumoCota(usuario) })
 
   } catch (error) {
-    if (error instanceof ErroCotaIA) {
-      return res.status(403).json({ error: error.message })
-    }
-    console.error("ERRO EM /chat", error)
-    const sobrecarregado = error.status === 529 || error.error?.error?.type === 'overloaded_error'
-    res.status(sobrecarregado ? 503 : 500).json({
-      error: sobrecarregado
-        ? "O assistente está sobrecarregado no momento. Tente novamente em instantes."
-        : "Não foi possível responder agora."
+    const { status, mensagem } = erroDoChat(error)
+    res.status(status).json({ error: mensagem })
+  }
+})
+
+// Mesmo chat, mas a resposta vai chegando aos poucos (Server-Sent Events): o usuário vê
+// o texto aparecer em ~1s em vez de esperar a resposta inteira.
+app.post('/chat/stream', auth, async (req, res) => {
+  let stream = null
+  try {
+    // erros de validação/cota saem como JSON normal, antes de abrir o stream
+    const { usuario, params } = await prepararChat(req)
+
+    res.status(200).set({
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no'
     })
+    res.flushHeaders()
+
+    const enviar = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`)
+
+    stream = anthropic.messages.stream(params)
+    res.on('close', () => { if (!res.writableEnded) stream.abort() })
+
+    let recebeuTexto = false
+    stream.on('text', (t) => { recebeuTexto = true; enviar({ t }) })
+
+    await stream.finalMessage()
+
+    if (!recebeuTexto) enviar({ t: 'Não consegui responder agora, tente de novo.' })
+    await registrarUso(usuario)
+    enviar({ fim: true, ...resumoCota(usuario) })
+    res.end()
+
+  } catch (error) {
+    if (res.writableEnded || res.destroyed) return
+    const { status, mensagem } = erroDoChat(error)
+    if (!res.headersSent) return res.status(status).json({ error: mensagem })
+    res.write(`data: ${JSON.stringify({ erro: mensagem })}\n\n`)
+    res.end()
   }
 })
 

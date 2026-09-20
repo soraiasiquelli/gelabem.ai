@@ -1,4 +1,5 @@
-import { AfterViewChecked, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChatService, MensagemChat } from '../../services/chat.service';
 
@@ -27,11 +28,17 @@ export class Assistente implements AfterViewChecked {
 
   mensagemAtual = ''
   enviando = false
+  // true até chegar o primeiro pedaço da resposta (mostra os pontinhos "digitando")
+  aguardandoResposta = false
   erro = ''
 
   private deveRolar = false
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   ngAfterViewChecked() {
     if (this.deveRolar && this.scrollArea) {
@@ -48,7 +55,7 @@ export class Assistente implements AfterViewChecked {
     this.enviar(this.mensagemAtual)
   }
 
-  enviar(texto: string) {
+  async enviar(texto: string) {
     const mensagem = texto.trim()
     if (!mensagem || this.enviando) return
 
@@ -56,20 +63,36 @@ export class Assistente implements AfterViewChecked {
     this.mensagens.push({ autor: 'usuario', texto: mensagem })
     this.mensagemAtual = ''
     this.enviando = true
+    this.aguardandoResposta = true
     this.erro = ''
     this.deveRolar = true
 
-    this.chatService.enviar(mensagem, historico).subscribe({
-      next: (res) => {
-        this.mensagens.push({ autor: 'assistente', texto: res.resposta })
-        this.enviando = false
+    let resposta: MensagemChat | null = null
+
+    try {
+      await this.chatService.enviarStream(mensagem, historico, (pedaco) => {
+        if (!resposta) {
+          resposta = { autor: 'assistente', texto: '' }
+          this.mensagens.push(resposta)
+          this.aguardandoResposta = false
+        }
+        resposta.texto += pedaco
         this.deveRolar = true
-      },
-      error: (err) => {
-        this.erro = err.error?.error || 'Não conseguimos responder agora. Tenta de novo.'
-        this.enviando = false
-        this.deveRolar = true
+        this.cdr.detectChanges()
+      })
+    } catch (err: any) {
+      if (err?.status === 401) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('usuario')
+        this.router.navigate(['/login'])
+        return
       }
-    })
+      this.erro = err?.message || 'Não conseguimos responder agora. Tenta de novo.'
+    } finally {
+      this.enviando = false
+      this.aguardandoResposta = false
+      this.deveRolar = true
+      this.cdr.detectChanges()
+    }
   }
 }
