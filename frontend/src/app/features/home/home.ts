@@ -1,17 +1,35 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { GeladeiraService } from '../../services/geladeira.service';
+import { GeladeiraService, ItemVencendo, Receita } from '../../services/geladeira.service';
 import { LoginService } from '../../services/auth/login.service';
+import { ListaComprasService } from '../../services/lista-compras.service';
+import { FeedbackService } from '../../services/feedback.service';
+import { quandoVence } from '../../utils/validade';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { Observable, map, of, switchMap } from 'rxjs';
-import { HttpClient } from '@angular/common/http'; // ← adiciona
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 const TIPOS_DISPONIVEIS = [
-  { nome: 'geladeira', label: 'Geladeira', icone: '🧊' },
-  { nome: 'freezer', label: 'Freezer', icone: '❄️' },
-  { nome: 'despensa', label: 'Despensa', icone: '🏺' },
-  { nome: 'frigobar', label: 'Frigobar', icone: '🧃' },
+  { nome: 'geladeira', label: 'Geladeira', icone: '🧊', desc: 'Frescos' },
+  { nome: 'freezer', label: 'Freezer', icone: '❄️', desc: 'Congelados' },
+  { nome: 'despensa', label: 'Despensa', icone: '🏺', desc: 'Secos e enlatados' },
+  { nome: 'frigobar', label: 'Frigobar', icone: '🧃', desc: 'Bebidas e petiscos' },
 ]
+
+/** o anel conta até 7 dias; passou disso, o alimento nem entra em "vence em breve" */
+const JANELA_ANEL_DIAS = 7
+const RAIO_ANEL = 26
+const CIRCUNFERENCIA_ANEL = 2 * Math.PI * RAIO_ANEL
+
+export interface AnelValidade {
+  /** comprimento do arco preenchido (stroke-dasharray) */
+  arco: number
+  circunferencia: number
+  cor: string
+  numero: string
+  descricao: string
+}
 
 @Component({
   selector: 'app-home',
@@ -29,23 +47,87 @@ export class Home {
   salvando = false
 
   itensAcabando: any[] = []
-  mostrarAlerta = true
+
+  /** vencidos ou que vencem nos próximos dias, do que vence primeiro ao último */
+  itensVencendo: ItemVencendo[] = []
+  readonly maxVencendoVisiveis = 6
+  quandoVence = quandoVence
+
+  sugestoes: Receita[] = []
+  carregandoSugestoes = true
+  erroSugestoes = ''
+
+  totalListaCompras = 0
 
   fecharAlerta() {
     this.itensAcabando = []
   }
 
-  private api = 'http://localhost:3000' // ← ou sua URL de produção
+  private api = environment.apiUrl
   private usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
+
+  get primeiroNome(): string {
+    const nome = this.usuario?.nome || ''
+    return nome.split(' ')[0] || 'por aí'
+  }
+
+  get inicial(): string {
+    return (this.usuario?.nome || '?').trim().charAt(0).toUpperCase()
+  }
+
+  get vencendoVisiveis(): ItemVencendo[] {
+    return this.itensVencendo.slice(0, this.maxVencendoVisiveis)
+  }
 
   constructor(
     private geladeiraService: GeladeiraService,
     private loginService: LoginService,
+    private listaComprasService: ListaComprasService,
+    private feedbackService: FeedbackService,
     private cdr: ChangeDetectorRef,
-    private http: HttpClient // ← adiciona
+    private http: HttpClient
   ) {
     this.carregarLocais()
-    this.carregarItensAcabando() // ← adiciona
+    this.carregarItensVencendo()
+    this.carregarItensAcabando()
+    this.carregarSugestoes()
+    this.carregarListaCompras()
+  }
+
+  sugerirMelhoria() {
+    this.feedbackService.abrir()
+  }
+
+  /**
+   * Anel de contagem regressiva: o arco é o tempo que ainda resta (esvazia conforme a validade chega).
+   * Já vencido ou vencendo hoje, o anel fica cheio e vermelho: é o único estado que grita.
+   */
+  anel(item: ItemVencendo): AnelValidade {
+    const dias = item.dias_restantes
+    const urgente = dias <= 0
+    const fracao = urgente ? 1 : Math.max(0.1, Math.min(1, dias / JANELA_ANEL_DIAS))
+
+    return {
+      arco: CIRCUNFERENCIA_ANEL * fracao,
+      circunferencia: CIRCUNFERENCIA_ANEL,
+      cor: urgente ? 'var(--erro)' : 'var(--ambar)',
+      numero: dias < 0 ? '!' : String(dias),
+      descricao: `${item.nome} vence ${this.quandoVence(item.data_validade)}`
+    }
+  }
+
+  carregarItensVencendo() {
+    if (!this.usuario) return
+
+    this.geladeiraService.getItensVencendoBD().subscribe({
+      next: (itens) => {
+        this.itensVencendo = itens
+        this.cdr.markForCheck()
+      },
+      error: (err) => {
+        console.error('Erro ao buscar itens que vencem em breve:', err)
+      }
+    })
   }
 
   carregarItensAcabando() {
@@ -55,6 +137,7 @@ export class Home {
       .subscribe({
         next: (itens) => {
           this.itensAcabando = itens
+          this.cdr.markForCheck()
         },
         error: (err) => {
           console.error('Erro ao buscar itens acabando:', err)
@@ -79,6 +162,41 @@ export class Home {
           : of(0)
       })
     )
+  }
+
+  carregarSugestoes() {
+    if (!this.usuario) {
+      this.carregandoSugestoes = false
+      return
+    }
+
+    this.carregandoSugestoes = true
+    this.erroSugestoes = ''
+
+    this.geladeiraService.sugerirReceitas().subscribe({
+      next: (res) => {
+        this.sugestoes = (res.receitas || []).slice(0, 3)
+        this.carregandoSugestoes = false
+        this.cdr.markForCheck()
+      },
+      error: (err) => {
+        // 404 = cozinha vazia ainda, não é bem um erro, é um estado esperado
+        this.erroSugestoes = err.status === 404 ? '' : 'Não conseguimos buscar sugestões agora.'
+        this.sugestoes = []
+        this.carregandoSugestoes = false
+        this.cdr.markForCheck()
+      }
+    })
+  }
+
+  carregarListaCompras() {
+    this.listaComprasService.getItensBD().subscribe({
+      next: (itens) => {
+        this.totalListaCompras = itens.filter(i => !i.comprado).length
+        this.cdr.markForCheck()
+      },
+      error: () => {}
+    })
   }
 
   toggleOpcoes() {

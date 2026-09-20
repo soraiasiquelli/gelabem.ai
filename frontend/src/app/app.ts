@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterNav } from './features/geral/footer-nav/footer-nav';
+import { FeedbackModal } from './features/geral/feedback-modal/feedback-modal';
 
-const ROTAS_SEM_FOOTER = ['/', '/login', '/criar-conta', '/escolher-armazenamento', '/planos'];
+const ROTAS_SEM_FOOTER = ['/', '/login', '/criar-conta', '/escolher-armazenamento', '/planos', '/comecar'];
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FooterNav],
+  imports: [RouterOutlet, FooterNav, FeedbackModal],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

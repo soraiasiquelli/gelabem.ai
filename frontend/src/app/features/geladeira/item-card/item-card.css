@@ -3,24 +3,16 @@
   width: 100%;
 }
 
+/* linha dentro da superfície da categoria; sem borda nem sombra próprias */
 .cardItem {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(125, 216, 255, 0.15);
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: background 0.18s, border-color 0.18s;
-}
-.cardItem:hover {
-  background: rgba(125, 216, 255, 0.09);
-  border-color: rgba(125, 216, 255, 0.28);
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: transparent;
+  transition: background 0.15s ease;
 }
 
 /* ── Info ── */
@@ -28,109 +20,142 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .nomeItem {
   margin: 0;
-  font-size: 15px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.1px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tinta);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .detalhesItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .quantItem {
   display: inline-flex;
   align-items: center;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 700;
-  color: #4cc38a;
-  background: rgba(76, 195, 138, 0.15);
-  border: 1px solid rgba(76, 195, 138, 0.25);
+  color: var(--verde-escuro);
+  background: var(--verde-10);
   padding: 3px 10px;
-  border-radius: 999px;
-  letter-spacing: 0.03em;
+  border-radius: var(--raio-pilula);
+}
+
+/* ── Validade ── */
+.chipValidade {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--raio-pilula);
+  white-space: nowrap;
+  color: var(--tinta-suave);
+  background: var(--linha-clara);
+}
+.chipValidade--breve {
+  color: var(--ambar-texto);
+  background: var(--ambar-15);
+}
+.chipValidade--hoje,
+.chipValidade--vencido {
+  color: var(--erro);
+  background: var(--erro-10);
 }
 
 /* ── Ações ── */
 .acoesItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-1);
   flex-shrink: 0;
 }
 
-/* ── Botão editar ── */
-.btnEditar {
+/* baixa rápida: "−" usei um, "+" comprei mais um */
+.passoItem {
+  display: flex;
+  gap: 6px;
+  margin-right: var(--sp-1);
+}
+
+.btnPasso {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--verde);
+  border-radius: 11px;
+  background: transparent;
+  color: var(--verde);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+.btnPasso + .btnPasso {
+  background: var(--verde);
+  color: #fff;
+}
+.btnPasso:hover { background: var(--verde-10); }
+.btnPasso + .btnPasso:hover { background: var(--verde-escuro); }
+.btnPasso:active { transform: scale(0.92); }
+
+.btnEditar, .btnRemover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(125, 216, 255, 0.25);
-  border-radius: 10px;
-  background: rgba(125, 216, 255, 0.1);
-  color: #7dd8ff;
-  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--tinta-suave);
   flex-shrink: 0;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
 }
+.btnEditar:active, .btnRemover:active { transform: scale(0.92); }
+.btnEditar svg, .btnRemover svg { width: 18px; height: 18px; }
+
 .btnEditar:hover {
-  background: rgba(125, 216, 255, 0.2);
-  border-color: rgba(125, 216, 255, 0.45);
-}
-.btnEditar:active { transform: scale(0.92); }
-.btnEditar svg { width: 15px; height: 15px; }
-
-/* ── Botão remover ── */
-.btnRemover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  border-radius: 10px;
-  background: rgba(239, 68, 68, 0.1);
-  color: #f87171;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  background: var(--linha-clara);
+  color: var(--tinta);
 }
 .btnRemover:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.45);
+  background: var(--erro-10);
+  color: var(--erro);
 }
-.btnRemover:active { transform: scale(0.92); }
-.btnRemover svg { width: 15px; height: 15px; }
 
 /* ── Seleção (gerar receita) ── */
 .cardItem.selecionavel {
   cursor: pointer;
 }
 .cardItem.selecionado {
-  background: rgba(76, 195, 138, 0.14);
-  border-color: rgba(76, 195, 138, 0.5);
+  background: var(--verde-10);
 }
 
 .checkboxItem {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px; height: 26px;
-  min-width: 26px;
-  border-radius: 8px;
-  border: 2px solid rgba(125, 216, 255, 0.4);
-  background: rgba(255, 255, 255, 0.05);
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--linha);
   color: #fff;
   flex-shrink: 0;
   transition: background 0.15s, border-color 0.15s;
 }
-.checkboxItem svg { width: 14px; height: 14px; }
+.checkboxItem svg { width: 15px; height: 15px; }
 .checkboxItem.marcado {
-  background: #1e7a4a;
-  border-color: #4cc38a;
+  background: var(--verde);
+  border-color: var(--verde);
 }

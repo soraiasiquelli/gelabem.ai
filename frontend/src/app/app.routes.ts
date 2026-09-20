@@ -7,10 +7,13 @@ import { Login } from './features/login/login';
 import { CriarConta } from './features/criar-conta/criar-conta';
 import { authGuard } from './guards/auth.guard';
 import { EscolherArmazenamento } from './features/escolher-armazenamento/escolher-armazenamento';
-import { Planos } from './features/planos/planos';
 import { LerNotafiscal } from './features/ler-notafiscal/ler-notafiscal';
 import { Receita } from './features/geladeira/receita/receita';
+import { Receitas } from './features/receitas/receitas';
+import { Assistente } from './features/assistente/assistente';
 import { ListaCompras } from './features/lista-compras/lista-compras';
+import { Perfil } from './features/perfil/perfil';
+import { Comecar } from './features/comecar/comecar';
 
 export const routes: Routes = [
     {
@@ -42,6 +45,16 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'receitas',
+        component: Receitas,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'assistente',
+        component: Assistente,
+        canActivate: [authGuard]
+    },
+    {
         path: 'criar-conta',
         component: CriarConta
 
@@ -53,10 +66,6 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path: 'planos',
-        component: Planos
-    },
-    {
         path: 'ler-nota-fiscal',
         component: LerNotafiscal,
         canActivate: [authGuard]
@@ -64,6 +73,16 @@ export const routes: Routes = [
     {
         path: 'lista-compras',
         component: ListaCompras,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'perfil',
+        component: Perfil,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'comecar',
+        component: Comecar,
         canActivate: [authGuard]
     }
 ];

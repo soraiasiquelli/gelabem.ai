@@ -5,6 +5,11 @@ import { Usuario, LoginRequest } from '../../models/Usuario.model';
 import { environment } from '../../../environments/environment';
 
 
+export interface SessaoLogin {
+  token: string
+  usuario: { id: number, nome: string, email: string, nivel: string }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,6 +29,16 @@ export class LoginService {
 
   login(usuario: LoginRequest) {
     return this.http.post(`${this.api}/login`, usuario)
+  }
+
+  /** `credential` é o ID token entregue pelo Google Identity Services; `novo` = conta criada agora */
+  loginGoogle(credential: string) {
+    return this.http.post<SessaoLogin & { novo: boolean }>(`${this.api}/login/google`, { credential })
+  }
+
+  salvarSessao(sessao: SessaoLogin) {
+    localStorage.setItem('token', sessao.token)
+    localStorage.setItem('usuario', JSON.stringify(sessao.usuario))
   }
 
   salvarArmazenamentos(usuarioId: number, armazenamentos: string[]) {

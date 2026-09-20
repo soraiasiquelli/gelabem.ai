@@ -32,7 +32,16 @@ const Usuario = sequelize.define('Usuario', {
   usos_ia: {
     type: DataTypes.INTEGER,
     defaultValue: 0
-  }
+  },
+
+  // mês (YYYY-MM) a que `usos_ia` se refere; quando vira o mês o contador recomeça
+  usos_ia_mes: DataTypes.STRING(7),
+
+  // casa compartilhada (null = usa o app sozinho)
+  casa_id: DataTypes.INTEGER,
+
+  // preenchido quando a conta foi criada/vinculada pelo login com Google
+  google_id: DataTypes.STRING
 }, {
   tableName: 'usuarios'
 });

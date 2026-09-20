@@ -1,12 +1,41 @@
 <div class="listaItens">
-    @for(item of itens$ | async; track item.id){
-    <app-item-card
-    [item]="item"
-    [selecionavel]="modoSelecao"
-    [selecionado]="isSelecionado(item)"
-    (remover)="removerItem($event)"
-    (editar)="editarItem($event)"
-    (selecionar)="selecionarItem.emit($event)">
-    </app-item-card>
-    }
+  @for (grupo of grupos$ | async; track grupo.nome) {
+    <div class="grupo">
+      @if (grupo.nome) {
+        <p class="grupo-titulo">
+          <span aria-hidden="true">{{ grupo.icone }}</span> {{ grupo.nome }}
+        </p>
+      }
+      <div class="grupo-itens">
+        @for (item of grupo.itens; track item.id) {
+          <app-item-card
+            [item]="item"
+            [selecionavel]="modoSelecao"
+            [selecionado]="isSelecionado(item)"
+            (remover)="removerItem($event)"
+            (editar)="editarItem($event)"
+            (consumir)="consumirItem($event)"
+            (repor)="reporItem($event)"
+            (selecionar)="selecionarItem.emit($event)">
+          </app-item-card>
+        }
+      </div>
+    </div>
+  } @empty {
+    <div class="listaVazia">
+      <span class="listaVazia-icone" aria-hidden="true">🧺</span>
+      <p class="listaVazia-titulo">Ainda não tem nada por aqui</p>
+      <p class="listaVazia-sub">Fotografe o que você tem ou adicione um item manualmente pra começar.</p>
+    </div>
+  }
 </div>
+
+@if (aviso) {
+  <div class="aviso" role="status">
+    <span class="aviso-texto">{{ aviso.texto }}</span>
+    @if (aviso.item) {
+      <button class="aviso-acao" type="button" (click)="adicionarNaListaDeCompras()">🛒 Adicionar à lista</button>
+    }
+    <button class="aviso-fechar" type="button" (click)="fecharAviso()" aria-label="Fechar aviso">✕</button>
+  </div>
+}

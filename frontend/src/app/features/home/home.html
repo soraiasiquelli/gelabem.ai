@@ -1,145 +1,178 @@
-<header>
-  <div class="header-top">
-    <div class="logo-row">
-      <div class="logo-icon">
-        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="20" y1="4" x2="20" y2="36" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="4" y1="20" x2="36" y2="20" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="7.5" y1="7.5" x2="32.5" y2="32.5" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="32.5" y1="7.5" x2="7.5" y2="32.5" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <circle cx="20" cy="20" r="3.5" fill="#b2ebf2"/>
-        </svg>
-      </div>
-      <h1>Gela<span>bem</span></h1>
-    </div>
-    <div class="avatar">GB</div>
-  </div>
-  <p>O que você quer verificar hoje?</p>
-</header>
+<main class="home">
 
-@if (itensAcabando.length > 0) {
-<div class="alerta-acabando">
-  <div class="alerta-header">
-    <div class="alerta-icone">⚠️</div>
-    <div class="alerta-texto">
-      <span class="alerta-titulo">Itens acabando</span>
-      <span class="alerta-sub">{{ itensAcabando.length }} item(s) precisam de atenção</span>
+  <header class="topo">
+    <div class="topo-texto">
+      <p class="saudacao">Oi, {{ primeiroNome }} 👋</p>
+      <h1>O que vamos cozinhar hoje?</h1>
     </div>
-    <button class="alerta-fechar" (click)="fecharAlerta()">✕</button>
-  </div>
-  <div class="alerta-lista">
-    @for (item of itensAcabando; track item.id) {
-      <div class="alerta-item">
-        <span class="alerta-item-nome">{{ item.nome }}</span>
-        <span class="alerta-item-quant">{{ item.quantidade }} {{ item.unidade }}</span>
-      </div>
-    }
-  </div>
-</div>
-}
+    <a class="avatar" routerLink="/perfil" aria-label="Minha conta">{{ inicial }}</a>
+  </header>
 
-<p class="section-label">Meus armazenamentos</p>
+  <!-- Locais de armazenamento -->
+  @if (locais$ | async; as locais) {
+    <section class="locais" aria-label="Minha cozinha">
+      @for (tipo of tiposDisponiveis; track tipo.nome) {
+        @if (locais.includes(tipo.nome)) {
+          <a class="local" [routerLink]="['/armazenamento', tipo.nome]">
+            <span class="local-icone" aria-hidden="true">{{ tipo.icone }}</span>
+            <span class="local-nome">{{ tipo.label }}</span>
+            <span class="local-sub">
+              @if (tipo.nome === 'geladeira') { {{ totalItens$ | async }} alimentos } @else { {{ tipo.desc }} }
+            </span>
+          </a>
+        }
+      }
 
-@if (locais$ | async; as locais) {
-<div class="secaoBlocos">
+      @if (locais.length < tiposDisponiveis.length) {
+        @if (!mostrarOpcoes) {
+          <button class="local local--novo" type="button" (click)="toggleOpcoes()">
+            <span class="local-icone local-icone--novo" aria-hidden="true">+</span>
+            <span class="local-nome">Novo local</span>
+            <span class="local-sub">Freezer, despensa...</span>
+          </button>
+        }
+      }
+    </section>
 
-  @if (locais.includes('geladeira')) {
-  <div class="bloco bloco--geladeira" routerLink="/armazenamento/geladeira">
-    <div class="bloco-decoracoes">
-      <span class="circulo"></span>
-      <span class="diamante"></span>
-    </div>
-    <div class="bloco-icone">🧊</div>
-    <div class="bloco-conteudo">
-      <h2>Geladeira</h2>
-      <p>{{ totalItens$ | async }} itens armazenados</p>
-    </div>
-    <span class="bloco-seta">›</span>
-  </div>
-  }
-
-  @if (locais.includes('freezer')) {
-  <div class="bloco bloco--freezer" routerLink="/armazenamento/freezer">
-    <div class="bloco-decoracoes">
-      <span class="circulo"></span>
-      <span class="diamante"></span>
-    </div>
-    <div class="bloco-icone">❄️</div>
-    <div class="bloco-conteudo">
-      <h2>Freezer</h2>
-      <p>Alimentos congelados</p>
-    </div>
-    <span class="bloco-seta">›</span>
-  </div>
-  }
-
-  @if (locais.includes('despensa')) {
-  <div class="bloco bloco--despensa" routerLink="/armazenamento/despensa">
-    <div class="bloco-decoracoes">
-      <span class="circulo"></span>
-      <span class="diamante"></span>
-    </div>
-    <div class="bloco-icone">🏺</div>
-    <div class="bloco-conteudo">
-      <h2>Despensa</h2>
-      <p>Secos e enlatados</p>
-    </div>
-    <span class="bloco-seta">›</span>
-  </div>
-  }
-
-  @if (locais.includes('frigobar')) {
-  <div class="bloco bloco--frigobar" routerLink="/armazenamento/frigobar">
-    <div class="bloco-decoracoes">
-      <span class="circulo"></span>
-      <span class="diamante"></span>
-    </div>
-    <div class="bloco-icone">🧃</div>
-    <div class="bloco-conteudo">
-      <h2>Frigobar</h2>
-      <p>Bebidas e petiscos</p>
-    </div>
-    <span class="bloco-seta">›</span>
-  </div>
-  }
-
-</div>
-
-@if (locais.length < tiposDisponiveis.length) {
-  <div class="adicionar-armazenamento">
-    @if (!mostrarOpcoes) {
-      <button class="btn-add-armazenamento" type="button" (click)="toggleOpcoes()">
-        + Adicionar tipo de armazenamento
-      </button>
-    } @else {
-      <div class="opcoes-armazenamento">
+    @if (mostrarOpcoes) {
+      <div class="opcoes-local" role="group" aria-label="Escolha o local para adicionar">
+        <span class="opcoes-titulo">Adicionar</span>
         @for (tipo of tiposDisponiveis; track tipo.nome) {
           @if (!locais.includes(tipo.nome)) {
-            <button
-              class="chip-tipo"
-              type="button"
-              [disabled]="salvando"
-              (click)="adicionarTipo(locais, tipo.nome)">
-              {{ tipo.icone }} {{ tipo.label }}
+            <button class="chip-tipo" type="button" [disabled]="salvando" (click)="adicionarTipo(locais, tipo.nome)">
+              <span aria-hidden="true">{{ tipo.icone }}</span> {{ tipo.label }}
             </button>
           }
         }
-        <button class="btn-cancelar-add" type="button" (click)="toggleOpcoes()">Cancelar</button>
+        <button class="chip-cancelar" type="button" (click)="toggleOpcoes()">Cancelar</button>
       </div>
     }
-  </div>
-}
 
+    @if (!locais.length) {
+      <p class="vazio-linha">Você ainda não escolheu onde guarda seus alimentos.</p>
+    }
+  }
 
- <!-- <button class="btn-nota-fiscal" type="button" routerLink="/ler-nota-fiscal">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-    <line x1="16" y1="13" x2="8" y2="13"/>
-    <line x1="16" y1="17" x2="8" y2="17"/>
-    <polyline points="10 9 9 9 8 9"/>
-  </svg>
-  Ler Nota Fiscal
-</button>-->
+  <!-- Banner principal: a foto é o jeito mais rápido de cadastrar -->
+  <a class="banner" routerLink="/armazenamento/geladeira/adicionar">
+    <span class="banner-texto">
+      <span class="banner-titulo">Fotografe sua cozinha</span>
+      <span class="banner-sub">A IA identifica os alimentos e estima a validade.</span>
+      <span class="banner-botao">Abrir a câmera</span>
+    </span>
+    <span class="banner-frutas" aria-hidden="true">
+      <span class="fruta fruta--a">🥑</span>
+      <span class="fruta fruta--b">🍅</span>
+      <span class="fruta fruta--c">🥛</span>
+    </span>
+  </a>
 
-}
+  <!-- A validade é o coração do app -->
+  @if (itensVencendo.length > 0) {
+    <section class="secao" aria-labelledby="titulo-vencendo">
+      <div class="secao-cabecalho">
+        <h2 id="titulo-vencendo">Vence em breve</h2>
+        <a class="secao-link" routerLink="/receitas">Receitas pra aproveitar</a>
+      </div>
+
+      <ul class="vencendo-lista">
+        @for (item of vencendoVisiveis; track item.id) {
+          <li class="vencendo-item">
+            <svg class="anel" viewBox="0 0 64 64" role="img" [attr.aria-label]="anel(item).descricao">
+              <circle class="anel-trilho" cx="32" cy="32" r="26"></circle>
+              <circle
+                class="anel-arco"
+                cx="32" cy="32" r="26"
+                transform="rotate(-90 32 32)"
+                [attr.stroke-dasharray]="anel(item).arco + ' ' + anel(item).circunferencia"
+                [style.stroke]="anel(item).cor"></circle>
+              <text class="anel-numero" x="32" y="33" text-anchor="middle" dominant-baseline="central">{{ anel(item).numero }}</text>
+            </svg>
+            <span class="vencendo-nome">{{ item.nome }}</span>
+            <span class="vencendo-quando" [class.vencendo-quando--urgente]="item.dias_restantes <= 0">{{ quandoVence(item.data_validade) }}</span>
+          </li>
+        }
+        @if (itensVencendo.length > maxVencendoVisiveis) {
+          <li class="vencendo-item vencendo-item--mais">
+            <span class="mais-numero">+{{ itensVencendo.length - maxVencendoVisiveis }}</span>
+            <span class="vencendo-quando">outros</span>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (itensAcabando.length > 0) {
+    <section class="acabando" aria-label="Estoque baixo">
+      <div class="acabando-topo">
+        <div>
+          <h2>Acabando</h2>
+          <p>{{ itensAcabando.length }} alimento(s) precisam de reposição</p>
+        </div>
+        <button class="acabando-fechar" type="button" (click)="fecharAlerta()" aria-label="Fechar aviso">✕</button>
+      </div>
+      <ul class="acabando-lista">
+        @for (item of itensAcabando; track item.id) {
+          <li class="acabando-chip"><strong>{{ item.nome }}</strong> {{ item.quantidade }}{{ item.unidade }}</li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section class="secao" aria-labelledby="titulo-sugestoes">
+    <div class="secao-cabecalho">
+      <h2 id="titulo-sugestoes">Sugestões pra você</h2>
+      <a class="secao-link" routerLink="/receitas">Ver todas</a>
+    </div>
+
+    @if (carregandoSugestoes) {
+      <div class="sugestoes-scroll">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    } @else if (sugestoes.length) {
+      <div class="sugestoes-scroll">
+        @for (receita of sugestoes; track receita.titulo) {
+          <a class="sugestao-card" routerLink="/receitas">
+            <span class="sugestao-titulo">{{ receita.titulo }}</span>
+            <span class="sugestao-meta">
+              @if (receita.tempoPreparo) { <span>{{ receita.tempoPreparo }}</span> }
+              @if (receita.dificuldade) { <span>{{ receita.dificuldade }}</span> }
+            </span>
+            @if (receita.aproveitaVencendo?.length) {
+              <span class="sugestao-vence">Aproveita {{ receita.aproveitaVencendo![0] }}</span>
+            } @else if (receita.ingredientesUsados?.length) {
+              <span class="sugestao-usa">Usa {{ receita.ingredientesUsados!.length }} do que você já tem</span>
+            }
+          </a>
+        }
+      </div>
+    } @else if (erroSugestoes) {
+      <p class="vazio-linha">{{ erroSugestoes }}</p>
+    } @else {
+      <p class="vazio-linha">Adicione alguns alimentos e a gente sugere o que cozinhar.</p>
+    }
+  </section>
+
+  <a class="linha-compras" routerLink="/lista-compras">
+    <span class="linha-compras-icone" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="20" r="1.3"></circle>
+        <circle cx="17" cy="20" r="1.3"></circle>
+        <path d="M3 4h2.5l2.2 10.2a1 1 0 0 0 1 .8h8.3a1 1 0 0 0 1-.8L19.5 8H6.2"></path>
+      </svg>
+    </span>
+    <span class="linha-compras-texto">
+      <span class="linha-compras-titulo">Lista de compras</span>
+      <span class="linha-compras-sub">{{ totalListaCompras }} item(ns) pendente(s)</span>
+    </span>
+    <span class="linha-compras-seta" aria-hidden="true">›</span>
+  </a>
+
+  <button class="beta" type="button" (click)="sugerirMelhoria()">
+    <span class="beta-tag">Beta</span>
+    <span class="beta-texto">Ainda estamos ajustando o Gelabem. Achou algo estranho ou tem uma ideia?</span>
+    <span class="beta-acao">Sugerir melhoria</span>
+  </button>
+
+</main>

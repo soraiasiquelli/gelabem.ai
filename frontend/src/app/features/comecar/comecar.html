@@ -1,0 +1,23 @@
+<main class="comecar">
+
+  <header class="topo">
+    <h1>Boas-vindas{{ primeiroNome ? ', ' + primeiroNome : '' }}! 🎉</h1>
+    <p>
+      Tire uma foto da sua geladeira e a IA cadastra o que encontrar, já com uma estimativa de validade
+      pra você não perder nada.
+    </p>
+  </header>
+
+  <app-formulario-item [mostrarCancelar]="false" (salvo)="aoSalvar()"></app-formulario-item>
+
+  <div class="rodape">
+    @if (itensSalvos > 0) {
+      <button class="btn-concluir" type="button" (click)="concluir()">
+        Ver minha cozinha
+      </button>
+    } @else {
+      <button class="btn-pular" type="button" (click)="concluir()">Pular por agora</button>
+    }
+  </div>
+
+</main>

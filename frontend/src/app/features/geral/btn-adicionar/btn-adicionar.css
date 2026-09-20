@@ -3,16 +3,19 @@
     flex: 1;
 }
 
-.btnAdicionar{
+.btnAdicionar {
     display: block;
     width: 100%;
-    height: 56px;
-    background-color: #2ec4a3;
-    color: white;
-    font-size: 18px;
-    font-weight: 800;
-    border: none;
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(46, 196, 163, 0.45);
+    height: 54px;
+    background-color: var(--superficie);
+    color: var(--tinta);
+    font-size: 15px;
+    font-weight: 700;
+    border: 1.5px solid var(--linha);
+    border-radius: var(--raio-pilula);
     cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+.btnAdicionar:hover {
+    border-color: var(--verde);
 }

@@ -61,7 +61,11 @@
   } @else if (erro) {
     <p class="status erro">{{ erro }}</p>
   } @else if (!itens.length) {
-    <p class="status">Sua lista de compras está vazia.</p>
+    <div class="vazio">
+      <span class="vazio-icone" aria-hidden="true">🛒</span>
+      <p class="vazio-titulo">Sua lista está vazia por enquanto</p>
+      <p class="vazio-sub">Adicione um item acima ou veja o que falta em uma receita.</p>
+    </div>
   } @else {
     <ul class="lista">
       @for (item of itens; track item.id) {

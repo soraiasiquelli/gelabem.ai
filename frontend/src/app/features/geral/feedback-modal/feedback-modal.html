@@ -1,0 +1,67 @@
+@if (feedback.aberto()) {
+  <div class="overlay" (click)="fechar()">
+    <section
+      class="sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="feedback-titulo"
+      (click)="$event.stopPropagation()">
+
+      <header class="sheet-topo">
+        <div>
+          <h2 id="feedback-titulo">Sugerir melhoria</h2>
+          <span class="beta-tag">Beta</span>
+        </div>
+        <button class="sheet-fechar" type="button" (click)="fechar()" aria-label="Fechar">✕</button>
+      </header>
+
+      @if (enviado) {
+        <div class="sucesso">
+          <span class="sucesso-icone" aria-hidden="true">🙏</span>
+          <p class="sucesso-titulo">Obrigado! Recebemos sua mensagem.</p>
+          <p class="sucesso-sub">Lemos tudo que chega. É assim que o Gelabem melhora.</p>
+          <button class="btn-primario" type="button" (click)="fechar()">Fechar</button>
+        </div>
+      } @else {
+        <p class="aviso-beta">
+          O Gelabem está em <strong>versão beta</strong>: ainda estamos ajustando muita coisa, e o que você contar aqui
+          define o que a gente melhora primeiro.
+        </p>
+
+        <div class="tipos" role="radiogroup" aria-label="Tipo de mensagem">
+          @for (t of tipos; track t.valor) {
+            <button
+              type="button"
+              class="tipo"
+              role="radio"
+              [attr.aria-checked]="tipo === t.valor"
+              [class.ativo]="tipo === t.valor"
+              (click)="tipo = t.valor">
+              {{ t.label }}
+            </button>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="feedback-mensagem" class="sr-only">Sua mensagem</label>
+          <textarea
+            id="feedback-mensagem"
+            rows="5"
+            [maxlength]="limite"
+            [placeholder]="dica"
+            [(ngModel)]="mensagem"></textarea>
+          <span class="contador">{{ mensagem.length }}/{{ limite }}</span>
+        </div>
+
+        @if (erro) {
+          <p class="erro" role="alert">{{ erro }}</p>
+        }
+
+        <button class="btn-primario" type="button" [disabled]="enviando" (click)="enviar()">
+          {{ enviando ? 'Enviando…' : 'Enviar' }}
+        </button>
+      }
+
+    </section>
+  </div>
+}

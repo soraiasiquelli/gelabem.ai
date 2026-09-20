@@ -18,6 +18,9 @@ const Item = sequelize.define('Item', {
   },
     quantidade_minima: DataTypes.INTEGER,
 
+  // opcional: sem data, o item nunca aparece em "vence em breve"
+  data_validade: DataTypes.DATEONLY,
+
 }, {
   tableName: 'itens',
   timestamps: false

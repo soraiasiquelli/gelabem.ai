@@ -1,4 +1,62 @@
-/* styles.css */
+/* styles.css — identidade visual do Gelabem
+   Direção: cozinha fresca. Verde de horta sobre um fundo cinza-menta, superfícies brancas,
+   e a validade dos alimentos (anel de contagem regressiva) como elemento de assinatura.
+   Componentes só usam estes tokens; cor nova entra aqui, não nos componentes. */
+
+:root {
+  /* Verdes */
+  --verde: #2b8f49;            /* ação: botões, links, item ativo (4,3:1 com texto branco) */
+  --verde-escuro: #1f6f38;     /* hover e texto sobre tinta verde */
+  --verde-vivo: #5dbb63;       /* ilustração, anéis e barras (nunca texto) */
+  --verde-floresta: #143d26;   /* superfície forte: banner principal */
+  --verde-10: #e4f3e7;         /* tinta suave: chips, seleção */
+  --verde-20: #cbe8d1;
+
+  /* Neutros com um fio de verde */
+  --fundo: #edf3ee;
+  --superficie: #ffffff;
+  --tinta: #15221a;
+  --tinta-suave: #55665b;      /* 5,5:1 sobre branco */
+  --linha: #dae5dd;
+  --linha-clara: #eaf1ec;
+
+  /* Atenção e erro */
+  --ambar: #f3a83b;
+  --ambar-15: #fff1d6;
+  --ambar-texto: #7a4e00;
+  --erro: #c23b26;
+  --erro-10: #fce8e4;
+
+  /* Tipografia */
+  --fonte-titulo: 'Bricolage Grotesque', 'Segoe UI', sans-serif;
+  --fonte-corpo: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Espaçamento (escala de 4px) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* Forma: cada nível de hierarquia tem seu raio */
+  --raio-sm: 12px;             /* campos, botões de ícone */
+  --raio-md: 16px;             /* itens dentro de uma superfície */
+  --raio-lg: 22px;             /* superfícies (cartões, tiles) */
+  --raio-xl: 28px;             /* banner e folhas (sheets) */
+  --raio-pilula: 999px;
+
+  /* Sombras: pouca e com cor do ambiente, não cinza genérico */
+  --sombra-card: 0 1px 2px rgba(21, 34, 26, 0.04), 0 10px 24px -14px rgba(21, 34, 26, 0.16);
+  --sombra-flutuante: 0 14px 30px -12px rgba(31, 111, 56, 0.45);
+  --sombra-nav: 0 16px 40px -12px rgba(21, 34, 26, 0.28), 0 2px 6px rgba(21, 34, 26, 0.06);
+
+  color-scheme: light;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -8,6 +66,86 @@
 html, body {
   height: 100%;
   width: 100%;
-  margin: 0;
-  padding: 0;
+}
+
+body {
+  background: var(--fundo);
+  color: var(--tinta);
+  font-family: var(--fonte-corpo);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+/* Foco de teclado sempre visível — nunca dependemos só de cor */
+:focus-visible {
+  outline: 2.5px solid var(--verde);
+  outline-offset: 2px;
+}
+
+/* Botão primário */
+.btn-primario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 54px;
+  padding: 0 var(--sp-6);
+  border: none;
+  border-radius: var(--raio-pilula);
+  background: var(--verde);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-primario:hover { background: var(--verde-escuro); }
+.btn-primario:active { transform: scale(0.98); }
+.btn-primario:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+.btn-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 48px;
+  padding: 0 var(--sp-5);
+  border: 1.5px solid var(--linha);
+  border-radius: var(--raio-pilula);
+  background: var(--superficie);
+  color: var(--tinta);
+  font-weight: 700;
+  font-size: 14px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.btn-secundario:hover { border-color: var(--verde); background: var(--verde-10); }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

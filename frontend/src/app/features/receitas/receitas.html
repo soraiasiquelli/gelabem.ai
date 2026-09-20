@@ -1,0 +1,134 @@
+<main class="mainReceitas">
+
+  <header class="topo">
+    <h1>O que posso cozinhar?</h1>
+    <p>Sugestões com base no que você já tem em casa</p>
+  </header>
+
+  <div class="filtros">
+    <div class="filtros-linha">
+      @for (f of filtrosTempo; track f.valor) {
+        <button
+          type="button"
+          class="chip"
+          [class.ativo]="tempoSelecionado === f.valor"
+          (click)="toggleTempo(f.valor)">
+          {{ f.label }}
+        </button>
+      }
+    </div>
+    <div class="filtros-linha">
+      @for (f of filtrosObjetivo; track f.valor) {
+        <button
+          type="button"
+          class="chip"
+          [class.ativo]="objetivoSelecionado === f.valor"
+          (click)="toggleObjetivo(f.valor)">
+          {{ f.label }}
+        </button>
+      }
+    </div>
+
+    @if (ingredientesDisponiveis.length) {
+      <div class="filtros-bloco">
+        <p class="filtros-titulo">Usar primeiro (até 3)</p>
+        <div class="filtros-linha">
+          @for (ing of ingredientesDisponiveis; track ing) {
+            <button
+              type="button"
+              class="chip chip-ingrediente"
+              [class.ativo]="ingredientesPriorizados.has(ing)"
+              (click)="toggleIngrediente(ing)">
+              {{ ing }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (carregando) {
+    <div class="lista-receitas">
+      <div class="skeleton-receita"></div>
+      <div class="skeleton-receita"></div>
+    </div>
+  } @else if (erro) {
+    <div class="vazio">
+      <span class="vazio-icone" aria-hidden="true">🍽️</span>
+      <p class="vazio-titulo">{{ erro }}</p>
+      <button class="btn-primario" type="button" (click)="irParaCozinha()">📸 Fotografar minha cozinha</button>
+    </div>
+  } @else if (!receitas.length) {
+    <div class="vazio">
+      <span class="vazio-icone" aria-hidden="true">🤔</span>
+      <p class="vazio-titulo">Não achamos receitas com esses filtros. Tente ajustar as preferências.</p>
+    </div>
+  } @else {
+    <div class="lista-receitas">
+      @for (receita of receitas; track receita.titulo; let i = $index) {
+        <article class="card-receita" [class.expandido]="expandido === i">
+          <button class="card-receita-topo" type="button" (click)="alternarExpandido(i)">
+            <div class="card-receita-info">
+              <h2>{{ receita.titulo }}</h2>
+              <p class="card-receita-meta">
+                @if (receita.tempoPreparo) { <span>{{ receita.tempoPreparo }}</span> }
+                @if (receita.dificuldade) { <span>{{ receita.dificuldade }}</span> }
+                @if (receita.porcoes) { <span>{{ receita.porcoes }} porções</span> }
+              </p>
+            </div>
+            <span class="card-receita-seta" aria-hidden="true">{{ expandido === i ? '﹀' : '›' }}</span>
+          </button>
+
+          <div class="card-receita-ingredientes">
+            @if (receita.aproveitaVencendo?.length) {
+              <div class="ingredientes-linha">
+                <span class="tag tag-vence">Aproveita o que vence: {{ receita.aproveitaVencendo!.join(', ') }}</span>
+              </div>
+            }
+            @if (receita.ingredientesUsados?.length) {
+              <div class="ingredientes-linha">
+                @for (ing of receita.ingredientesUsados; track ing) {
+                  <span class="tag tag-tem">✓ {{ ing }}</span>
+                }
+              </div>
+            }
+            @if (receita.ingredientesFaltantes?.length) {
+              <div class="ingredientes-linha">
+                @for (ing of receita.ingredientesFaltantes; track ing) {
+                  <button
+                    type="button"
+                    class="tag tag-falta"
+                    [class.tag-adicionado]="adicionadosNaLista.has(chaveIngrediente(i, ing))"
+                    (click)="adicionarNaLista(i, ing)">
+                    {{ adicionadosNaLista.has(chaveIngrediente(i, ing)) ? '✓ na lista' : '+ ' + ing }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          @if (expandido === i && receita.modoPreparo?.length) {
+            <ol class="modo-preparo">
+              @for (passo of receita.modoPreparo; track passo) {
+                <li>{{ passo }}</li>
+              }
+            </ol>
+          }
+
+          @if (expandido === i) {
+            <div class="card-receita-acoes">
+              <button class="btn-cozinhei" type="button" (click)="abrirCozinhei(receita)">
+                🍳 Cozinhei essa
+              </button>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+
+  @if (receitaCozinhando) {
+    <app-cozinhei-sheet [receita]="receitaCozinhando" (fechar)="fecharCozinhei()"></app-cozinhei-sheet>
+  }
+
+</main>

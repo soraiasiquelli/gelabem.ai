@@ -27,6 +27,10 @@ export class EscolherArmazenamento {
     }
   }
 
+  pular() {
+    this.router.navigate(['/home'])
+  }
+
   continuar() {
     localStorage.setItem('armazenamentos', JSON.stringify(this.selecionados))
 

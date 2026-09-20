@@ -21,14 +21,14 @@
 
   @if (!carregando && receita) {
     <div class="receita-card">
-      <h2>🍽️ {{ receita.titulo }}</h2>
+      <h2>{{ receita.titulo }}</h2>
 
       <div class="receita-meta">
         @if (receita.tempoPreparo) {
-          <span>⏱️ {{ receita.tempoPreparo }}</span>
+          <span>{{ receita.tempoPreparo }}</span>
         }
         @if (receita.porcoes) {
-          <span>🍽️ {{ receita.porcoes }} porções</span>
+          <span>{{ receita.porcoes }} porções</span>
         }
       </div>
 
@@ -58,7 +58,15 @@
           }
         </ol>
       }
+
+      <button class="btn-cozinhei" type="button" (click)="mostrarCozinhei = true">
+        🍳 Cozinhei essa
+      </button>
     </div>
+  }
+
+  @if (mostrarCozinhei && receita) {
+    <app-cozinhei-sheet [receita]="receita" (fechar)="mostrarCozinhei = false"></app-cozinhei-sheet>
   }
 
 </main>

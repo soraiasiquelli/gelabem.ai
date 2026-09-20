@@ -59,7 +59,8 @@ export class FormularioLerNota {
       unidade: item.unidade || 'un',
       categoria: item.categoria_id,
       local: 1, // ajusta para o local correto
-      usuario_id: usuario.id
+      usuario_id: usuario.id,
+      data_validade: item.validade_sugerida ?? null
     }).subscribe({
       next: () => {
         this.itensDetectados.splice(index, 1)
@@ -84,7 +85,8 @@ export class FormularioLerNota {
         unidade: item.unidade || 'un',
         categoria: item.categoria_id,
         local: 1, // ajusta para o local correto
-        usuario_id: usuario.id
+        usuario_id: usuario.id,
+        data_validade: item.validade_sugerida ?? null
       })
     )
 

@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { LoginService } from '../../services/auth/login.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../models/Usuario.model';
+import { GoogleLogin } from '../geral/google-login/google-login';
 @Component({
   selector: 'app-criar-conta',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink, GoogleLogin],
   standalone: true,
   templateUrl: './criar-conta.html',
   styleUrl: './criar-conta.css',
@@ -18,10 +19,16 @@ export class CriarConta {
     repetirsenha = ''
     mostrarSenha = false
     mostrarConfirmarSenha = false
+    erro = ''
 
 
   constructor(private loginService: LoginService, private http: HttpClient, private router: Router){
 
+  }
+
+  aoEntrarComGoogle(resultado: { novo: boolean }) {
+    // quem já tinha conta cai no início; conta nova começa pela foto
+    this.router.navigate([resultado.novo ? '/comecar' : '/home'])
   }
 
   toggleSenha() {
@@ -51,15 +58,18 @@ adicionarUsuario() {
   }
   console.log(novoUsuario)
 
+  this.erro = ''
+
   this.loginService.addItemBD(novoUsuario).subscribe({
     next: (res: any) => {
       console.log("Salvo no banco:", res);
-      localStorage.setItem('token', res.token)
-      localStorage.setItem('usuario', JSON.stringify(res.usuario))
-      this.router.navigate(['/escolher-armazenamento'])
+      this.loginService.salvarSessao(res)
+      // a conta já nasce com a geladeira; o primeiro passo é fotografar, não escolher armazenamentos
+      this.router.navigate(['/comecar'])
     },
     error: (err) => {
       console.log("Erro:", err);
+      this.erro = err.error?.error || 'Não foi possível criar sua conta agora. Tente novamente.'
     }
   });
 }

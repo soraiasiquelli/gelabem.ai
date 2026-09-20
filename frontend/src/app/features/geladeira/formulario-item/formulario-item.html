@@ -27,33 +27,103 @@
   <!-- Itens detectados pela IA -->
   @if (!itemId && itensDetectados.length) {
     <div class="itens-detectados">
-      @for (item of itensDetectados; track $index) {
-        <div class="item-detectado-card">
-          <div class="field">
-            <label>Nome</label>
-            <input type="text" [(ngModel)]="item.nome" />
-          </div>
-          <div class="field-row">
+
+      @if (itensCertos.length) {
+        <p class="detectados-titulo">
+          <span class="marca marca-certa" aria-hidden="true">✓</span> Encontramos
+        </p>
+        @for (item of itensCertos; track item) {
+          <div class="item-detectado-card">
             <div class="field">
-              <label>Quantidade</label>
-              <input type="number" [(ngModel)]="item.quantidade" min="0" />
+              <label>Nome</label>
+              <input type="text" [(ngModel)]="item.nome" />
             </div>
-            <div class="field">
-              <label>Categoria</label>
-              <div class="select-wrap">
-                <select [(ngModel)]="item.categoria">
-                  <option value="">Selecionar</option>
-                  @for (cat of categorias; track cat.id) {
-                    <option [value]="cat.id">{{ cat.nome }}</option>
-                  }
-                </select>
+            <div class="field-row">
+              <div class="field">
+                <label>Quantidade</label>
+                <input type="number" [(ngModel)]="item.quantidade" min="0" />
+              </div>
+              <div class="field">
+                <label>Categoria</label>
+                <div class="select-wrap">
+                  <select [(ngModel)]="item.categoria">
+                    <option value="">Selecionar</option>
+                    @for (cat of categorias; track cat.id) {
+                      <option [value]="cat.id">{{ cat.nome }}</option>
+                    }
+                  </select>
+                </div>
               </div>
             </div>
+            <div class="field">
+              <label>
+                Validade <span class="opcional">(opcional)</span>
+                @if (item.validadeEstimada) { <span class="dica-ia">✨ estimada pela IA, confira</span> }
+              </label>
+              <input
+                type="date"
+                [ngModel]="item.data_validade"
+                (ngModelChange)="item.data_validade = $event; item.validadeEstimada = false" />
+            </div>
+            <div class="item-detectado-acoes">
+              <button type="button" class="btn-save" (click)="adicionarDetectado(item)">
+                + Adicionar
+              </button>
+              <button type="button" class="btn-descartar" (click)="descartarDetectado(item)" aria-label="Não adicionar este item">
+                ✕
+              </button>
+            </div>
           </div>
-          <button type="button" class="btn-save" (click)="adicionarDetectado(item, $index)">
-            + Adicionar
-          </button>
-        </div>
+        }
+      }
+
+      @if (itensIncertos.length) {
+        <p class="detectados-titulo">
+          <span class="marca marca-incerta" aria-hidden="true">?</span> Não temos certeza sobre
+        </p>
+        @for (item of itensIncertos; track item) {
+          <div class="item-detectado-card item-detectado-card--incerto">
+            <div class="field">
+              <label>Nome — confirme antes de adicionar</label>
+              <input type="text" [(ngModel)]="item.nome" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Quantidade</label>
+                <input type="number" [(ngModel)]="item.quantidade" min="0" />
+              </div>
+              <div class="field">
+                <label>Categoria</label>
+                <div class="select-wrap">
+                  <select [(ngModel)]="item.categoria">
+                    <option value="">Selecionar</option>
+                    @for (cat of categorias; track cat.id) {
+                      <option [value]="cat.id">{{ cat.nome }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>
+                Validade <span class="opcional">(opcional)</span>
+                @if (item.validadeEstimada) { <span class="dica-ia">✨ estimada pela IA, confira</span> }
+              </label>
+              <input
+                type="date"
+                [ngModel]="item.data_validade"
+                (ngModelChange)="item.data_validade = $event; item.validadeEstimada = false" />
+            </div>
+            <div class="item-detectado-acoes">
+              <button type="button" class="btn-save" (click)="adicionarDetectado(item)">
+                + Confirmar e adicionar
+              </button>
+              <button type="button" class="btn-descartar" (click)="descartarDetectado(item)" aria-label="Não adicionar este item">
+                ✕
+              </button>
+            </div>
+          </div>
+        }
       }
     </div>
   }
@@ -124,6 +194,23 @@
 
     </div>
 
+    <!-- Validade -->
+    <div class="field">
+      <label for="validade">Validade <span class="opcional">(opcional)</span></label>
+      <input
+        type="date"
+        id="validade"
+        [(ngModel)]="data_validade" />
+      <div class="atalhos-validade">
+        @for (atalho of atalhosValidade; track atalho.dias) {
+          <button type="button" class="atalho" (click)="definirValidadeEm(atalho.dias)">{{ atalho.label }}</button>
+        }
+        @if (data_validade) {
+          <button type="button" class="atalho atalho--limpar" (click)="limparValidade()">Sem validade</button>
+        }
+      </div>
+    </div>
+
   </div>
 
   <!-- Ações -->
@@ -135,7 +222,9 @@
       </svg>
       {{ itemId ? 'Salvar alterações' : 'Adicionar item' }}
     </button>
-    <button type="button" class="btn-cancel">Cancelar</button>
+    @if (mostrarCancelar) {
+      <button type="button" class="btn-cancel" (click)="cancelar()">Cancelar</button>
+    }
   </div>
 
 </div>

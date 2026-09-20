@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeladeiraService, Receita as ReceitaModel } from '../../../services/geladeira.service';
 import { LoginService } from '../../../services/auth/login.service';
+import { CozinheiSheet } from '../../geral/cozinhei-sheet/cozinhei-sheet';
 
 @Component({
   selector: 'app-receita',
-  imports: [],
+  imports: [CozinheiSheet],
   templateUrl: './receita.html',
   styleUrl: './receita.css',
 })
@@ -15,6 +16,7 @@ export class Receita {
   carregando = true
   erro = ''
   receita?: ReceitaModel
+  mostrarCozinhei = false
 
   constructor(
     private geladeiraService: GeladeiraService,

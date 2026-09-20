@@ -1,0 +1,102 @@
+<div class="overlay" (click)="fechar.emit()">
+  <section
+    class="sheet"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cozinhei-titulo"
+    (click)="$event.stopPropagation()">
+
+    <header class="sheet-topo">
+      <h2 id="cozinhei-titulo">🍳 Cozinhei: {{ receita.titulo }}</h2>
+      <button class="sheet-fechar" type="button" (click)="fechar.emit()" aria-label="Fechar">✕</button>
+    </header>
+
+    @switch (estado) {
+      @case ('carregando') {
+        <p class="msg">Conferindo o seu estoque…</p>
+      }
+
+      @case ('erro') {
+        <p class="msg">Não conseguimos abrir o seu estoque agora. Tente de novo em instantes.</p>
+        <div class="acoes">
+          <button class="btn-secundario" type="button" (click)="fechar.emit()">Fechar</button>
+        </div>
+      }
+
+      @case ('pronto') {
+        <p class="msg msg--ok">✓ Estoque atualizado! Bom apetite.</p>
+
+        @if (acabaram.length) {
+          <p class="sub">Acabou de vez:</p>
+          <ul class="chips">
+            @for (item of acabaram; track item.nome) {
+              <li class="chip">{{ item.nome }}</li>
+            }
+          </ul>
+
+          @if (adicionadosNaLista) {
+            <p class="dica">🛒 Adicionado à sua lista de compras.</p>
+          } @else {
+            <button class="btn-primario" type="button" [disabled]="salvandoLista" (click)="adicionarAcabaramNaLista()">
+              🛒 Adicionar à lista de compras
+            </button>
+          }
+        }
+
+        <div class="acoes">
+          <button class="btn-secundario" type="button" (click)="fechar.emit()">Fechar</button>
+        </div>
+      }
+
+      @default {
+        <p class="sub">Confirme o que você usou pra a gente atualizar o seu estoque.</p>
+
+        @if (ingredientes.length) {
+          <ul class="linhas">
+            @for (item of ingredientes; track item.nome) {
+              <li class="linha" [class.desmarcada]="!item.marcado">
+                <label class="linha-check">
+                  <input type="checkbox" [(ngModel)]="item.marcado" />
+                  <span class="linha-texto">
+                    <span class="linha-nome">{{ item.nome }}</span>
+                    <span class="linha-tem">tem {{ item.total }} {{ item.unidade }}</span>
+                  </span>
+                </label>
+
+                @if (item.marcado) {
+                  <div class="passo" role="group" [attr.aria-label]="'Quanto de ' + item.nome + ' você usou'">
+                    <button type="button" (click)="alterarUso(item, -1)" aria-label="Usou menos">−</button>
+                    <span class="passo-valor">{{ item.usar }} {{ item.unidade }}</span>
+                    <button type="button" (click)="alterarUso(item, 1)" aria-label="Usou mais">+</button>
+                  </div>
+                }
+              </li>
+            }
+          </ul>
+
+          @if (temNaoContavel) {
+            <p class="dica">Itens em peso ou volume vêm desmarcados porque a receita não diz quanto foi usado. Marque e ajuste se quiser descontar.</p>
+          }
+        } @else {
+          <p class="msg">Nenhum ingrediente dessa receita foi encontrado no seu estoque.</p>
+        }
+
+        @if (semEstoque.length) {
+          <p class="dica">Não achamos no estoque: {{ semEstoque.join(', ') }}.</p>
+        }
+
+        <div class="acoes">
+          <button
+            class="btn-primario"
+            type="button"
+            [disabled]="marcados === 0 || estado === 'salvando'"
+            (click)="confirmar()">
+            {{ estado === 'salvando' ? 'Atualizando…' : 'Descontar do estoque' }}
+          </button>
+          <button class="btn-secundario" type="button" (click)="fechar.emit()">Agora não</button>
+        </div>
+      }
+    }
+
+  </section>
+</div>

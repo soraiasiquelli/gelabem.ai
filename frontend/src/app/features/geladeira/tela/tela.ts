@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { ListaItens } from '../lista-itens/lista-itens';
 import { BtnAdicionar } from '../../geral/btn-adicionar/btn-adicionar';
 import { GeladeiraService } from '../../../services/geladeira.service';
@@ -7,16 +6,16 @@ import { LoginService } from '../../../services/auth/login.service';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Item } from '../../../models/item.model';
 
-const METADATA: Record<string, { titulo: string, desc: string, icone: string, classe: string }> = {
-  geladeira: { titulo: 'Geladeira', desc: 'Seus itens frescos', icone: '🧊', classe: 'bloco--geladeira' },
-  freezer:   { titulo: 'Freezer',   desc: 'Alimentos congelados', icone: '❄️', classe: 'bloco--freezer' },
-  despensa:  { titulo: 'Despensa',  desc: 'Secos e enlatados', icone: '🏺', classe: 'bloco--despensa' },
-  frigobar:  { titulo: 'Frigobar',  desc: 'Bebidas e petiscos', icone: '🧃', classe: 'bloco--frigobar' },
+const METADATA: Record<string, { titulo: string, desc: string, icone: string }> = {
+  geladeira: { titulo: 'Geladeira', desc: 'Seus itens frescos', icone: '🧊' },
+  freezer:   { titulo: 'Freezer',   desc: 'Alimentos congelados', icone: '❄️' },
+  despensa:  { titulo: 'Despensa',  desc: 'Secos e enlatados', icone: '🏺' },
+  frigobar:  { titulo: 'Frigobar',  desc: 'Bebidas e petiscos', icone: '🧃' },
 }
 
 @Component({
   selector: 'app-tela',
-  imports: [ListaItens, BtnAdicionar, RouterLink, NgClass],
+  imports: [ListaItens, BtnAdicionar, RouterLink],
   templateUrl: './tela.html',
   styleUrl: './tela.css',
 })

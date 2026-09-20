@@ -5,6 +5,8 @@ const Categoria = require('./Categoria');
 const Local = require('./Local');
 const Usuario = require('./Usuarios');
 const ListaCompras = require('./ListaCompras');
+const Casa = require('./Casa');
+const Feedback = require('./Feedback');
 
 // Categoria → Item
 Categoria.hasMany(Item, { foreignKey: 'categoria_id' });
@@ -32,5 +34,7 @@ module.exports = {
   Categoria,
   Local,
   Usuario,
-  ListaCompras
+  ListaCompras,
+  Casa,
+  Feedback
 };

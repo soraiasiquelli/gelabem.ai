@@ -1,37 +1,18 @@
 <div class="register-host">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+
+  <header class="marca">
+    <div class="icon-wrap">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <circle cx="20" cy="20" r="15" stroke="currentColor" stroke-opacity="0.28" stroke-width="3.5"/>
+          <circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="70 95" transform="rotate(-90 20 20)"/>
+          <path d="M14.5 25.5c0-6.5 4.5-10.5 11-10.5 0 6.5-4.5 10.5-11 10.5z" fill="currentColor"/>
+        </svg>
+    </div>
+    <span class="brand">Gelabem</span>
+    <p class="subtitle">Crie sua conta e organize a cozinha em um minuto.</p>
+  </header>
 
   <div class="card">
-
-    <!-- Header -->
-    <div class="logo-row">
-      <div class="icon-wrap">
-        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="20" y1="4" x2="20" y2="36" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="4" y1="20" x2="36" y2="20" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="7.5" y1="7.5" x2="32.5" y2="32.5" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="32.5" y1="7.5" x2="7.5" y2="32.5" stroke="#7dd8ff" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="20" y1="4" x2="16" y2="9" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="20" y1="4" x2="24" y2="9" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="20" y1="36" x2="16" y2="31" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="20" y1="36" x2="24" y2="31" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="4" y1="20" x2="9" y2="16" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="4" y1="20" x2="9" y2="24" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="36" y1="20" x2="31" y2="16" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="36" y1="20" x2="31" y2="24" stroke="#7dd8ff" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="20" cy="20" r="3.5" fill="#b2ebf2"/>
-        </svg>
-      </div>
-      <span class="brand">Gela<span class="brand-accent">bem</span></span>
-    </div>
-
-    <p class="subtitle">Crie sua conta e comece a organizar</p>
-
-
-
-    <div class="card-divider"></div>
 
     <!-- Nome -->
     <div class="field">
@@ -100,6 +81,10 @@
       </div>
     </div>
 
+    @if (erro) {
+      <p class="erro-form" role="alert">{{ erro }}</p>
+    }
+
     <!-- Botão criar conta -->
     <button class="btn-primary" (click)="validarSenha()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -111,7 +96,9 @@
       Criar conta grátis
     </button>
 
-    <p class="login-link">Já tem uma conta? <a href="#">Entrar</a></p>
+    <app-google-login (entrou)="aoEntrarComGoogle($event)" (erro)="erro = $event"></app-google-login>
+
+    <p class="login-link">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
 
   </div>
 </div>

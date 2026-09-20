@@ -1,8 +1,107 @@
-.listaItens{
-    width: 100%;
-    height: 50vh;
-    gap: 20px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+.listaItens {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.grupo-titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding-left: 2px;
+  font-family: var(--fonte-titulo);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* uma superfície por categoria; os alimentos são linhas separadas por fios, não cartões soltos */
+.grupo-itens {
+  overflow: hidden;
+  border-radius: var(--raio-lg);
+  background: var(--superficie);
+  box-shadow: var(--sombra-card);
+}
+.grupo-itens app-item-card + app-item-card {
+  border-top: 1px solid var(--linha-clara);
+}
+
+.listaVazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--sp-2);
+  padding: var(--sp-10) var(--sp-6);
+  background: var(--superficie);
+  border: 1.5px dashed var(--verde-vivo);
+  border-radius: var(--raio-lg);
+}
+
+.listaVazia-icone {
+  font-size: 40px;
+}
+
+.listaVazia-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.listaVazia-sub {
+  font-size: 14px;
+  color: var(--tinta-suave);
+  max-width: 32ch;
+}
+
+/* ── Aviso temporário (ex.: "Leite acabou") ── */
+.aviso {
+  position: fixed;
+  left: var(--sp-5);
+  right: var(--sp-5);
+  bottom: calc(176px + env(safe-area-inset-bottom, 0px));
+  max-width: 520px;
+  margin: 0 auto;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--raio-md);
+  background: var(--verde-floresta);
+  color: #fff;
+  box-shadow: 0 14px 30px -10px rgba(20, 61, 38, 0.5);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.aviso-texto {
+  flex: 1;
+  min-width: 0;
+}
+
+.aviso-acao {
+  border: none;
+  border-radius: var(--raio-pilula);
+  padding: 8px 14px;
+  background: var(--verde-vivo);
+  color: var(--verde-floresta);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.aviso-fechar {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  padding: 4px;
 }
