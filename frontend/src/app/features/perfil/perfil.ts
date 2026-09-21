@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { UsoIA, UsoIAService } from '../../services/uso-ia.service';
 import { TPipe } from '../../i18n/t.pipe';
 import { tr } from '../../i18n/i18n.service';
 import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
+import { Analytics } from '../../analytics/analytics.service';
 
 @Component({
   selector: 'app-perfil',
@@ -17,6 +18,13 @@ import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
   styleUrl: './perfil.css',
 })
 export class Perfil implements OnDestroy {
+
+  analytics = inject(Analytics)
+
+  alternarAnalytics() {
+    if (this.analytics.consentimento() === 'aceito') this.analytics.recusar()
+    else this.analytics.aceitar()
+  }
 
   usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
 

@@ -1,0 +1,11 @@
+@if (analytics.ativo && analytics.consentimento() === null) {
+  <div class="cookie-banner" role="dialog" aria-live="polite" [attr.aria-label]="'Cookies de análise' | t">
+    <p class="texto">
+      {{ 'Usamos o Google Analytics (cookies) só para entender como o Gelabem é usado. Não enviamos seu e-mail nem o que você guarda na geladeira.' | t }}
+    </p>
+    <div class="acoes">
+      <button type="button" class="btn-recusar" (click)="analytics.recusar()">{{ 'Recusar' | t }}</button>
+      <button type="button" class="btn-aceitar" (click)="analytics.aceitar()">{{ 'Aceitar' | t }}</button>
+    </div>
+  </div>
+}

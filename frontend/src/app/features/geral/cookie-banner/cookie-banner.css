@@ -1,0 +1,51 @@
+.cookie-banner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 100;
+  width: min(calc(100% - 32px), 440px);
+  padding: var(--sp-4);
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-md);
+  box-shadow: 0 8px 28px rgba(20, 61, 38, 0.18);
+}
+
+.texto {
+  margin: 0 0 var(--sp-3);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--tinta);
+}
+
+.acoes {
+  display: flex;
+  gap: var(--sp-2);
+  justify-content: flex-end;
+}
+
+.acoes button {
+  min-height: 40px;
+  padding: 0 var(--sp-4);
+  border-radius: 999px;
+  font: 700 13px/1 var(--fonte-corpo);
+  cursor: pointer;
+}
+
+.btn-recusar {
+  background: transparent;
+  color: var(--tinta-suave);
+  border: 1px solid var(--linha);
+}
+
+.btn-aceitar {
+  background: var(--verde);
+  color: #fff;
+  border: 1px solid var(--verde);
+}
+
+.acoes button:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 2px;
+}

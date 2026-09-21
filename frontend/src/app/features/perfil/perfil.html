@@ -142,6 +142,16 @@
     <app-seletor-idioma></app-seletor-idioma>
   </section>
 
+  @if (analytics.ativo) {
+    <section class="secao">
+      <h2>{{ 'Cookies de análise' | t }}</h2>
+      <p class="cookies-texto">{{ 'Google Analytics: nos ajuda a entender como o app é usado, sem enviar seu e-mail nem seus alimentos.' | t }}</p>
+      <button class="btn-secundario" type="button" (click)="alternarAnalytics()">
+        {{ (analytics.consentimento() === 'aceito' ? 'Desativar' : 'Ativar') | t }}
+      </button>
+    </section>
+  }
+
   <section class="secao">
     <h2>{{ 'Ajude a melhorar' | t }}</h2>
     <button class="cartao linha-acao" type="button" (click)="sugerirMelhoria()">

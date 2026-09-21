@@ -10,6 +10,7 @@ import { environment } from '../../../../environments/environment';
 import { dataEmDias } from '../../../utils/validade';
 import { TPipe } from '../../../i18n/t.pipe';
 import { tr } from '../../../i18n/i18n.service';
+import { registrarEvento } from '../../../analytics/analytics.service';
 
 interface ItemDetectado {
   nome: string
@@ -163,6 +164,7 @@ export class FormularioItem implements OnInit {
         next: (res) => {
           console.log("Salvo no banco:", res);
           this.mensagemIA = ''
+          if (!this.itemId) registrarEvento('item_added')
           this.mostrarStatus(this.itemId ? tr('Item atualizado com sucesso!') : tr('Item salvo com sucesso!'), 'sucesso')
           this.salvo.emit()
         },
@@ -205,6 +207,7 @@ export class FormularioItem implements OnInit {
           next: (res) => {
             console.log("Salvo no banco:", res);
             this.descartarDetectado(item)
+            registrarEvento('item_added', { origem: 'ia' })
             this.mostrarStatus(tr('Item salvo com sucesso!'), 'sucesso')
             this.salvo.emit()
           },

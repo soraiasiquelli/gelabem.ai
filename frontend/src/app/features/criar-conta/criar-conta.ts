@@ -8,6 +8,7 @@ import { GoogleLogin } from '../geral/google-login/google-login';
 import { TPipe } from '../../i18n/t.pipe';
 import { tr } from '../../i18n/i18n.service';
 import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
+import { registrarEvento } from '../../analytics/analytics.service';
 @Component({
   selector: 'app-criar-conta',
   imports: [SeletorIdioma, TPipe, FormsModule, RouterLink, GoogleLogin],
@@ -67,6 +68,7 @@ adicionarUsuario() {
     next: (res: any) => {
       console.log("Salvo no banco:", res);
       this.loginService.salvarSessao(res)
+      registrarEvento('sign_up', { method: 'email' })
       // a conta já nasce com a geladeira; o primeiro passo é fotografar, não escolher armazenamentos
       this.router.navigate(['/comecar'])
     },

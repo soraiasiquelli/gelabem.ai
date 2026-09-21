@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChatService, MensagemChat } from '../../services/chat.service';
 import { tr } from '../../i18n/i18n.service';
 import { TPipe } from '../../i18n/t.pipe';
+import { registrarEvento } from '../../analytics/analytics.service';
 
 const SUGESTOES_RAPIDAS = [
   'O que posso fazer com o que eu já tenho?',
@@ -82,6 +83,7 @@ export class Assistente implements AfterViewChecked {
         this.deveRolar = true
         this.cdr.detectChanges()
       })
+      registrarEvento('assistente_mensagem')
     } catch (err: any) {
       if (err?.status === 401) {
         localStorage.removeItem('token')

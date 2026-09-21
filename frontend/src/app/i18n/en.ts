@@ -381,4 +381,13 @@ export const EN: Record<string, string> = {
   '🙂 Fácil': '🙂 Easy',
   '💪 Mais proteína': '💪 More protein',
   '♻️ Aproveitar o que tenho': '♻️ Use what I have',
+
+  // analytics / cookies
+  'Cookies de análise': 'Analytics cookies',
+  'Usamos o Google Analytics (cookies) só para entender como o Gelabem é usado. Não enviamos seu e-mail nem o que você guarda na geladeira.': 'We use Google Analytics (cookies) only to understand how Gelabem is used. We never send your email or what you keep in your fridge.',
+  'Aceitar': 'Accept',
+  'Recusar': 'Decline',
+  'Ativar': 'Turn on',
+  'Desativar': 'Turn off',
+  'Google Analytics: nos ajuda a entender como o app é usado, sem enviar seu e-mail nem seus alimentos.': 'Google Analytics: helps us understand how the app is used, without sending your email or your food.',
 }

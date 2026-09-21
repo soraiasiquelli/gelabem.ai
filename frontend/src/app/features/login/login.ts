@@ -9,6 +9,7 @@ import { GoogleLogin } from '../geral/google-login/google-login';
 import { TPipe } from '../../i18n/t.pipe';
 import { tr } from '../../i18n/i18n.service';
 import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
+import { registrarEvento } from '../../analytics/analytics.service';
 
 @Component({
   selector: 'app-login',
@@ -50,6 +51,7 @@ export class Login {
     next: (res: any) => {
       console.log("Usuario encontrado:", res);
       this.loginService.salvarSessao(res)
+      registrarEvento('login', { method: 'email' })
       this.router.navigate(['/home'])
     },
     error: (err) => {

@@ -3,6 +3,7 @@ import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../services/auth/login.service';
 import { TPipe } from '../../../i18n/t.pipe';
 import { tr } from '../../../i18n/i18n.service';
+import { registrarEvento } from '../../../analytics/analytics.service';
 
 const GIS_URL = 'https://accounts.google.com/gsi/client'
 
@@ -84,6 +85,7 @@ export class GoogleLogin implements AfterViewInit {
     this.loginService.loginGoogle(credential).subscribe({
       next: (res) => {
         this.loginService.salvarSessao(res)
+        registrarEvento(res.novo ? 'sign_up' : 'login', { method: 'google' })
         this.entrando = false
         this.entrou.emit({ novo: res.novo })
       },
