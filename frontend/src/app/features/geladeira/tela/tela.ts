@@ -5,6 +5,8 @@ import { GeladeiraService } from '../../../services/geladeira.service';
 import { LoginService } from '../../../services/auth/login.service';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Item } from '../../../models/item.model';
+import { TPipe } from '../../../i18n/t.pipe';
+import { tr } from '../../../i18n/i18n.service';
 
 const METADATA: Record<string, { titulo: string, desc: string, icone: string }> = {
   geladeira: { titulo: 'Geladeira', desc: 'Seus itens frescos', icone: '🧊' },
@@ -15,7 +17,7 @@ const METADATA: Record<string, { titulo: string, desc: string, icone: string }> 
 
 @Component({
   selector: 'app-tela',
-  imports: [ListaItens, BtnAdicionar, RouterLink],
+  imports: [TPipe, ListaItens, BtnAdicionar, RouterLink],
   templateUrl: './tela.html',
   styleUrl: './tela.css',
 })
@@ -90,7 +92,7 @@ export class Tela {
   }
 
   if (this.itensSelecionados.size === 0) {
-    this.mensagemSelecao = 'Selecione pelo menos um item para gerar a receita.'
+    this.mensagemSelecao = tr('Selecione pelo menos um item para gerar a receita.')
     this.cdr.markForCheck()
     return
   }

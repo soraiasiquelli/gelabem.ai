@@ -1,0 +1,13 @@
+<div class="seletor" [class.flutuante]="flutuante()" role="group" aria-label="Language / Idioma">
+  @for (idioma of idiomas; track idioma.codigo) {
+    <button
+      type="button"
+      class="opcao"
+      [class.ativa]="i18n.idioma() === idioma.codigo"
+      [attr.aria-pressed]="i18n.idioma() === idioma.codigo"
+      [attr.lang]="idioma.codigo"
+      (click)="escolher(idioma.codigo)">
+      {{ idioma.codigo.toUpperCase() }}
+    </button>
+  }
+</div>

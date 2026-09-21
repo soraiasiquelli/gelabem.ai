@@ -2,22 +2,22 @@
 
   <header class="topo">
     <div class="topo-texto">
-      <p class="saudacao">Oi, {{ primeiroNome }} 👋</p>
-      <h1>O que vamos cozinhar hoje?</h1>
+      <p class="saudacao">{{ 'Oi, {nome} 👋' | t: { nome: primeiroNome } }}</p>
+      <h1>{{ 'O que vamos cozinhar hoje?' | t }}</h1>
     </div>
-    <a class="avatar" routerLink="/perfil" aria-label="Minha conta">{{ inicial }}</a>
+    <a class="avatar" routerLink="/perfil" [attr.aria-label]="'Minha conta' | t">{{ inicial }}</a>
   </header>
 
   <!-- Locais de armazenamento -->
   @if (locais$ | async; as locais) {
-    <section class="locais" aria-label="Minha cozinha">
+    <section class="locais" [attr.aria-label]="'Minha cozinha' | t">
       @for (tipo of tiposDisponiveis; track tipo.nome) {
         @if (locais.includes(tipo.nome)) {
           <a class="local" [routerLink]="['/armazenamento', tipo.nome]">
             <span class="local-icone" aria-hidden="true">{{ tipo.icone }}</span>
-            <span class="local-nome">{{ tipo.label }}</span>
+            <span class="local-nome">{{ tipo.label | t }}</span>
             <span class="local-sub">
-              @if (tipo.nome === 'geladeira') { {{ totalItens$ | async }} alimentos } @else { {{ tipo.desc }} }
+              @if (tipo.nome === 'geladeira') { {{ '{n} alimentos' | t: { n: ((totalItens$ | async) ?? 0) } }} } @else { {{ tipo.desc | t }} }
             </span>
           </a>
         }
@@ -27,38 +27,38 @@
         @if (!mostrarOpcoes) {
           <button class="local local--novo" type="button" (click)="toggleOpcoes()">
             <span class="local-icone local-icone--novo" aria-hidden="true">+</span>
-            <span class="local-nome">Novo local</span>
-            <span class="local-sub">Freezer, despensa...</span>
+            <span class="local-nome">{{ 'Novo local' | t }}</span>
+            <span class="local-sub">{{ 'Freezer, despensa...' | t }}</span>
           </button>
         }
       }
     </section>
 
     @if (mostrarOpcoes) {
-      <div class="opcoes-local" role="group" aria-label="Escolha o local para adicionar">
-        <span class="opcoes-titulo">Adicionar</span>
+      <div class="opcoes-local" role="group" [attr.aria-label]="'Escolha o local para adicionar' | t">
+        <span class="opcoes-titulo">{{ 'Adicionar' | t }}</span>
         @for (tipo of tiposDisponiveis; track tipo.nome) {
           @if (!locais.includes(tipo.nome)) {
             <button class="chip-tipo" type="button" [disabled]="salvando" (click)="adicionarTipo(locais, tipo.nome)">
-              <span aria-hidden="true">{{ tipo.icone }}</span> {{ tipo.label }}
+              <span aria-hidden="true">{{ tipo.icone }}</span> {{ tipo.label | t }}
             </button>
           }
         }
-        <button class="chip-cancelar" type="button" (click)="toggleOpcoes()">Cancelar</button>
+        <button class="chip-cancelar" type="button" (click)="toggleOpcoes()">{{ 'Cancelar' | t }}</button>
       </div>
     }
 
     @if (!locais.length) {
-      <p class="vazio-linha">Você ainda não escolheu onde guarda seus alimentos.</p>
+      <p class="vazio-linha">{{ 'Você ainda não escolheu onde guarda seus alimentos.' | t }}</p>
     }
   }
 
   <!-- Banner principal: a foto é o jeito mais rápido de cadastrar -->
   <a class="banner" routerLink="/armazenamento/geladeira/adicionar">
     <span class="banner-texto">
-      <span class="banner-titulo">Fotografe sua cozinha</span>
-      <span class="banner-sub">A IA identifica os alimentos e estima a validade.</span>
-      <span class="banner-botao">Abrir a câmera</span>
+      <span class="banner-titulo">{{ 'Fotografe sua cozinha' | t }}</span>
+      <span class="banner-sub">{{ 'A IA identifica os alimentos e estima a validade.' | t }}</span>
+      <span class="banner-botao">{{ 'Abrir a câmera' | t }}</span>
     </span>
     <span class="banner-frutas" aria-hidden="true">
       <span class="fruta fruta--a">🥑</span>
@@ -71,8 +71,8 @@
   @if (itensVencendo.length > 0) {
     <section class="secao" aria-labelledby="titulo-vencendo">
       <div class="secao-cabecalho">
-        <h2 id="titulo-vencendo">Vence em breve</h2>
-        <a class="secao-link" routerLink="/receitas">Receitas pra aproveitar</a>
+        <h2 id="titulo-vencendo">{{ 'Vence em breve' | t }}</h2>
+        <a class="secao-link" routerLink="/receitas">{{ 'Receitas pra aproveitar' | t }}</a>
       </div>
 
       <ul class="vencendo-lista">
@@ -95,7 +95,7 @@
         @if (itensVencendo.length > maxVencendoVisiveis) {
           <li class="vencendo-item vencendo-item--mais">
             <span class="mais-numero">+{{ itensVencendo.length - maxVencendoVisiveis }}</span>
-            <span class="vencendo-quando">outros</span>
+            <span class="vencendo-quando">{{ 'outros' | t }}</span>
           </li>
         }
       </ul>
@@ -103,13 +103,13 @@
   }
 
   @if (itensAcabando.length > 0) {
-    <section class="acabando" aria-label="Estoque baixo">
+    <section class="acabando" [attr.aria-label]="'Estoque baixo' | t">
       <div class="acabando-topo">
         <div>
-          <h2>Acabando</h2>
-          <p>{{ itensAcabando.length }} alimento(s) precisam de reposição</p>
+          <h2>{{ 'Acabando' | t }}</h2>
+          <p>{{ '{n} alimento(s) precisam de reposição' | t: { n: itensAcabando.length } }}</p>
         </div>
-        <button class="acabando-fechar" type="button" (click)="fecharAlerta()" aria-label="Fechar aviso">✕</button>
+        <button class="acabando-fechar" type="button" (click)="fecharAlerta()" [attr.aria-label]="'Fechar aviso' | t">✕</button>
       </div>
       <ul class="acabando-lista">
         @for (item of itensAcabando; track item.id) {
@@ -121,8 +121,8 @@
 
   <section class="secao" aria-labelledby="titulo-sugestoes">
     <div class="secao-cabecalho">
-      <h2 id="titulo-sugestoes">Sugestões pra você</h2>
-      <a class="secao-link" routerLink="/receitas">Ver todas</a>
+      <h2 id="titulo-sugestoes">{{ 'Sugestões pra você' | t }}</h2>
+      <a class="secao-link" routerLink="/receitas">{{ 'Ver todas' | t }}</a>
     </div>
 
     @if (carregandoSugestoes) {
@@ -140,9 +140,9 @@
               @if (receita.dificuldade) { <span>{{ receita.dificuldade }}</span> }
             </span>
             @if (receita.aproveitaVencendo?.length) {
-              <span class="sugestao-vence">Aproveita {{ receita.aproveitaVencendo![0] }}</span>
+              <span class="sugestao-vence">{{ 'Aproveita {item}' | t: { item: receita.aproveitaVencendo![0] } }}</span>
             } @else if (receita.ingredientesUsados?.length) {
-              <span class="sugestao-usa">Usa {{ receita.ingredientesUsados!.length }} do que você já tem</span>
+              <span class="sugestao-usa">{{ 'Usa {n} do que você já tem' | t: { n: receita.ingredientesUsados!.length } }}</span>
             }
           </a>
         }
@@ -150,7 +150,7 @@
     } @else if (erroSugestoes) {
       <p class="vazio-linha">{{ erroSugestoes }}</p>
     } @else {
-      <p class="vazio-linha">Adicione alguns alimentos e a gente sugere o que cozinhar.</p>
+      <p class="vazio-linha">{{ 'Adicione alguns alimentos e a gente sugere o que cozinhar.' | t }}</p>
     }
   </section>
 
@@ -163,16 +163,16 @@
       </svg>
     </span>
     <span class="linha-compras-texto">
-      <span class="linha-compras-titulo">Lista de compras</span>
-      <span class="linha-compras-sub">{{ totalListaCompras }} item(ns) pendente(s)</span>
+      <span class="linha-compras-titulo">{{ 'Lista de compras' | t }}</span>
+      <span class="linha-compras-sub">{{ '{n} item(ns) pendente(s)' | t: { n: totalListaCompras } }}</span>
     </span>
     <span class="linha-compras-seta" aria-hidden="true">›</span>
   </a>
 
   <button class="beta" type="button" (click)="sugerirMelhoria()">
-    <span class="beta-tag">Beta</span>
-    <span class="beta-texto">Ainda estamos ajustando o Gelabem. Achou algo estranho ou tem uma ideia?</span>
-    <span class="beta-acao">Sugerir melhoria</span>
+    <span class="beta-tag">{{ 'Beta' | t }}</span>
+    <span class="beta-texto">{{ 'Ainda estamos ajustando o Gelabem. Achou algo estranho ou tem uma ideia?' | t }}</span>
+    <span class="beta-acao">{{ 'Sugerir melhoria' | t }}</span>
   </button>
 
 </main>

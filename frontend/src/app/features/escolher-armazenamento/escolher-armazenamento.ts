@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../services/auth/login.service';
+import { TPipe } from '../../i18n/t.pipe';
 
 @Component({
   selector: 'app-escolher-armazenamento',
-  imports: [CommonModule],
+  imports: [TPipe, CommonModule],
   standalone: true,
   templateUrl: './escolher-armazenamento.html',
   styleUrl: './escolher-armazenamento.css',

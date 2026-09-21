@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { FiltrosReceita, GeladeiraService, Receita } from '../../services/geladeira.service';
 import { ListaComprasService } from '../../services/lista-compras.service';
 import { CozinheiSheet } from '../geral/cozinhei-sheet/cozinhei-sheet';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
 
 const FILTROS_TEMPO: { valor: FiltrosReceita['tempo'], label: string }[] = [
   { valor: 'ate15', label: 'Até 15 min' },
@@ -20,7 +22,7 @@ const FILTROS_OBJETIVO: { valor: FiltrosReceita['objetivo'], label: string }[] =
 
 @Component({
   selector: 'app-receitas',
-  imports: [CozinheiSheet],
+  imports: [TPipe, CozinheiSheet],
   templateUrl: './receitas.html',
   styleUrl: './receitas.css',
 })
@@ -83,8 +85,8 @@ export class Receitas {
       error: (err) => {
         this.receitas = []
         this.erro = err.status === 404
-          ? (err.error?.error || 'Adicione alimentos na sua cozinha pra receber sugestões.')
-          : 'Não conseguimos buscar receitas agora. Tente de novo em instantes.'
+          ? (err.error?.error || tr('Adicione alimentos na sua cozinha pra receber sugestões.'))
+          : tr('Não conseguimos buscar receitas agora. Tente de novo em instantes.')
         this.carregando = false
         this.cdr.markForCheck()
       }

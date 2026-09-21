@@ -5,6 +5,7 @@ import { GeladeiraService, Receita } from '../../../services/geladeira.service';
 import { ListaComprasService } from '../../../services/lista-compras.service';
 import { Item } from '../../../models/item.model';
 import { encontrarNoEstoque, passoDaUnidade, unidadeContavel } from '../../../utils/itens';
+import { TPipe } from '../../../i18n/t.pipe';
 
 interface IngredienteNoEstoque {
   ingrediente: string
@@ -27,7 +28,7 @@ type Estado = 'carregando' | 'confirmar' | 'salvando' | 'pronto' | 'erro'
  */
 @Component({
   selector: 'app-cozinhei-sheet',
-  imports: [FormsModule],
+  imports: [TPipe, FormsModule],
   templateUrl: './cozinhei-sheet.html',
   styleUrl: './cozinhei-sheet.css',
 })

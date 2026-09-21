@@ -1,13 +1,13 @@
 <main class="perfil">
 
   <header class="topo">
-    <button class="btnVoltar" type="button" (click)="goBack()" aria-label="Voltar">
+    <button class="btnVoltar" type="button" (click)="goBack()" [attr.aria-label]="'Voltar' | t">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
     </button>
-    <h1>Minha conta</h1>
+    <h1>{{ 'Minha conta' | t }}</h1>
   </header>
 
   <!-- Conta -->
@@ -23,46 +23,45 @@
   @if (usoIA && usoIA.limiteIA !== null) {
     <section class="cartao">
       <div class="ia-topo">
-        <span class="ia-titulo">✨ Usos de IA neste mês</span>
-        <span class="ia-contagem">{{ usoIA.usosIA }} de {{ usoIA.limiteIA }}</span>
+        <span class="ia-titulo">{{ '✨ Usos de IA neste mês' | t }}</span>
+        <span class="ia-contagem">{{ '{usados} de {limite}' | t: { usados: usoIA.usosIA, limite: usoIA.limiteIA } }}</span>
       </div>
       <div class="barra" role="progressbar" [attr.aria-valuenow]="usoIA.usosIA" aria-valuemin="0" [attr.aria-valuemax]="usoIA.limiteIA">
         <div class="barra-preenchida" [class.cheia]="usoIA.usosIA >= usoIA.limiteIA" [style.width.%]="percentualIA"></div>
       </div>
       <p class="ia-sub">
-        Foto, nota fiscal, receita e assistente contam. Volta a zero todo dia 1º.
-        Durante o beta, tudo é gratuito.
+        {{ 'Foto, nota fiscal, receita e assistente contam. Volta a zero todo dia 1º. Durante o beta, tudo é gratuito.' | t }}
       </p>
     </section>
   }
 
   <!-- Casa compartilhada -->
   <section class="secao">
-    <h2>Minha casa</h2>
+    <h2>{{ 'Minha casa' | t }}</h2>
 
     @if (carregandoCasa) {
-      <div class="cartao"><p class="msg">Carregando…</p></div>
+      <div class="cartao"><p class="msg">{{ 'Carregando…' | t }}</p></div>
     } @else if (casa) {
       <div class="cartao casa">
         <div class="casa-topo">
           <div>
             <p class="casa-nome">{{ casa.nome }}</p>
-            <p class="casa-sub">{{ casa.membros.length }} de {{ casa.limite_membros }} moradores</p>
+            <p class="casa-sub">{{ '{n} de {limite} moradores' | t: { n: casa.membros.length, limite: casa.limite_membros } }}</p>
           </div>
         </div>
 
         <div class="convite">
-          <p class="convite-rotulo">Código de convite</p>
-          <p class="convite-codigo" aria-label="Código de convite">{{ casa.codigo }}</p>
+          <p class="convite-rotulo">{{ 'Código de convite' | t }}</p>
+          <p class="convite-codigo" [attr.aria-label]="'Código de convite' | t">{{ casa.codigo }}</p>
           <div class="convite-acoes">
             <button class="btn-secundario" type="button" (click)="copiarCodigo()">
-              {{ copiado ? 'Copiado ✓' : 'Copiar' }}
+              {{ (copiado ? 'Copiado ✓' : 'Copiar') | t }}
             </button>
-            <button class="btn-primario" type="button" (click)="compartilhar()">Convidar</button>
+            <button class="btn-primario" type="button" (click)="compartilhar()">{{ 'Convidar' | t }}</button>
           </div>
           @if (souDono) {
             <button class="btn-texto" type="button" [disabled]="ocupado" (click)="renovarCodigo()">
-              Gerar novo código
+              {{ 'Gerar novo código' | t }}
             </button>
           }
         </div>
@@ -74,14 +73,14 @@
               <span class="morador-texto">
                 <span class="morador-nome">
                   {{ morador.nome }}
-                  @if (morador.id === usuario?.id) { <span class="tag">você</span> }
-                  @if (morador.id === casa.dono_id) { <span class="tag tag-dono">dono</span> }
+                  @if (morador.id === usuario?.id) { <span class="tag">{{ 'você' | t }}</span> }
+                  @if (morador.id === casa.dono_id) { <span class="tag tag-dono">{{ 'dono' | t }}</span> }
                 </span>
                 <span class="morador-email">{{ morador.email }}</span>
               </span>
               @if (souDono && morador.id !== usuario?.id) {
                 <button class="btn-remover" type="button" [disabled]="ocupado" (click)="removerMorador(morador)">
-                  Remover
+                  {{ 'Remover' | t }}
                 </button>
               }
             </li>
@@ -89,44 +88,44 @@
         </ul>
 
         <button class="btn-perigo" type="button" [disabled]="ocupado" (click)="sairDaCasa()">
-          Sair da casa
+          {{ 'Sair da casa' | t }}
         </button>
       </div>
     } @else {
       <div class="cartao">
         <p class="explica">
-          Divida a geladeira com quem mora com você: todo mundo vê os mesmos alimentos, validades e a mesma lista de compras.
+          {{ 'Divida a geladeira com quem mora com você: todo mundo vê os mesmos alimentos, validades e a mesma lista de compras.' | t }}
         </p>
 
         <div class="bloco">
-          <label for="casa-nome">Criar uma casa</label>
+          <label for="casa-nome">{{ 'Criar uma casa' | t }}</label>
           <div class="linha-input">
             <input
               id="casa-nome"
               type="text"
-              placeholder="Nome da casa (opcional)"
+              [placeholder]="'Nome da casa (opcional)' | t"
               maxlength="60"
               [(ngModel)]="nomeNovaCasa" />
-            <button class="btn-primario" type="button" [disabled]="ocupado" (click)="criarCasa()">Criar</button>
+            <button class="btn-primario" type="button" [disabled]="ocupado" (click)="criarCasa()">{{ 'Criar' | t }}</button>
           </div>
         </div>
 
-        <div class="divisor"><span>ou</span></div>
+        <div class="divisor"><span>{{ 'ou' | t }}</span></div>
 
         <div class="bloco">
-          <label for="casa-codigo">Entrar com um código</label>
+          <label for="casa-codigo">{{ 'Entrar com um código' | t }}</label>
           <div class="linha-input">
             <input
               id="casa-codigo"
               class="input-codigo"
               type="text"
-              placeholder="Ex.: K7M2QX"
+              [placeholder]="'Ex.: K7M2QX' | t"
               maxlength="8"
               autocapitalize="characters"
               autocomplete="off"
               [(ngModel)]="codigoConvite"
               (keyup.enter)="entrarNaCasa()" />
-            <button class="btn-secundario" type="button" [disabled]="ocupado" (click)="entrarNaCasa()">Entrar</button>
+            <button class="btn-secundario" type="button" [disabled]="ocupado" (click)="entrarNaCasa()">{{ 'Entrar|casa' | t }}</button>
           </div>
         </div>
       </div>
@@ -139,17 +138,22 @@
 
   <!-- Feedback (versão beta) -->
   <section class="secao">
-    <h2>Ajude a melhorar</h2>
+    <h2>Idioma / Language</h2>
+    <app-seletor-idioma></app-seletor-idioma>
+  </section>
+
+  <section class="secao">
+    <h2>{{ 'Ajude a melhorar' | t }}</h2>
     <button class="cartao linha-acao" type="button" (click)="sugerirMelhoria()">
       <span class="linha-icone" aria-hidden="true">💡</span>
       <span class="linha-texto">
-        <span class="linha-titulo">Sugerir melhoria <span class="beta-tag">Beta</span></span>
-        <span class="linha-sub">O Gelabem está em versão beta. Conta o que faltou, o que travou ou o que você mais gostou.</span>
+        <span class="linha-titulo">{{ 'Sugerir melhoria' | t }} <span class="beta-tag">{{ 'Beta' | t }}</span></span>
+        <span class="linha-sub">{{ 'O Gelabem está em versão beta. Conta o que faltou, o que travou ou o que você mais gostou.' | t }}</span>
       </span>
       <span class="linha-seta" aria-hidden="true">›</span>
     </button>
   </section>
 
-  <button class="btn-sair" type="button" (click)="sair()">Sair da conta</button>
+  <button class="btn-sair" type="button" (click)="sair()">{{ 'Sair da conta' | t }}</button>
 
 </main>

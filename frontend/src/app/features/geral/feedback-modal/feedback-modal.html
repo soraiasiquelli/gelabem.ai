@@ -9,26 +9,25 @@
 
       <header class="sheet-topo">
         <div>
-          <h2 id="feedback-titulo">Sugerir melhoria</h2>
-          <span class="beta-tag">Beta</span>
+          <h2 id="feedback-titulo">{{ 'Sugerir melhoria' | t }}</h2>
+          <span class="beta-tag">{{ 'Beta' | t }}</span>
         </div>
-        <button class="sheet-fechar" type="button" (click)="fechar()" aria-label="Fechar">✕</button>
+        <button class="sheet-fechar" type="button" (click)="fechar()" [attr.aria-label]="'Fechar' | t">✕</button>
       </header>
 
       @if (enviado) {
         <div class="sucesso">
           <span class="sucesso-icone" aria-hidden="true">🙏</span>
-          <p class="sucesso-titulo">Obrigado! Recebemos sua mensagem.</p>
-          <p class="sucesso-sub">Lemos tudo que chega. É assim que o Gelabem melhora.</p>
-          <button class="btn-primario" type="button" (click)="fechar()">Fechar</button>
+          <p class="sucesso-titulo">{{ 'Obrigado! Recebemos sua mensagem.' | t }}</p>
+          <p class="sucesso-sub">{{ 'Lemos tudo que chega. É assim que o Gelabem melhora.' | t }}</p>
+          <button class="btn-primario" type="button" (click)="fechar()">{{ 'Fechar' | t }}</button>
         </div>
       } @else {
         <p class="aviso-beta">
-          O Gelabem está em <strong>versão beta</strong>: ainda estamos ajustando muita coisa, e o que você contar aqui
-          define o que a gente melhora primeiro.
+          {{ 'O Gelabem está em' | t }} <strong>{{ 'versão beta' | t }}</strong>{{ ': ainda estamos ajustando muita coisa, e o que você contar aqui define o que a gente melhora primeiro.' | t }}
         </p>
 
-        <div class="tipos" role="radiogroup" aria-label="Tipo de mensagem">
+        <div class="tipos" role="radiogroup" [attr.aria-label]="'Tipo de mensagem' | t">
           @for (t of tipos; track t.valor) {
             <button
               type="button"
@@ -37,18 +36,18 @@
               [attr.aria-checked]="tipo === t.valor"
               [class.ativo]="tipo === t.valor"
               (click)="tipo = t.valor">
-              {{ t.label }}
+              {{ t.label | t }}
             </button>
           }
         </div>
 
         <div class="campo">
-          <label for="feedback-mensagem" class="sr-only">Sua mensagem</label>
+          <label for="feedback-mensagem" class="sr-only">{{ 'Sua mensagem' | t }}</label>
           <textarea
             id="feedback-mensagem"
             rows="5"
             [maxlength]="limite"
-            [placeholder]="dica"
+            [placeholder]="dica | t"
             [(ngModel)]="mensagem"></textarea>
           <span class="contador">{{ mensagem.length }}/{{ limite }}</span>
         </div>
@@ -58,7 +57,7 @@
         }
 
         <button class="btn-primario" type="button" [disabled]="enviando" (click)="enviar()">
-          {{ enviando ? 'Enviando…' : 'Enviar' }}
+          {{ (enviando ? 'Enviando…' : 'Enviar') | t }}
         </button>
       }
 

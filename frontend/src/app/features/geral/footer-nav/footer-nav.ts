@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TPipe } from '../../../i18n/t.pipe';
 
 @Component({
   selector: 'app-footer-nav',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [TPipe, RouterLink, RouterLinkActive],
   templateUrl: './footer-nav.html',
   styleUrl: './footer-nav.css',
 })

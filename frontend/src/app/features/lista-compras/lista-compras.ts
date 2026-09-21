@@ -5,10 +5,12 @@ import { Router } from '@angular/router';
 import { ItemListaCompras, ListaComprasService } from '../../services/lista-compras.service';
 import { GeladeiraService } from '../../services/geladeira.service';
 import { Item } from '../../models/item.model';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
 
 @Component({
   selector: 'app-lista-compras',
-  imports: [CommonModule, FormsModule],
+  imports: [TPipe, CommonModule, FormsModule],
   templateUrl: './lista-compras.html',
   styleUrl: './lista-compras.css',
 })
@@ -45,7 +47,7 @@ export class ListaCompras {
         this.cdr.markForCheck()
       },
       error: () => {
-        this.erro = 'Erro ao carregar a lista de compras.'
+        this.erro = tr('Erro ao carregar a lista de compras.')
         this.carregando = false
         this.cdr.markForCheck()
       }

@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
 
 @Component({
   selector: 'app-formulario-ler-nota',
   standalone: true,
-  imports: [FormsModule],
+  imports: [TPipe, FormsModule],
   templateUrl: './formulario-ler-nota.html',
   styleUrl: './formulario-ler-nota.css',
 })
@@ -36,14 +38,14 @@ export class FormularioLerNota {
           this.carregando = false
           this.itensDetectados = res.resultado || []
           if (!this.itensDetectados.length) {
-            this.mensagem = 'Nenhum item encontrado na nota.'
+            this.mensagem = tr('Nenhum item encontrado na nota.')
             this.statusTipo = 'erro'
           }
         },
         error: (error) => {
           console.log("Erro:", error)
           this.carregando = false
-          this.mensagem = 'Erro ao processar a nota fiscal.'
+          this.mensagem = tr('Erro ao processar a nota fiscal.')
           this.statusTipo = 'erro'
         }
       })
@@ -64,11 +66,11 @@ export class FormularioLerNota {
     }).subscribe({
       next: () => {
         this.itensDetectados.splice(index, 1)
-        this.mensagem = 'Item adicionado!'
+        this.mensagem = tr('Item adicionado!')
         this.statusTipo = 'sucesso'
       },
       error: () => {
-        this.mensagem = 'Erro ao adicionar item.'
+        this.mensagem = tr('Erro ao adicionar item.')
         this.statusTipo = 'erro'
       }
     })
@@ -98,12 +100,12 @@ export class FormularioLerNota {
           concluidos++
           if (concluidos === requisicoes.length) {
             this.itensDetectados = []
-            this.mensagem = `${concluidos} item(s) adicionado(s) com sucesso!`
+            this.mensagem = tr('{n} item(s) adicionado(s) com sucesso!', { n: concluidos })
             this.statusTipo = 'sucesso'
           }
         },
         error: () => {
-          this.mensagem = 'Erro ao adicionar alguns itens.'
+          this.mensagem = tr('Erro ao adicionar alguns itens.')
           this.statusTipo = 'erro'
         }
       })

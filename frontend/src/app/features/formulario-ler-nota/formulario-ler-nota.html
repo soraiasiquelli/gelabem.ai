@@ -16,26 +16,26 @@
             <line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
         </div>
-        <span class="upload-label">Enviar foto da nota fiscal</span>
-        <span class="upload-sub">Tire uma foto clara da nota ou escolha da galeria</span>
-        <span class="upload-btn">Escolher imagem</span>
+        <span class="upload-label">{{ 'Enviar foto da nota fiscal' | t }}</span>
+        <span class="upload-sub">{{ 'Tire uma foto clara da nota ou escolha da galeria' | t }}</span>
+        <span class="upload-btn">{{ 'Escolher imagem' | t }}</span>
       </div>
     } @else {
       <div class="upload-loading">
         <div class="spinner"></div>
-        <span class="loading-text">Lendo nota fiscal...</span>
-        <span class="loading-sub">A IA está identificando os itens</span>
+        <span class="loading-text">{{ 'Lendo nota fiscal...' | t }}</span>
+        <span class="loading-sub">{{ 'A IA está identificando os itens' | t }}</span>
       </div>
     }
   </div>
 
   <!-- Dicas -->
   <div class="dicas-card">
-    <p class="dicas-titulo">📋 Dicas para melhor resultado</p>
+    <p class="dicas-titulo">{{ '📋 Dicas para melhor resultado' | t }}</p>
     <ul class="dicas-lista">
-      <li>Fotografe a nota em local bem iluminado</li>
-      <li>Mantenha a câmera paralela à nota</li>
-      <li>Certifique-se que o texto está legível</li>
+      <li>{{ 'Fotografe a nota em local bem iluminado' | t }}</li>
+      <li>{{ 'Mantenha a câmera paralela à nota' | t }}</li>
+      <li>{{ 'Certifique-se que o texto está legível' | t }}</li>
     </ul>
   </div>
 
@@ -43,8 +43,8 @@
   @if (itensDetectados.length > 0) {
     <div class="resultado-wrap">
       <div class="resultado-header">
-        <span class="resultado-titulo">✅ {{ itensDetectados.length }} item(s) encontrado(s)</span>
-        <span class="resultado-sub">Confirme e adicione cada item</span>
+        <span class="resultado-titulo">{{ '✅ {n} item(s) encontrado(s)' | t: { n: itensDetectados.length } }}</span>
+        <span class="resultado-sub">{{ 'Confirme e adicione cada item' | t }}</span>
       </div>
 
       <div class="resultado-lista">
@@ -59,14 +59,14 @@
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Adicionar
+              {{ 'Adicionar' | t }}
             </button>
           </div>
         }
       </div>
 
       <button class="btn-add-todos" (click)="adicionarTodos()">
-        Adicionar todos os itens
+        {{ 'Adicionar todos os itens' | t }}
       </button>
     </div>
   }

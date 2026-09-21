@@ -2,14 +2,16 @@ import { HttpInterceptorFn } from '@angular/common/http'
 import { inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { catchError, throwError } from 'rxjs'
+import { I18n } from '../i18n/i18n.service'
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('token')
   const router = inject(Router)
+  const idioma = inject(I18n).idioma()
 
   const reqComToken = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-    : req
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}`, 'Accept-Language': idioma } })
+    : req.clone({ setHeaders: { 'Accept-Language': idioma } })
 
   return next(reqComToken).pipe(
     catchError((erro) => {

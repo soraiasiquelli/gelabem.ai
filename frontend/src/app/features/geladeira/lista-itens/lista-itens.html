@@ -3,7 +3,7 @@
     <div class="grupo">
       @if (grupo.nome) {
         <p class="grupo-titulo">
-          <span aria-hidden="true">{{ grupo.icone }}</span> {{ grupo.nome }}
+          <span aria-hidden="true">{{ grupo.icone }}</span> {{ grupo.nome | t }}
         </p>
       }
       <div class="grupo-itens">
@@ -24,8 +24,8 @@
   } @empty {
     <div class="listaVazia">
       <span class="listaVazia-icone" aria-hidden="true">🧺</span>
-      <p class="listaVazia-titulo">Ainda não tem nada por aqui</p>
-      <p class="listaVazia-sub">Fotografe o que você tem ou adicione um item manualmente pra começar.</p>
+      <p class="listaVazia-titulo">{{ 'Ainda não tem nada por aqui' | t }}</p>
+      <p class="listaVazia-sub">{{ 'Fotografe o que você tem ou adicione um item manualmente pra começar.' | t }}</p>
     </div>
   }
 </div>
@@ -34,8 +34,8 @@
   <div class="aviso" role="status">
     <span class="aviso-texto">{{ aviso.texto }}</span>
     @if (aviso.item) {
-      <button class="aviso-acao" type="button" (click)="adicionarNaListaDeCompras()">🛒 Adicionar à lista</button>
+      <button class="aviso-acao" type="button" (click)="adicionarNaListaDeCompras()">{{ '🛒 Adicionar à lista' | t }}</button>
     }
-    <button class="aviso-fechar" type="button" (click)="fecharAviso()" aria-label="Fechar aviso">✕</button>
+    <button class="aviso-fechar" type="button" (click)="fecharAviso()" [attr.aria-label]="'Fechar aviso' | t">✕</button>
   </div>
 }

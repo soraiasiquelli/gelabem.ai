@@ -8,8 +8,8 @@
       </svg>
     </button>
     <div>
-      <h1>Lista de Compras</h1>
-      <p>{{ itens.length }} item(s) na lista</p>
+      <h1>{{ 'Lista de Compras' | t }}</h1>
+      <p>{{ '{n} item(s) na lista' | t: { n: itens.length } }}</p>
     </div>
   </div>
 
@@ -17,7 +17,7 @@
     <input
       class="inputNome"
       type="text"
-      placeholder="Adicionar item..."
+      [placeholder]="'Adicionar item...' | t"
       [(ngModel)]="novoNome"
       name="nome"
       required />
@@ -28,26 +28,26 @@
       [(ngModel)]="novaQuantidade"
       name="quantidade" />
     <select class="selectUnidade" [(ngModel)]="novaUnidade" name="unidade">
-      <option value="un">un</option>
-      <option value="kg">kg</option>
-      <option value="g">g</option>
-      <option value="L">L</option>
-      <option value="mL">mL</option>
-      <option value="cx">cx</option>
-      <option value="pct">pct</option>
+      <option value="un">{{ 'un' | t }}</option>
+      <option value="kg">{{ 'kg' | t }}</option>
+      <option value="g">{{ 'g' | t }}</option>
+      <option value="L">{{ 'L' | t }}</option>
+      <option value="mL">{{ 'mL' | t }}</option>
+      <option value="cx">{{ 'cx' | t }}</option>
+      <option value="pct">{{ 'pct' | t }}</option>
     </select>
     <button class="btnAdicionar" type="submit" [disabled]="salvando">+</button>
   </form>
 
   @if (sugestoes.length > 0) {
     <div class="sugestoes">
-      <p class="sugestoesTitulo">⚠️ Estoque baixo</p>
+      <p class="sugestoesTitulo">{{ '⚠️ Estoque baixo' | t }}</p>
       <ul class="listaSugestoes">
         @for (item of sugestoes; track item.id) {
           <li class="itemSugestao">
             <div class="itemInfo">
               <span class="itemNome">{{ item.nome }}</span>
-              <span class="itemQuantidade">restam {{ item.quantidade }} {{ item.unidade }}</span>
+              <span class="itemQuantidade">{{ 'restam {quantidade} {unidade}' | t: { quantidade: item.quantidade, unidade: item.unidade } }}</span>
             </div>
             <button class="addSugestaoBtn" type="button" [disabled]="salvando" (click)="adicionarSugestao(item)">+</button>
           </li>
@@ -57,14 +57,14 @@
   }
 
   @if (carregando) {
-    <p class="status">Carregando...</p>
+    <p class="status">{{ 'Carregando...' | t }}</p>
   } @else if (erro) {
     <p class="status erro">{{ erro }}</p>
   } @else if (!itens.length) {
     <div class="vazio">
       <span class="vazio-icone" aria-hidden="true">🛒</span>
-      <p class="vazio-titulo">Sua lista está vazia por enquanto</p>
-      <p class="vazio-sub">Adicione um item acima ou veja o que falta em uma receita.</p>
+      <p class="vazio-titulo">{{ 'Sua lista está vazia por enquanto' | t }}</p>
+      <p class="vazio-sub">{{ 'Adicione um item acima ou veja o que falta em uma receita.' | t }}</p>
     </div>
   } @else {
     <ul class="lista">

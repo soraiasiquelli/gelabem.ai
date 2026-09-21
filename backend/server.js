@@ -21,6 +21,7 @@ const { carregarCasa } = require('./middleware/casa');
 const { locaisDaCasa } = require('./services/casa');
 const { hoje, somarDias, diasAte, dataValida, validadeEmDias } = require('./utils/datas');
 const { descreverItens, REGRA_VALIDADE } = require('./utils/itens');
+const { traduzir, middlewareIdioma, instrucaoIdioma } = require('./utils/idioma');
 
 // rotas que enxergam o que é compartilhado na casa (req.idsCasa) além do usuário logado
 const auth = [authMiddleware, carregarCasa]
@@ -36,6 +37,7 @@ const app = express();
 
 app.use(cors())
 app.use(express.json())
+app.use(middlewareIdioma)
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store')
   next()
@@ -174,7 +176,7 @@ app.post('/leitura-nota', authMiddleware, upload.single("image"), async (req, re
     const prompt = `Leia esta nota fiscal. Retorne APENAS JSON com itens alimentícios. Ignore higiene/limpeza.
 Categorias: ${categoriasDB.map(c => c.nome).join(', ')}
 "dias_validade": estimativa de quantos dias o item dura a partir da compra, guardado do jeito normal (null se não estraga ou se não der pra estimar).
-Formato: [{"nome":"Arroz","quantidade":2,"categoria":"Grãos e Cereais","unidade":"un","dias_validade":180}]`
+Formato: [{"nome":"Arroz","quantidade":2,"categoria":"Grãos e Cereais","unidade":"un","dias_validade":180}]${req.idioma === 'en' ? '\nEscreva o campo "nome" de cada item em inglês (ex.: "Rice"), mas mantenha "categoria" exatamente como está na lista de categorias.' : ''}`
 
     // 3. Chamar o Claude
     const response = await anthropic.messages.create({
@@ -259,7 +261,7 @@ Regras:
 - "quantidade" deve ser a quantidade real daquele alimento visível na imagem
 - "confianca" é "alta" quando você tem certeza do que é o alimento, e "baixa" quando está em dúvida (embalagem parcialmente visível, alimento coberto, item ambíguo)
 - "dias_validade" é uma estimativa realista de quantos dias, a partir de hoje, o alimento ainda dura guardado em: ${local}. Use null se ele não estraga (sal, açúcar) ou se não der pra estimar. Seja conservador: é melhor avisar cedo do que tarde.
-
+${req.idioma === 'en' ? '- escreva o campo "nome" de cada item em inglês (ex.: "banana", "milk"), mas mantenha "categoria" exatamente como está na lista acima\n' : ''}
 Formato obrigatório:
 [
   {
@@ -385,7 +387,7 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, no formato:
   "ingredientesUsados": ["item 1", "item 2"],
   "ingredientesFaltantes": ["item que precisa comprar"],
   "modoPreparo": ["passo 1", "passo 2"]
-}`
+}${req.idioma === 'en' ? "\nEscreva titulo, tempoPreparo, ingredientesFaltantes e modoPreparo em inglês. Em ingredientesUsados use exatamente os nomes da lista de itens acima, sem traduzir." : ''}`
 
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5',
@@ -819,7 +821,7 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, no formato:
     "aproveitaVencendo": ["item que vence logo"],
     "modoPreparo": ["passo 1", "passo 2"]
   }
-]`
+]${req.idioma === 'en' ? "\nEscreva titulo, tempoPreparo, dificuldade (Easy/Medium/Hard), ingredientesFaltantes e modoPreparo em inglês. Em ingredientesUsados e aproveitaVencendo use exatamente os nomes da lista de itens acima, sem traduzir." : ''}`
 
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5',
@@ -877,7 +879,8 @@ Regras:
 - quando sugerir uma receita, estruture com um título, o tempo estimado e o modo de preparo em poucos passos curtos
 - se faltar informação (tempo disponível, quantas pessoas, tipo de refeição), pergunte antes de sugerir
 - nunca invente que o usuário tem um ingrediente que não está na lista acima
-- se a lista de alimentos estiver vazia, sugira que ele fotografe a cozinha ou adicione itens manualmente`
+- se a lista de alimentos estiver vazia, sugira que ele fotografe a cozinha ou adicione itens manualmente
+${instrucaoIdioma(req)}`
 
   const messages = historico
     .filter(m => m && m.texto)
@@ -956,7 +959,7 @@ app.post('/chat/stream', auth, async (req, res) => {
     if (res.writableEnded || res.destroyed) return
     const { status, mensagem } = erroDoChat(error)
     if (!res.headersSent) return res.status(status).json({ error: mensagem })
-    res.write(`data: ${JSON.stringify({ erro: mensagem })}\n\n`)
+    res.write(`data: ${JSON.stringify({ erro: traduzir(req.idioma, mensagem) })}\n\n`)
     res.end()
   }
 })

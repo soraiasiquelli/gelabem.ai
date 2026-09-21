@@ -1,5 +1,7 @@
 <div class="register-host">
 
+  <app-seletor-idioma [flutuante]="true"></app-seletor-idioma>
+
   <header class="marca">
     <div class="icon-wrap">
       <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
@@ -8,15 +10,15 @@
           <path d="M14.5 25.5c0-6.5 4.5-10.5 11-10.5 0 6.5-4.5 10.5-11 10.5z" fill="currentColor"/>
         </svg>
     </div>
-    <span class="brand">Gelabem</span>
-    <p class="subtitle">Crie sua conta e organize a cozinha em um minuto.</p>
+    <span class="brand">{{ 'Gelabem' | t }}</span>
+    <p class="subtitle">{{ 'Crie sua conta e organize a cozinha em um minuto.' | t }}</p>
   </header>
 
   <div class="card">
 
     <!-- Nome -->
     <div class="field">
-      <label>Nome completo</label>
+      <label>{{ 'Nome completo' | t }}</label>
       <div class="input-wrap">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -24,13 +26,13 @@
             <circle cx="12" cy="7" r="4"/>
           </svg>
         </span>
-        <input type="text" placeholder="Seu nome" [(ngModel)]="nome" />
+        <input type="text" [placeholder]="'Seu nome' | t" [(ngModel)]="nome" />
       </div>
     </div>
 
     <!-- E-mail -->
     <div class="field">
-      <label>E-mail</label>
+      <label>{{ 'E-mail' | t }}</label>
       <div class="input-wrap">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -38,13 +40,13 @@
             <polyline points="2,4 12,13 22,4"/>
           </svg>
         </span>
-        <input type="email" placeholder="seu@email.com" [(ngModel)]="email" />
+        <input type="email" [placeholder]="'seu@email.com' | t" [(ngModel)]="email" />
       </div>
     </div>
 
     <!-- Senha -->
     <div class="field">
-      <label>Senha</label>
+      <label>{{ 'Senha' | t }}</label>
       <div class="input-wrap">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -52,7 +54,7 @@
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </span>
-        <input [type]="mostrarSenha ? 'text' : 'password'" placeholder="Mínimo 8 caracteres" [(ngModel)]="senha"/>
+        <input [type]="mostrarSenha ? 'text' : 'password'" [placeholder]="'Mínimo 8 caracteres' | t" [(ngModel)]="senha"/>
         <span class="eye" (click)="toggleSenha()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -64,14 +66,14 @@
 
     <!-- Confirmar senha -->
     <div class="field">
-      <label>Confirmar senha</label>
+      <label>{{ 'Confirmar senha' | t }}</label>
       <div class="input-wrap">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
         </span>
-        <input [type]="mostrarConfirmarSenha ? 'text' : 'password'" placeholder="Repita a senha" [(ngModel)]="repetirsenha"/>
+        <input [type]="mostrarConfirmarSenha ? 'text' : 'password'" [placeholder]="'Repita a senha' | t" [(ngModel)]="repetirsenha"/>
         <span class="eye" (click)="toggleConfirmarSenha()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -93,12 +95,12 @@
         <line x1="19" y1="8" x2="19" y2="14"/>
         <line x1="22" y1="11" x2="16" y2="11"/>
       </svg>
-      Criar conta grátis
+      {{ 'Criar conta grátis' | t }}
     </button>
 
     <app-google-login (entrou)="aoEntrarComGoogle($event)" (erro)="erro = $event"></app-google-login>
 
-    <p class="login-link">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+    <p class="login-link">{{ 'Já tem uma conta?' | t }} <a routerLink="/login">{{ 'Entrar' | t }}</a></p>
 
   </div>
 </div>

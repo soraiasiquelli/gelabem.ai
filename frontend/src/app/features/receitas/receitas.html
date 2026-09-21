@@ -1,8 +1,8 @@
 <main class="mainReceitas">
 
   <header class="topo">
-    <h1>O que posso cozinhar?</h1>
-    <p>Sugestões com base no que você já tem em casa</p>
+    <h1>{{ 'O que posso cozinhar?' | t }}</h1>
+    <p>{{ 'Sugestões com base no que você já tem em casa' | t }}</p>
   </header>
 
   <div class="filtros">
@@ -13,7 +13,7 @@
           class="chip"
           [class.ativo]="tempoSelecionado === f.valor"
           (click)="toggleTempo(f.valor)">
-          {{ f.label }}
+          {{ f.label | t }}
         </button>
       }
     </div>
@@ -24,14 +24,14 @@
           class="chip"
           [class.ativo]="objetivoSelecionado === f.valor"
           (click)="toggleObjetivo(f.valor)">
-          {{ f.label }}
+          {{ f.label | t }}
         </button>
       }
     </div>
 
     @if (ingredientesDisponiveis.length) {
       <div class="filtros-bloco">
-        <p class="filtros-titulo">Usar primeiro (até 3)</p>
+        <p class="filtros-titulo">{{ 'Usar primeiro (até 3)' | t }}</p>
         <div class="filtros-linha">
           @for (ing of ingredientesDisponiveis; track ing) {
             <button
@@ -56,12 +56,12 @@
     <div class="vazio">
       <span class="vazio-icone" aria-hidden="true">🍽️</span>
       <p class="vazio-titulo">{{ erro }}</p>
-      <button class="btn-primario" type="button" (click)="irParaCozinha()">📸 Fotografar minha cozinha</button>
+      <button class="btn-primario" type="button" (click)="irParaCozinha()">{{ '📸 Fotografar minha cozinha' | t }}</button>
     </div>
   } @else if (!receitas.length) {
     <div class="vazio">
       <span class="vazio-icone" aria-hidden="true">🤔</span>
-      <p class="vazio-titulo">Não achamos receitas com esses filtros. Tente ajustar as preferências.</p>
+      <p class="vazio-titulo">{{ 'Não achamos receitas com esses filtros. Tente ajustar as preferências.' | t }}</p>
     </div>
   } @else {
     <div class="lista-receitas">
@@ -73,7 +73,7 @@
               <p class="card-receita-meta">
                 @if (receita.tempoPreparo) { <span>{{ receita.tempoPreparo }}</span> }
                 @if (receita.dificuldade) { <span>{{ receita.dificuldade }}</span> }
-                @if (receita.porcoes) { <span>{{ receita.porcoes }} porções</span> }
+                @if (receita.porcoes) { <span>{{ '{n} porções' | t: { n: receita.porcoes } }}</span> }
               </p>
             </div>
             <span class="card-receita-seta" aria-hidden="true">{{ expandido === i ? '﹀' : '›' }}</span>
@@ -82,7 +82,7 @@
           <div class="card-receita-ingredientes">
             @if (receita.aproveitaVencendo?.length) {
               <div class="ingredientes-linha">
-                <span class="tag tag-vence">Aproveita o que vence: {{ receita.aproveitaVencendo!.join(', ') }}</span>
+                <span class="tag tag-vence">{{ 'Aproveita o que vence: {itens}' | t: { itens: receita.aproveitaVencendo!.join(', ') } }}</span>
               </div>
             }
             @if (receita.ingredientesUsados?.length) {
@@ -100,7 +100,7 @@
                     class="tag tag-falta"
                     [class.tag-adicionado]="adicionadosNaLista.has(chaveIngrediente(i, ing))"
                     (click)="adicionarNaLista(i, ing)">
-                    {{ adicionadosNaLista.has(chaveIngrediente(i, ing)) ? '✓ na lista' : '+ ' + ing }}
+                    {{ adicionadosNaLista.has(chaveIngrediente(i, ing)) ? ('✓ na lista' | t) : '+ ' + ing }}
                   </button>
                 }
               </div>
@@ -118,7 +118,7 @@
           @if (expandido === i) {
             <div class="card-receita-acoes">
               <button class="btn-cozinhei" type="button" (click)="abrirCozinhei(receita)">
-                🍳 Cozinhei essa
+                {{ '🍳 Cozinhei essa' | t }}
               </button>
             </div>
           }

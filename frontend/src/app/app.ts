@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterNav } from './features/geral/footer-nav/footer-nav';
+import { I18n } from './i18n/i18n.service';
 import { FeedbackModal } from './features/geral/feedback-modal/feedback-modal';
 
 const ROTAS_SEM_FOOTER = ['/', '/login', '/criar-conta', '/escolher-armazenamento', '/planos', '/comecar'];
@@ -15,7 +16,7 @@ export class App {
   protected readonly title = signal('frontend');
   mostrarFooter = signal(false);
 
-  constructor(private router: Router) {
+  constructor(private router: Router, _i18n: I18n) {
     this.atualizarFooter(this.router.url);
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

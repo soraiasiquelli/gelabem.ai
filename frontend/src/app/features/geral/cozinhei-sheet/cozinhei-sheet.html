@@ -7,27 +7,27 @@
     (click)="$event.stopPropagation()">
 
     <header class="sheet-topo">
-      <h2 id="cozinhei-titulo">🍳 Cozinhei: {{ receita.titulo }}</h2>
-      <button class="sheet-fechar" type="button" (click)="fechar.emit()" aria-label="Fechar">✕</button>
+      <h2 id="cozinhei-titulo">{{ '🍳 Cozinhei: {titulo}' | t: { titulo: receita.titulo } }}</h2>
+      <button class="sheet-fechar" type="button" (click)="fechar.emit()" [attr.aria-label]="'Fechar' | t">✕</button>
     </header>
 
     @switch (estado) {
       @case ('carregando') {
-        <p class="msg">Conferindo o seu estoque…</p>
+        <p class="msg">{{ 'Conferindo o seu estoque…' | t }}</p>
       }
 
       @case ('erro') {
-        <p class="msg">Não conseguimos abrir o seu estoque agora. Tente de novo em instantes.</p>
+        <p class="msg">{{ 'Não conseguimos abrir o seu estoque agora. Tente de novo em instantes.' | t }}</p>
         <div class="acoes">
-          <button class="btn-secundario" type="button" (click)="fechar.emit()">Fechar</button>
+          <button class="btn-secundario" type="button" (click)="fechar.emit()">{{ 'Fechar' | t }}</button>
         </div>
       }
 
       @case ('pronto') {
-        <p class="msg msg--ok">✓ Estoque atualizado! Bom apetite.</p>
+        <p class="msg msg--ok">{{ '✓ Estoque atualizado! Bom apetite.' | t }}</p>
 
         @if (acabaram.length) {
-          <p class="sub">Acabou de vez:</p>
+          <p class="sub">{{ 'Acabou de vez:' | t }}</p>
           <ul class="chips">
             @for (item of acabaram; track item.nome) {
               <li class="chip">{{ item.nome }}</li>
@@ -35,21 +35,21 @@
           </ul>
 
           @if (adicionadosNaLista) {
-            <p class="dica">🛒 Adicionado à sua lista de compras.</p>
+            <p class="dica">{{ '🛒 Adicionado à sua lista de compras.' | t }}</p>
           } @else {
             <button class="btn-primario" type="button" [disabled]="salvandoLista" (click)="adicionarAcabaramNaLista()">
-              🛒 Adicionar à lista de compras
+              {{ '🛒 Adicionar à lista de compras' | t }}
             </button>
           }
         }
 
         <div class="acoes">
-          <button class="btn-secundario" type="button" (click)="fechar.emit()">Fechar</button>
+          <button class="btn-secundario" type="button" (click)="fechar.emit()">{{ 'Fechar' | t }}</button>
         </div>
       }
 
       @default {
-        <p class="sub">Confirme o que você usou pra a gente atualizar o seu estoque.</p>
+        <p class="sub">{{ 'Confirme o que você usou pra a gente atualizar o seu estoque.' | t }}</p>
 
         @if (ingredientes.length) {
           <ul class="linhas">
@@ -59,15 +59,15 @@
                   <input type="checkbox" [(ngModel)]="item.marcado" />
                   <span class="linha-texto">
                     <span class="linha-nome">{{ item.nome }}</span>
-                    <span class="linha-tem">tem {{ item.total }} {{ item.unidade }}</span>
+                    <span class="linha-tem">{{ 'tem {total} {unidade}' | t: { total: item.total, unidade: item.unidade } }}</span>
                   </span>
                 </label>
 
                 @if (item.marcado) {
-                  <div class="passo" role="group" [attr.aria-label]="'Quanto de ' + item.nome + ' você usou'">
-                    <button type="button" (click)="alterarUso(item, -1)" aria-label="Usou menos">−</button>
+                  <div class="passo" role="group" [attr.aria-label]="'Quanto de {nome} você usou' | t: { nome: item.nome }">
+                    <button type="button" (click)="alterarUso(item, -1)" [attr.aria-label]="'Usou menos' | t">−</button>
                     <span class="passo-valor">{{ item.usar }} {{ item.unidade }}</span>
-                    <button type="button" (click)="alterarUso(item, 1)" aria-label="Usou mais">+</button>
+                    <button type="button" (click)="alterarUso(item, 1)" [attr.aria-label]="'Usou mais' | t">+</button>
                   </div>
                 }
               </li>
@@ -75,14 +75,14 @@
           </ul>
 
           @if (temNaoContavel) {
-            <p class="dica">Itens em peso ou volume vêm desmarcados porque a receita não diz quanto foi usado. Marque e ajuste se quiser descontar.</p>
+            <p class="dica">{{ 'Itens em peso ou volume vêm desmarcados porque a receita não diz quanto foi usado. Marque e ajuste se quiser descontar.' | t }}</p>
           }
         } @else {
-          <p class="msg">Nenhum ingrediente dessa receita foi encontrado no seu estoque.</p>
+          <p class="msg">{{ 'Nenhum ingrediente dessa receita foi encontrado no seu estoque.' | t }}</p>
         }
 
         @if (semEstoque.length) {
-          <p class="dica">Não achamos no estoque: {{ semEstoque.join(', ') }}.</p>
+          <p class="dica">{{ 'Não achamos no estoque: {itens}.' | t: { itens: semEstoque.join(', ') } }}</p>
         }
 
         <div class="acoes">
@@ -91,9 +91,9 @@
             type="button"
             [disabled]="marcados === 0 || estado === 'salvando'"
             (click)="confirmar()">
-            {{ estado === 'salvando' ? 'Atualizando…' : 'Descontar do estoque' }}
+            {{ (estado === 'salvando' ? 'Atualizando…' : 'Descontar do estoque') | t }}
           </button>
-          <button class="btn-secundario" type="button" (click)="fechar.emit()">Agora não</button>
+          <button class="btn-secundario" type="button" (click)="fechar.emit()">{{ 'Agora não' | t }}</button>
         </div>
       }
     }

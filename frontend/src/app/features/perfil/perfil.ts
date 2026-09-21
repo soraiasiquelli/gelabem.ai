@@ -6,10 +6,13 @@ import { Casa, CasaService, MoradorCasa } from '../../services/casa.service';
 import { FeedbackService } from '../../services/feedback.service';
 import { LoginService } from '../../services/auth/login.service';
 import { UsoIA, UsoIAService } from '../../services/uso-ia.service';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
+import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
 
 @Component({
   selector: 'app-perfil',
-  imports: [FormsModule],
+  imports: [SeletorIdioma, TPipe, FormsModule],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css',
 })
@@ -74,7 +77,7 @@ export class Perfil implements OnDestroy {
         this.cdr.markForCheck()
       },
       error: () => {
-        this.erroCasa = 'Não foi possível carregar sua casa agora.'
+        this.erroCasa = tr('Não foi possível carregar sua casa agora.')
         this.carregandoCasa = false
         this.cdr.markForCheck()
       }
@@ -96,7 +99,7 @@ export class Perfil implements OnDestroy {
       },
       error: (err) => {
         this.ocupado = false
-        this.erroCasa = err.error?.error || 'Não foi possível concluir. Tente novamente.'
+        this.erroCasa = err.error?.error || tr('Não foi possível concluir. Tente novamente.')
         this.cdr.markForCheck()
       }
     })
@@ -109,24 +112,24 @@ export class Perfil implements OnDestroy {
   entrarNaCasa() {
     const codigo = this.codigoConvite.trim()
     if (!codigo) {
-      this.erroCasa = 'Digite o código que você recebeu.'
+      this.erroCasa = tr('Digite o código que você recebeu.')
       return
     }
     this.executar(this.casaService.entrar(codigo), () => this.codigoConvite = '')
   }
 
   sairDaCasa() {
-    if (!confirm('Sair da casa? Você leva o que cadastrou, mas deixa de ver os itens dos outros moradores.')) return
+    if (!confirm(tr('Sair da casa? Você leva o que cadastrou, mas deixa de ver os itens dos outros moradores.'))) return
     this.executar(this.casaService.sair())
   }
 
   renovarCodigo() {
-    if (!confirm('Gerar um novo código? O código atual deixa de funcionar pra quem ainda não entrou.')) return
+    if (!confirm(tr('Gerar um novo código? O código atual deixa de funcionar pra quem ainda não entrou.'))) return
     this.executar(this.casaService.renovarCodigo())
   }
 
   removerMorador(morador: MoradorCasa) {
-    if (!confirm(`Remover ${morador.nome} da casa?`)) return
+    if (!confirm(tr('Remover {nome} da casa?', { nome: morador.nome }))) return
     this.executar(this.casaService.removerMorador(morador.id))
   }
 
@@ -138,7 +141,7 @@ export class Perfil implements OnDestroy {
   async compartilhar() {
     if (!this.casa) return
 
-    const texto = `Entra na nossa casa no Gelabem! Crie sua conta em ${window.location.origin} e, em Minha conta > Minha casa, use o código ${this.casa.codigo}.`
+    const texto = tr('Entra na nossa casa no Gelabem! Crie sua conta em {url} e, em Minha conta > Minha casa, use o código {codigo}.', { url: window.location.origin, codigo: this.casa.codigo })
 
     if (navigator.share) {
       try {
@@ -162,7 +165,7 @@ export class Perfil implements OnDestroy {
         this.cdr.markForCheck()
       }, 2000)
     } catch {
-      this.erroCasa = 'Não conseguimos copiar automaticamente. Anote o código acima.'
+      this.erroCasa = tr('Não conseguimos copiar automaticamente. Anote o código acima.')
       this.cdr.markForCheck()
     }
   }

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TPipe } from '../../i18n/t.pipe';
 
 @Component({
   selector: 'app-planos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TPipe, CommonModule],
   templateUrl: './planos.html',
   styleUrl: './planos.css',
 })

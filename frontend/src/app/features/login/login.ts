@@ -6,10 +6,13 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginRequest } from '../../models/Usuario.model';
 import { GoogleLogin } from '../geral/google-login/google-login';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
+import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, GoogleLogin],
+  imports: [SeletorIdioma, TPipe, RouterLink, FormsModule, GoogleLogin],
   standalone: true,
   templateUrl: './login.html',
   styleUrl: './login.css',
@@ -51,7 +54,7 @@ export class Login {
     },
     error: (err) => {
       console.log("Erro:", err);
-      this.erro = err.error?.error || 'Não foi possível entrar agora. Tente novamente.'
+      this.erro = err.error?.error || tr('Não foi possível entrar agora. Tente novamente.')
     }
   });
 }

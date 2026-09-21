@@ -8,6 +8,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { dataEmDias } from '../../../utils/validade';
+import { TPipe } from '../../../i18n/t.pipe';
+import { tr } from '../../../i18n/i18n.service';
 
 interface ItemDetectado {
   nome: string
@@ -23,7 +25,7 @@ interface ItemDetectado {
 @Component({
   selector: 'app-formulario-item',
   standalone: true,
-  imports: [FormsModule],
+  imports: [TPipe, FormsModule],
   templateUrl: './formulario-item.html',
   styleUrl: './formulario-item.css',
 })
@@ -133,7 +135,7 @@ export class FormularioItem implements OnInit {
 
     adicionar(){
       if (!this.local) {
-        this.mostrarStatus('Esse armazenamento não está configurado pra esse usuário.', 'erro')
+        this.mostrarStatus(tr('Esse armazenamento não está configurado pra esse usuário.'), 'erro')
         return
       }
 
@@ -161,12 +163,12 @@ export class FormularioItem implements OnInit {
         next: (res) => {
           console.log("Salvo no banco:", res);
           this.mensagemIA = ''
-          this.mostrarStatus(this.itemId ? 'Item atualizado com sucesso!' : 'Item salvo com sucesso!', 'sucesso')
+          this.mostrarStatus(this.itemId ? tr('Item atualizado com sucesso!') : tr('Item salvo com sucesso!'), 'sucesso')
           this.salvo.emit()
         },
         error: (err) => {
           console.log("Erro:", err);
-          this.mostrarStatus(err.error?.error || 'Erro ao salvar item. Tente novamente.', 'erro')
+          this.mostrarStatus(err.error?.error || tr('Erro ao salvar item. Tente novamente.'), 'erro')
         }
       });
 
@@ -180,7 +182,7 @@ export class FormularioItem implements OnInit {
 
     adicionarDetectado(item: ItemDetectado){
       if (!this.local) {
-        this.mostrarStatus('Esse armazenamento não está configurado pra esse usuário.', 'erro')
+        this.mostrarStatus(tr('Esse armazenamento não está configurado pra esse usuário.'), 'erro')
         return
       }
 
@@ -203,12 +205,12 @@ export class FormularioItem implements OnInit {
           next: (res) => {
             console.log("Salvo no banco:", res);
             this.descartarDetectado(item)
-            this.mostrarStatus('Item salvo com sucesso!', 'sucesso')
+            this.mostrarStatus(tr('Item salvo com sucesso!'), 'sucesso')
             this.salvo.emit()
           },
           error: (err) => {
             console.log("Erro:", err);
-            this.mostrarStatus(err.error?.error || 'Erro ao salvar item. Tente novamente.', 'erro')
+            this.mostrarStatus(err.error?.error || tr('Erro ao salvar item. Tente novamente.'), 'erro')
           }
         });
     }
@@ -227,7 +229,7 @@ onFile(event: any) {
 
   const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
   if (!usuario) {
-    this.mensagemIA = 'Você precisa estar logado para usar a IA.'
+    this.mensagemIA = tr('Você precisa estar logado para usar a IA.')
     return
   }
 
@@ -249,7 +251,7 @@ onFile(event: any) {
         const itens = res.resultado || []
 
         if (!itens.length) {
-          this.mensagemIA = 'Nenhum alimento foi identificado na imagem.'
+          this.mensagemIA = tr('Nenhum alimento foi identificado na imagem.')
           this.cdr.markForCheck()
           return
         }
@@ -269,16 +271,16 @@ onFile(event: any) {
         })
 
         const restantes = res.limiteIA != null ? res.limiteIA - res.usosIA : null
-        this.mensagemIA = `${itens.length} item(ns) identificado(s). Confira e confirme cada um.`
-          + (restantes != null ? ` (${restantes} uso(s) de IA restante(s) neste mês)` : '')
+        this.mensagemIA = tr('{n} item(ns) identificado(s). Confira e confirme cada um.', { n: itens.length })
+          + (restantes != null ? ' ' + tr('({n} uso(s) de IA restante(s) neste mês)', { n: restantes }) : '')
         this.cdr.markForCheck()
       },
       error: (err) => {
         console.log("Erro:", err);
         this.analisando = false
         this.mensagemIA = (err.status === 403 || err.status === 503)
-          ? (err.error?.error || 'Não foi possível analisar a imagem.')
-          : 'Não foi possível analisar a imagem.'
+          ? (err.error?.error || tr('Não foi possível analisar a imagem.'))
+          : tr('Não foi possível analisar a imagem.')
         this.cdr.markForCheck()
       }
     });

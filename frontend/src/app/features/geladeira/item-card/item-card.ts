@@ -2,10 +2,11 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Item } from '../../../models/item.model';
 import { SituacaoValidade, situacaoValidade } from '../../../utils/validade';
 import { passoDaUnidade } from '../../../utils/itens';
+import { TPipe } from '../../../i18n/t.pipe';
 
 @Component({
   selector: 'app-item-card',
-  imports: [],
+  imports: [TPipe, ],
   templateUrl: './item-card.html',
   styleUrl: './item-card.css',
 })

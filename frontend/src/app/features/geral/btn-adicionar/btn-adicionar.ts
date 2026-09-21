@@ -1,9 +1,10 @@
 import { Component, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { TPipe } from '../../../i18n/t.pipe';
 
 @Component({
   selector: 'app-btn-adicionar',
-  imports: [],
+  imports: [TPipe, ],
   templateUrl: './btn-adicionar.html',
   styleUrl: './btn-adicionar.css',
 })

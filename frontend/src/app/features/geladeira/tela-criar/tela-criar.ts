@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormularioItem } from '../formulario-item/formulario-item';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { TPipe } from '../../../i18n/t.pipe';
 
 const TITULOS: Record<string, string> = {
   geladeira: 'Geladeira',
@@ -12,7 +13,7 @@ const TITULOS: Record<string, string> = {
 
 @Component({
   selector: 'app-tela-criar',
-  imports: [FormularioItem],
+  imports: [TPipe, FormularioItem],
   templateUrl: './tela-criar.html',
   styleUrl: './tela-criar.css',
 })

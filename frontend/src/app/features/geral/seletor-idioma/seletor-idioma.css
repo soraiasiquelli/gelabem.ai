@@ -1,0 +1,38 @@
+.seletor {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+}
+
+.seletor.flutuante {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  z-index: 5;
+}
+
+.opcao {
+  min-width: 40px;
+  min-height: 32px;
+  padding: 0 var(--sp-3);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font: 600 13px/1 var(--fonte-corpo);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.opcao.ativa {
+  background: var(--verde);
+  color: #fff;
+}
+
+.opcao:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 2px;
+}

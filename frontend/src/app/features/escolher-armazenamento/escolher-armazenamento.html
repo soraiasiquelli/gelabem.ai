@@ -11,10 +11,10 @@
           <path d="M14.5 25.5c0-6.5 4.5-10.5 11-10.5 0 6.5-4.5 10.5-11 10.5z" fill="currentColor"/>
         </svg>
         </div>
-        <span class="brand">Gelabem</span>
+        <span class="brand">{{ 'Gelabem' | t }}</span>
       </div>
-      <h1 class="title">Onde você guarda seus alimentos?</h1>
-      <p class="subtitle">Selecione os tipos de armazenamento que você usa. Pode escolher mais de um.</p>
+      <h1 class="title">{{ 'Onde você guarda seus alimentos?' | t }}</h1>
+      <p class="subtitle">{{ 'Selecione os tipos de armazenamento que você usa. Pode escolher mais de um.' | t }}</p>
     </div>
 
     <div class="grid">
@@ -31,8 +31,8 @@
             <line x1="20" y1="26" x2="20" y2="36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </div>
-        <span class="card-label">Geladeira</span>
-        <span class="card-desc">Alimentos frescos e bebidas</span>
+        <span class="card-label">{{ 'Geladeira' | t }}</span>
+        <span class="card-desc">{{ 'Alimentos frescos e bebidas' | t }}</span>
         <div class="check-icon">
           <svg viewBox="0 0 16 16" fill="none">
             <circle cx="8" cy="8" r="7" fill="var(--verde)" fill-opacity="0.2" stroke="var(--verde)" stroke-width="1.5"/>
@@ -61,8 +61,8 @@
             <circle cx="24" cy="24" r="3" fill="currentColor" fill-opacity="0.3"/>
           </svg>
         </div>
-        <span class="card-label">Freezer</span>
-        <span class="card-desc">Alimentos congelados</span>
+        <span class="card-label">{{ 'Freezer' | t }}</span>
+        <span class="card-desc">{{ 'Alimentos congelados' | t }}</span>
         <div class="check-icon">
           <svg viewBox="0 0 16 16" fill="none">
             <circle cx="8" cy="8" r="7" fill="var(--verde)" fill-opacity="0.2" stroke="var(--verde)" stroke-width="1.5"/>
@@ -87,8 +87,8 @@
             <circle cx="31" cy="26" r="2" fill="currentColor" fill-opacity="0.5"/>
           </svg>
         </div>
-        <span class="card-label">Despensa</span>
-        <span class="card-desc">Secos, enlatados e grãos</span>
+        <span class="card-label">{{ 'Despensa' | t }}</span>
+        <span class="card-desc">{{ 'Secos, enlatados e grãos' | t }}</span>
         <div class="check-icon">
           <svg viewBox="0 0 16 16" fill="none">
             <circle cx="8" cy="8" r="7" fill="var(--verde)" fill-opacity="0.2" stroke="var(--verde)" stroke-width="1.5"/>
@@ -110,8 +110,8 @@
             <rect x="16" y="10" width="4" height="2" rx="1" fill="currentColor" fill-opacity="0.4"/>
           </svg>
         </div>
-        <span class="card-label">Frigobar</span>
-        <span class="card-desc">Bebidas e petiscos</span>
+        <span class="card-label">{{ 'Frigobar' | t }}</span>
+        <span class="card-desc">{{ 'Bebidas e petiscos' | t }}</span>
         <div class="check-icon">
           <svg viewBox="0 0 16 16" fill="none">
             <circle cx="8" cy="8" r="7" fill="var(--verde)" fill-opacity="0.2" stroke="var(--verde)" stroke-width="1.5"/>
@@ -124,7 +124,7 @@
 
     <div class="counter-row">
       <span class="counter-text">
-        <span class="counter-num">{{ selecionados.length }}</span> selecionado(s)
+        <span class="counter-num">{{ selecionados.length }}</span> {{ 'selecionado(s)' | t }}
       </span>
     </div>
 
@@ -133,11 +133,11 @@
         <line x1="5" y1="12" x2="19" y2="12"/>
         <polyline points="12 5 19 12 12 19"/>
       </svg>
-      Continuar
+      {{ 'Continuar' | t }}
     </button>
 
     <p class="skip">
-      <a href="javascript:void(0)" (click)="pular()">Pular por agora</a>
+      <a href="javascript:void(0)" (click)="pular()">{{ 'Pular por agora' | t }}</a>
     </p>
 
   </div>

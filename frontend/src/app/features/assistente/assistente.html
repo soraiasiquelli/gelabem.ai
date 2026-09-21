@@ -3,15 +3,15 @@
   <header class="topo">
     <span class="topo-icone" aria-hidden="true">👨‍🍳</span>
     <div>
-      <h1>Assistente do Gelabem</h1>
-      <p>Conhece o que você tem em casa</p>
+      <h1>{{ 'Assistente do Gelabem' | t }}</h1>
+      <p>{{ 'Conhece o que você tem em casa' | t }}</p>
     </div>
   </header>
 
   <div class="conversa" #scrollArea>
     @for (msg of mensagens; track $index) {
       <div class="bolha" [class.bolha-usuario]="msg.autor === 'usuario'" [class.bolha-assistente]="msg.autor === 'assistente'">
-        {{ msg.texto }}
+        {{ msg.texto | t }}
       </div>
     }
 
@@ -29,7 +29,7 @@
   @if (mensagens.length <= 1) {
     <div class="sugestoes-rapidas">
       @for (s of sugestoesRapidas; track s) {
-        <button type="button" class="chip-sugestao" (click)="usarSugestao(s)">{{ s }}</button>
+        <button type="button" class="chip-sugestao" (click)="usarSugestao(s)">{{ s | t }}</button>
       }
     </div>
   }
@@ -37,12 +37,12 @@
   <form class="campo-envio" (ngSubmit)="enviarDoInput()">
     <input
       type="text"
-      placeholder="Pergunte o que cozinhar..."
+      [placeholder]="'Pergunte o que cozinhar...' | t"
       [(ngModel)]="mensagemAtual"
       name="mensagem"
       autocomplete="off"
       [disabled]="enviando" />
-    <button type="submit" class="btn-enviar" [disabled]="enviando || !mensagemAtual.trim()" aria-label="Enviar">
+    <button type="submit" class="btn-enviar" [disabled]="enviando || !mensagemAtual.trim()" [attr.aria-label]="'Enviar' | t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
         <line x1="12" y1="19" x2="12" y2="5"></line>
         <polyline points="5 12 12 5 19 12"></polyline>

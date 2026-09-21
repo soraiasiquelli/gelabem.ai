@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { I18n, tr } from '../i18n/i18n.service';
 
 export interface MensagemChat {
   autor: 'usuario' | 'assistente';
@@ -20,7 +21,7 @@ export class ChatService {
 
   private api = environment.apiUrl
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private i18n: I18n) {}
 
   enviar(mensagem: string, historico: MensagemChat[]): Observable<{ resposta: string }> {
     return this.http.post<{ resposta: string }>(`${this.api}/chat`, { mensagem, historico })
@@ -39,6 +40,7 @@ export class ChatService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept-Language': this.i18n.idioma(),
         ...(token ? { Authorization: `Bearer ${token}` } : {})
       },
       body: JSON.stringify({ mensagem, historico })
@@ -46,9 +48,9 @@ export class ChatService {
 
     if (!res.ok) {
       const corpo = await res.json().catch(() => ({}))
-      throw { status: res.status, message: corpo.error || 'Não conseguimos responder agora. Tente de novo.' }
+      throw { status: res.status, message: corpo.error || tr('Não conseguimos responder agora. Tente de novo.') }
     }
-    if (!res.body) throw { status: 0, message: 'Não conseguimos responder agora. Tente de novo.' }
+    if (!res.body) throw { status: 0, message: tr('Não conseguimos responder agora. Tente de novo.') }
 
     const leitor = res.body.getReader()
     const decodificador = new TextDecoder()

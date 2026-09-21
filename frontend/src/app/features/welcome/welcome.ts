@@ -1,9 +1,10 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
+import { TPipe } from '../../i18n/t.pipe';
 
 @Component({
   selector: 'app-welcome',
-  imports: [],
+  imports: [TPipe, ],
   templateUrl: './welcome.html',
   styleUrl: './welcome.css',
 })

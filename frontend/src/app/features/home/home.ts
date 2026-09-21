@@ -9,6 +9,8 @@ import { RouterLink } from "@angular/router";
 import { Observable, map, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
 
 const TIPOS_DISPONIVEIS = [
   { nome: 'geladeira', label: 'Geladeira', icone: '🧊', desc: 'Frescos' },
@@ -33,7 +35,7 @@ export interface AnelValidade {
 
 @Component({
   selector: 'app-home',
-  imports: [AsyncPipe, RouterLink],
+  imports: [TPipe, AsyncPipe, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -68,7 +70,7 @@ export class Home {
 
   get primeiroNome(): string {
     const nome = this.usuario?.nome || ''
-    return nome.split(' ')[0] || 'por aí'
+    return nome.split(' ')[0] || tr('por aí')
   }
 
   get inicial(): string {
@@ -112,7 +114,7 @@ export class Home {
       circunferencia: CIRCUNFERENCIA_ANEL,
       cor: urgente ? 'var(--erro)' : 'var(--ambar)',
       numero: dias < 0 ? '!' : String(dias),
-      descricao: `${item.nome} vence ${this.quandoVence(item.data_validade)}`
+      descricao: tr('{nome} vence {quando}', { nome: item.nome, quando: this.quandoVence(item.data_validade) })
     }
   }
 
@@ -181,7 +183,7 @@ export class Home {
       },
       error: (err) => {
         // 404 = cozinha vazia ainda, não é bem um erro, é um estado esperado
-        this.erroSugestoes = err.status === 404 ? '' : 'Não conseguimos buscar sugestões agora.'
+        this.erroSugestoes = err.status === 404 ? '' : tr('Não conseguimos buscar sugestões agora.')
         this.sugestoes = []
         this.carregandoSugestoes = false
         this.cdr.markForCheck()

@@ -2,6 +2,8 @@ import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FeedbackService, TipoFeedback } from '../../../services/feedback.service';
+import { TPipe } from '../../../i18n/t.pipe';
+import { tr } from '../../../i18n/i18n.service';
 
 const TIPOS: { valor: TipoFeedback, label: string, dica: string }[] = [
   { valor: 'ideia', label: '💡 Ideia', dica: 'Ex.: queria receber um aviso quando algo estiver pra vencer...' },
@@ -14,7 +16,7 @@ const LIMITE = 2000
 /** Modal global de "Sugerir melhoria". Abre com FeedbackService.abrir(); vive uma vez só, no App. */
 @Component({
   selector: 'app-feedback-modal',
-  imports: [FormsModule],
+  imports: [TPipe, FormsModule],
   templateUrl: './feedback-modal.html',
   styleUrl: './feedback-modal.css',
 })
@@ -56,7 +58,7 @@ export class FeedbackModal {
   enviar() {
     const mensagem = this.mensagem.trim()
     if (mensagem.length < 5) {
-      this.erro = 'Conta um pouco mais pra gente entender.'
+      this.erro = tr('Conta um pouco mais pra gente entender.')
       return
     }
     if (this.enviando) return
@@ -72,7 +74,7 @@ export class FeedbackModal {
       },
       error: (err) => {
         this.enviando = false
-        this.erro = err.error?.error || 'Não foi possível enviar agora. Tente de novo em instantes.'
+        this.erro = err.error?.error || tr('Não foi possível enviar agora. Tente de novo em instantes.')
         this.cdr.markForCheck()
       }
     })

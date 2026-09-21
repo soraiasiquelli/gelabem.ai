@@ -24,31 +24,31 @@
     </div>
   } @else {
     <div class="acoesItem">
-      <div class="passoItem" role="group" [attr.aria-label]="'Quantidade de ' + item.nome">
+      <div class="passoItem" role="group" [attr.aria-label]="'Quantidade de {nome}' | t: { nome: item.nome }">
         <button
           class="btnPasso"
           type="button"
           (click)="$event.stopPropagation(); consumir.emit(item)"
-          [attr.aria-label]="'Usei ' + passo + ' ' + item.unidade + ' de ' + item.nome">
+          [attr.aria-label]="'Usei {passo} {unidade} de {nome}' | t: { passo: passo, unidade: item.unidade, nome: item.nome }">
           −
         </button>
         <button
           class="btnPasso"
           type="button"
           (click)="$event.stopPropagation(); repor.emit(item)"
-          [attr.aria-label]="'Adicionar ' + passo + ' ' + item.unidade + ' de ' + item.nome">
+          [attr.aria-label]="'Adicionar {passo} {unidade} de {nome}' | t: { passo: passo, unidade: item.unidade, nome: item.nome }">
           +
         </button>
       </div>
 
-      <button class="btnEditar" (click)="$event.stopPropagation(); clicouEditar()" aria-label="Editar item">
+      <button class="btnEditar" (click)="$event.stopPropagation(); clicouEditar()" [attr.aria-label]="'Editar item' | t">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
           <path d="M15 5l4 4"></path>
         </svg>
       </button>
 
-      <button class="btnRemover" (click)="$event.stopPropagation(); clicouRemover()" aria-label="Remover item">
+      <button class="btnRemover" (click)="$event.stopPropagation(); clicouRemover()" [attr.aria-label]="'Remover item' | t">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 6h18"></path>
           <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>

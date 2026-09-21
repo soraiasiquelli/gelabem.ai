@@ -1,11 +1,11 @@
 @if (habilitado) {
   <div class="google">
-    <div class="divisor"><span>ou</span></div>
+    <div class="divisor"><span>{{ 'ou' | t }}</span></div>
 
     <div #botao class="botao" [class.entrando]="entrando"></div>
 
     @if (entrando) {
-      <p class="status">Entrando…</p>
+      <p class="status">{{ 'Entrando…' | t }}</p>
     }
   </div>
 }

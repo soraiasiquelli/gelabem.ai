@@ -5,13 +5,13 @@
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
-    Voltar
+    {{ 'Voltar' | t }}
   </button>
 
   @if (carregando) {
     <div class="status">
       <span class="spinner"></span>
-      Gerando sua receita...
+      {{ 'Gerando sua receita...' | t }}
     </div>
   }
 
@@ -28,12 +28,12 @@
           <span>{{ receita.tempoPreparo }}</span>
         }
         @if (receita.porcoes) {
-          <span>{{ receita.porcoes }} porções</span>
+          <span>{{ '{n} porções' | t: { n: receita.porcoes } }}</span>
         }
       </div>
 
       @if (receita.ingredientesUsados?.length) {
-        <h3>Ingredientes que você já tem</h3>
+        <h3>{{ 'Ingredientes que você já tem' | t }}</h3>
         <ul>
           @for (ingrediente of receita.ingredientesUsados; track ingrediente) {
             <li>{{ ingrediente }}</li>
@@ -42,7 +42,7 @@
       }
 
       @if (receita.ingredientesFaltantes?.length) {
-        <h3>Você ainda precisa de</h3>
+        <h3>{{ 'Você ainda precisa de' | t }}</h3>
         <ul>
           @for (ingrediente of receita.ingredientesFaltantes; track ingrediente) {
             <li>{{ ingrediente }}</li>
@@ -51,7 +51,7 @@
       }
 
       @if (receita.modoPreparo?.length) {
-        <h3>Modo de preparo</h3>
+        <h3>{{ 'Modo de preparo' | t }}</h3>
         <ol>
           @for (passo of receita.modoPreparo; track passo) {
             <li>{{ passo }}</li>
@@ -60,7 +60,7 @@
       }
 
       <button class="btn-cozinhei" type="button" (click)="mostrarCozinhei = true">
-        🍳 Cozinhei essa
+        {{ '🍳 Cozinhei essa' | t }}
       </button>
     </div>
   }

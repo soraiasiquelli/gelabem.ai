@@ -1,5 +1,7 @@
 <div class="login-host">
 
+  <app-seletor-idioma [flutuante]="true"></app-seletor-idioma>
+
   <header class="marca">
     <div class="icon-wrap">
       <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
@@ -8,15 +10,15 @@
           <path d="M14.5 25.5c0-6.5 4.5-10.5 11-10.5 0 6.5-4.5 10.5-11 10.5z" fill="currentColor"/>
         </svg>
     </div>
-    <span class="brand">Gelabem</span>
-    <p class="subtitle">Entre e veja o que vence antes de estragar.</p>
+    <span class="brand">{{ 'Gelabem' | t }}</span>
+    <p class="subtitle">{{ 'Entre e veja o que vence antes de estragar.' | t }}</p>
   </header>
 
   <div class="card">
 
     <!-- E-mail -->
     <div class="field">
-      <label>E-mail</label>
+      <label>{{ 'E-mail' | t }}</label>
       <div class="input-wrap">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -24,13 +26,13 @@
             <polyline points="2,4 12,13 22,4"/>
           </svg>
         </span>
-        <input type="email" placeholder="seu@email.com" [(ngModel)]="email"/>
+        <input type="email" [placeholder]="'seu@email.com' | t" [(ngModel)]="email"/>
       </div>
     </div>
 
     <!-- Senha -->
     <div class="field">
-      <label>Senha</label>
+      <label>{{ 'Senha' | t }}</label>
       <div class="input-wrap">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -59,13 +61,13 @@
         <polyline points="10 17 15 12 10 7"/>
         <line x1="15" y1="12" x2="3" y2="12"/>
       </svg>
-      Entrar
+      {{ 'Entrar' | t }}
     </button>
 
     <app-google-login (entrou)="aoEntrarComGoogle($event)" (erro)="erro = $event"></app-google-login>
 
 
-    <p class="signup">Não tem uma conta? <a routerLink="/criar-conta">Criar conta grátis</a></p>
+    <p class="signup">{{ 'Não tem uma conta?' | t }} <a routerLink="/criar-conta">{{ 'Criar conta grátis' | t }}</a></p>
 
   </div>
 </div>

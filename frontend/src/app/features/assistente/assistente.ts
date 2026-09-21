@@ -2,6 +2,8 @@ import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, ViewChild }
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChatService, MensagemChat } from '../../services/chat.service';
+import { tr } from '../../i18n/i18n.service';
+import { TPipe } from '../../i18n/t.pipe';
 
 const SUGESTOES_RAPIDAS = [
   'O que posso fazer com o que eu já tenho?',
@@ -12,7 +14,7 @@ const SUGESTOES_RAPIDAS = [
 
 @Component({
   selector: 'app-assistente',
-  imports: [FormsModule],
+  imports: [TPipe, FormsModule],
   templateUrl: './assistente.html',
   styleUrl: './assistente.css',
 })
@@ -48,7 +50,7 @@ export class Assistente implements AfterViewChecked {
   }
 
   usarSugestao(texto: string) {
-    this.enviar(texto)
+    this.enviar(tr(texto))
   }
 
   enviarDoInput() {
@@ -87,7 +89,7 @@ export class Assistente implements AfterViewChecked {
         this.router.navigate(['/login'])
         return
       }
-      this.erro = err?.message || 'Não conseguimos responder agora. Tenta de novo.'
+      this.erro = err?.message || tr('Não conseguimos responder agora. Tenta de novo.')
     } finally {
       this.enviando = false
       this.aguardandoResposta = false

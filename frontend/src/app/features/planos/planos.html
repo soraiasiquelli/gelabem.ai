@@ -11,19 +11,19 @@
         </svg>
       </button>
       <div class="header-text">
-        <h1>Escolha seu plano</h1>
-        <p>Desbloqueie o potencial da IA na sua cozinha</p>
+        <h1>{{ 'Escolha seu plano' | t }}</h1>
+        <p>{{ 'Desbloqueie o potencial da IA na sua cozinha' | t }}</p>
       </div>
     </div>
 
     <!-- Toggle mensal/anual -->
     <div class="toggle-row">
-      <span [class.active]="!anual" (click)="anual = false">Mensal</span>
+      <span [class.active]="!anual" (click)="anual = false">{{ 'Mensal' | t }}</span>
       <div class="toggle" (click)="anual = !anual">
         <div class="toggle-thumb" [class.right]="anual"></div>
       </div>
       <span [class.active]="anual" (click)="anual = true">
-        Anual
+        {{ 'Anual' | t }}
         <span class="badge-desconto">-20%</span>
       </span>
     </div>
@@ -36,17 +36,17 @@
         <div class="plano-header">
           <div class="plano-icon">🧊</div>
           <div>
-            <h2 class="plano-nome">Free</h2>
-            <p class="plano-desc">Para começar a organizar</p>
+            <h2 class="plano-nome">{{ 'Free' | t }}</h2>
+            <p class="plano-desc">{{ 'Para começar a organizar' | t }}</p>
           </div>
           @if (planoAtual === 'free') {
-            <span class="badge-atual">Atual</span>
+            <span class="badge-atual">{{ 'Atual' | t }}</span>
           }
         </div>
 
         <div class="plano-preco">
-          <span class="preco-valor">R$ 0</span>
-          <span class="preco-periodo">/mês</span>
+          <span class="preco-valor">{{ 'R$ 0' | t }}</span>
+          <span class="preco-periodo">{{ '/mês' | t }}</span>
         </div>
 
         <div class="plano-divider"></div>
@@ -54,56 +54,56 @@
         <ul class="plano-features">
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Até 3 armazenamentos
+            {{ 'Até 3 armazenamentos' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Cadastros manuais ilimitados
+            {{ 'Cadastros manuais ilimitados' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            10 cadastros com IA por mês
+            {{ '10 cadastros com IA por mês' | t }}
           </li>
           <li class="no">
             <span class="feat-icon no">✕</span>
-            Planejamento semanal
+            {{ 'Planejamento semanal' | t }}
           </li>
           <li class="no">
             <span class="feat-icon no">✕</span>
-            Lista de compras com IA
+            {{ 'Lista de compras com IA' | t }}
           </li>
           <li class="no">
             <span class="feat-icon no">✕</span>
-            Sugestões de receitas
+            {{ 'Sugestões de receitas' | t }}
           </li>
         </ul>
 
         <button class="btn-plano btn-free" disabled>
-          Plano atual
+          {{ 'Plano atual' | t }}
         </button>
       </div>
 
       <!-- PRO -->
       <div class="plano-card destaque" [class.atual]="planoAtual === 'pro'">
-        <div class="badge-popular">⚡ Mais popular</div>
+        <div class="badge-popular">{{ '⚡ Mais popular' | t }}</div>
 
         <div class="plano-header">
           <div class="plano-icon">❄️</div>
           <div>
-            <h2 class="plano-nome">Pro</h2>
-            <p class="plano-desc">Para usar sem limites</p>
+            <h2 class="plano-nome">{{ 'Pro' | t }}</h2>
+            <p class="plano-desc">{{ 'Para usar sem limites' | t }}</p>
           </div>
           @if (planoAtual === 'pro') {
-            <span class="badge-atual">Atual</span>
+            <span class="badge-atual">{{ 'Atual' | t }}</span>
           }
         </div>
 
         <div class="plano-preco">
           <span class="preco-valor">{{ anual ? 'R$ 7,92' : 'R$ 9,90' }}</span>
-          <span class="preco-periodo">/mês</span>
+          <span class="preco-periodo">{{ '/mês' | t }}</span>
         </div>
         @if (anual) {
-          <p class="preco-anual">R$ 95,04 cobrado anualmente</p>
+          <p class="preco-anual">{{ 'R$ 95,04 cobrado anualmente' | t }}</p>
         }
 
         <div class="plano-divider"></div>
@@ -111,32 +111,32 @@
         <ul class="plano-features">
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Até 5 armazenamentos
+            {{ 'Até 5 armazenamentos' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Cadastros manuais ilimitados
+            {{ 'Cadastros manuais ilimitados' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Cadastros com IA ilimitados
+            {{ 'Cadastros com IA ilimitados' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Planejamento semanal
+            {{ 'Planejamento semanal' | t }}
           </li>
           <li class="no">
             <span class="feat-icon no">✕</span>
-            Lista de compras com IA
+            {{ 'Lista de compras com IA' | t }}
           </li>
           <li class="no">
             <span class="feat-icon no">✕</span>
-            Sugestões de receitas
+            {{ 'Sugestões de receitas' | t }}
           </li>
         </ul>
 
         <button class="btn-plano btn-pro" (click)="assinar('pro')">
-          {{ planoAtual === 'pro' ? 'Plano atual' : 'Assinar Pro' }}
+          {{ (planoAtual === 'pro' ? 'Plano atual' : 'Assinar Pro') | t }}
         </button>
       </div>
 
@@ -145,20 +145,20 @@
         <div class="plano-header">
           <div class="plano-icon">🌟</div>
           <div>
-            <h2 class="plano-nome">Premium</h2>
-            <p class="plano-desc">Experiência completa com IA</p>
+            <h2 class="plano-nome">{{ 'Premium' | t }}</h2>
+            <p class="plano-desc">{{ 'Experiência completa com IA' | t }}</p>
           </div>
           @if (planoAtual === 'premium') {
-            <span class="badge-atual">Atual</span>
+            <span class="badge-atual">{{ 'Atual' | t }}</span>
           }
         </div>
 
         <div class="plano-preco">
           <span class="preco-valor">{{ anual ? 'R$ 15,92' : 'R$ 19,90' }}</span>
-          <span class="preco-periodo">/mês</span>
+          <span class="preco-periodo">{{ '/mês' | t }}</span>
         </div>
         @if (anual) {
-          <p class="preco-anual">R$ 191,04 cobrado anualmente</p>
+          <p class="preco-anual">{{ 'R$ 191,04 cobrado anualmente' | t }}</p>
         }
 
         <div class="plano-divider"></div>
@@ -166,32 +166,32 @@
         <ul class="plano-features">
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Armazenamentos ilimitados
+            {{ 'Armazenamentos ilimitados' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Cadastros manuais ilimitados
+            {{ 'Cadastros manuais ilimitados' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Cadastros com IA ilimitados
+            {{ 'Cadastros com IA ilimitados' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Planejamento semanal
+            {{ 'Planejamento semanal' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Lista de compras com IA
+            {{ 'Lista de compras com IA' | t }}
           </li>
           <li class="ok">
             <span class="feat-icon ok">✓</span>
-            Sugestões de receitas
+            {{ 'Sugestões de receitas' | t }}
           </li>
         </ul>
 
         <button class="btn-plano btn-premium" (click)="assinar('premium')">
-          {{ planoAtual === 'premium' ? 'Plano atual' : 'Assinar Premium' }}
+          {{ (planoAtual === 'premium' ? 'Plano atual' : 'Assinar Premium') | t }}
         </button>
       </div>
 
@@ -199,7 +199,7 @@
 
     <!-- Rodapé -->
     <p class="rodape">
-      Pagamento seguro via Kiwify · Cancele quando quiser · 7 dias de garantia
+      {{ 'Pagamento seguro via Kiwify · Cancele quando quiser · 7 dias de garantia' | t }}
     </p>
 
   </div>
@@ -210,24 +210,24 @@
 <div class="modal-overlay" (click)="fecharModal()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-icon">🚀</div>
-    <h2 class="modal-titulo">Limite atingido</h2>
-    <p class="modal-desc">Você usou todos os seus cadastros com IA do plano Free este mês. Faça upgrade para continuar usando.</p>
+    <h2 class="modal-titulo">{{ 'Limite atingido' | t }}</h2>
+    <p class="modal-desc">{{ 'Você usou todos os seus cadastros com IA do plano Free este mês. Faça upgrade para continuar usando.' | t }}</p>
 
     <div class="modal-planos">
       <div class="modal-plano" (click)="assinar('pro')">
-        <div class="modal-plano-nome">Pro</div>
-        <div class="modal-plano-preco">R$ 9,90<span>/mês</span></div>
-        <div class="modal-plano-feat">IA ilimitada</div>
+        <div class="modal-plano-nome">{{ 'Pro' | t }}</div>
+        <div class="modal-plano-preco">{{ 'R$ 9,90' | t }}<span>{{ '/mês' | t }}</span></div>
+        <div class="modal-plano-feat">{{ 'IA ilimitada' | t }}</div>
       </div>
       <div class="modal-plano destaque" (click)="assinar('premium')">
-        <div class="modal-plano-badge">Recomendado</div>
-        <div class="modal-plano-nome">Premium</div>
-        <div class="modal-plano-preco">R$ 19,90<span>/mês</span></div>
-        <div class="modal-plano-feat">IA + Lista de compras</div>
+        <div class="modal-plano-badge">{{ 'Recomendado' | t }}</div>
+        <div class="modal-plano-nome">{{ 'Premium' | t }}</div>
+        <div class="modal-plano-preco">{{ 'R$ 19,90' | t }}<span>{{ '/mês' | t }}</span></div>
+        <div class="modal-plano-feat">{{ 'IA + Lista de compras' | t }}</div>
       </div>
     </div>
 
-    <button class="modal-btn-fechar" (click)="fecharModal()">Agora não</button>
+    <button class="modal-btn-fechar" (click)="fecharModal()">{{ 'Agora não' | t }}</button>
   </div>
 </div>
 }

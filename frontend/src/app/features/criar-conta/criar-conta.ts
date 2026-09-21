@@ -5,9 +5,12 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../models/Usuario.model';
 import { GoogleLogin } from '../geral/google-login/google-login';
+import { TPipe } from '../../i18n/t.pipe';
+import { tr } from '../../i18n/i18n.service';
+import { SeletorIdioma } from '../geral/seletor-idioma/seletor-idioma';
 @Component({
   selector: 'app-criar-conta',
-  imports: [FormsModule, RouterLink, GoogleLogin],
+  imports: [SeletorIdioma, TPipe, FormsModule, RouterLink, GoogleLogin],
   standalone: true,
   templateUrl: './criar-conta.html',
   styleUrl: './criar-conta.css',
@@ -43,7 +46,7 @@ validarSenha(){
   if(this.senha === this.repetirsenha){
     this.adicionarUsuario()
   }else{
-    alert("As senhas não coincidem, tente novamente")
+    alert(tr("As senhas não coincidem, tente novamente"))
   }
 }
 
@@ -69,7 +72,7 @@ adicionarUsuario() {
     },
     error: (err) => {
       console.log("Erro:", err);
-      this.erro = err.error?.error || 'Não foi possível criar sua conta agora. Tente novamente.'
+      this.erro = err.error?.error || tr('Não foi possível criar sua conta agora. Tente novamente.')
     }
   });
 }

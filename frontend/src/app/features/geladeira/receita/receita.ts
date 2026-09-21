@@ -3,10 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GeladeiraService, Receita as ReceitaModel } from '../../../services/geladeira.service';
 import { LoginService } from '../../../services/auth/login.service';
 import { CozinheiSheet } from '../../geral/cozinhei-sheet/cozinhei-sheet';
+import { TPipe } from '../../../i18n/t.pipe';
+import { tr } from '../../../i18n/i18n.service';
 
 @Component({
   selector: 'app-receita',
-  imports: [CozinheiSheet],
+  imports: [TPipe, CozinheiSheet],
   templateUrl: './receita.html',
   styleUrl: './receita.css',
 })
@@ -34,7 +36,7 @@ export class Receita {
 
     const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
     if (!usuario) {
-      this.erro = 'Faça login para gerar uma receita.'
+      this.erro = tr('Faça login para gerar uma receita.')
       this.carregando = false
       return
     }
@@ -61,7 +63,7 @@ export class Receita {
         this.cdr.markForCheck()
       },
       error: (err) => {
-        this.erro = err?.error?.error || 'Erro ao gerar a receita. Tente novamente.'
+        this.erro = err?.error?.error || tr('Erro ao gerar a receita. Tente novamente.')
         this.carregando = false
         this.cdr.markForCheck()
       }

@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription, combineLatest, forkJoin, map } from 'rxjs';
 import { Item } from '../../../models/item.model';
 import { ordenarPorValidade, passoDaUnidade } from '../../../utils/itens';
+import { TPipe } from '../../../i18n/t.pipe';
+import { tr } from '../../../i18n/i18n.service';
 
 function agruparPorNome(itens: Item[]): Item[] {
   const grupos = new Map<string, Item>()
@@ -56,7 +58,7 @@ export interface GrupoItens {
 
 @Component({
   selector: 'app-lista-itens',
-  imports: [ItemCard, AsyncPipe],
+  imports: [TPipe, ItemCard, AsyncPipe],
   templateUrl: './lista-itens.html',
   styleUrl: './lista-itens.css',
 })
@@ -205,7 +207,7 @@ export class ListaItens implements OnDestroy {
 
         // só "acabou" de verdade quando não sobrou nenhuma outra unidade do mesmo alimento
         if (removido && (grupo.linhas?.length ?? 1) <= 1) {
-          this.mostrarAviso(`${grupo.nome} acabou.`, grupo)
+          this.mostrarAviso(tr('{nome} acabou.', { nome: grupo.nome }), grupo)
         }
       },
       // 404 = já mudou em outro aparelho/morador; busca o estado real
@@ -235,8 +237,8 @@ export class ListaItens implements OnDestroy {
       quantidade: item.quantidade_minima || 1,
       unidade: item.unidade
     }).subscribe({
-      next: () => this.mostrarAviso(`${item.nome} entrou na lista de compras ✓`),
-      error: () => this.mostrarAviso('Não foi possível adicionar à lista agora.')
+      next: () => this.mostrarAviso(tr('{nome} entrou na lista de compras ✓', { nome: item.nome })),
+      error: () => this.mostrarAviso(tr('Não foi possível adicionar à lista agora.'))
     })
   }
 

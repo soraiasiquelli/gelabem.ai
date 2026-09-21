@@ -1,6 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../services/auth/login.service';
+import { TPipe } from '../../../i18n/t.pipe';
+import { tr } from '../../../i18n/i18n.service';
 
 const GIS_URL = 'https://accounts.google.com/gsi/client'
 
@@ -20,7 +22,7 @@ function carregarScriptGoogle(): Promise<void> {
     script.onload = () => resolve()
     script.onerror = () => {
       carregandoScript = null
-      reject(new Error('Não foi possível carregar o login do Google.'))
+      reject(new Error(tr('Não foi possível carregar o login do Google.')))
     }
     document.head.appendChild(script)
   })
@@ -34,7 +36,7 @@ function carregarScriptGoogle(): Promise<void> {
  */
 @Component({
   selector: 'app-google-login',
-  imports: [],
+  imports: [TPipe, ],
   templateUrl: './google-login.html',
   styleUrl: './google-login.css',
 })
@@ -68,7 +70,7 @@ export class GoogleLogin implements AfterViewInit {
           size: 'large',
           text: 'continue_with',
           shape: 'pill',
-          locale: 'pt-BR',
+          locale: document.documentElement.lang || 'pt-BR',
           width: largura,
         })
       })
@@ -87,7 +89,7 @@ export class GoogleLogin implements AfterViewInit {
       },
       error: (err) => {
         this.entrando = false
-        this.erro.emit(err.error?.error || 'Não foi possível entrar com o Google. Tente novamente.')
+        this.erro.emit(err.error?.error || tr('Não foi possível entrar com o Google. Tente novamente.'))
         this.cdr.markForCheck()
       }
     })
